@@ -38,12 +38,8 @@ numpy==1.14.2
 opencv-contrib-python==3.4.0.12
 opencv-python==3.4.0.12
 Pillow==3.2.0
-pyOpenSSL==0.13.1
-pytz==2013.7
 PyYAML==3.11
 requests==2.10.0
-rospkg==1.0.39
-scandir==1.4
 scikit-image==0.12.3
 scipy
 tornado==4.3
