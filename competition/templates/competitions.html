@@ -1,0 +1,68 @@
+{% extends 'base.html' %} {% load staticfiles %} {% block head_content %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script>
+    function openNav() {
+        $("#mySidenav").addClass('active');
+    }
+    function closeNav() {
+        $("#mySidenav").removeClass('active');
+    }
+    function export_excel() {
+        $(".competitions").hide();
+        $("#export_excel").show();
+        closeNav();
+        $("#dashboar_span").html(" Competitions > Export");
+    }
+    function competition_list() {
+        $(".competitions").hide();
+        $("#competition_list").show();
+        closeNav()
+        $("#dashboar_span").html(" Competitions > Comps");
+    }
+    function exam_list() {
+        $(".competitions").hide();
+        $("#exam_list").show();
+        closeNav()
+        $("#dashboar_span").html(" Competitions > Exams");
+    }
+
+    //hide it when clicking anywhere else except the popup and the trigger
+    $(document).on('click touch', function (event) {
+        if (!$(event.target).parents().addBack().is('#mySidenav') && !$(event.target).parents().addBack().is('#dash_board_icon')) {
+            $("#mySidenav").removeClass('active');
+        }
+    });
+
+    $(document).ready(function () {
+        export_excel()
+    });
+
+</script> {% endblock %} {% block page_content %}
+<div id="dash_board_icon" class="dashboard-span" onclick="openNav()">&#9776;
+    <span id="dashboar_span"></span>
+</div>
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a onClick='export_excel()'>Export to Excel</a>
+    <a onClick='competition_list()'>Competition List</a>
+    <a onclick='exam_list()'>Exam List</a>
+</div>
+
+<div class='main-content'>
+    <div id="export_excel" class="competitions" style="display: none">
+        <h4>Export competition workbook</h4>
+    </div>
+
+    <div id="competition_list" class="competitions" style="display: none">
+        <h4>Competition List</h4>
+    </div>
+
+    <div id="exam_list" class="competitions" style="display: none">
+        <h4>Exam List</h4>
+    </div>
+</div>
+
+
+
+{% endblock %}

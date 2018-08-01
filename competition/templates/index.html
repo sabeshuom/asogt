@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block head_content %}
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+{% endblock %}
+
+{% block page_content %}
+
+
+<!-- Page Features -->
+<div class="row text-center">
+    <div class="col-md-3 col-sm-6 hero-feature">
+        <a href="students" class="btn thumbnail" data-toggle="tooltip" data-placement="auto" title="Dashboard to work on Student details" >
+            <img src="{%static 'assets/students.jpg'%}" alt="">
+            <div class="caption">
+                <h4>Students</h4>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3 col-sm-6 hero-feature">
+        <a href="competitions" class="btn thumbnail" data-toggle="tooltip" data-placement="auto" title="Dashboard to work on Competitions">
+            <img src="{% static 'assets/Competitions.jpg' %}" alt=""> 
+            <div class="caption">
+                <h4>Competitions</h4>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3 col-sm-6 hero-feature">
+        <a href="results" class="btn thumbnail" data-toggle="tooltip" data-placement="auto" title="Dhasboard to work on Results.">
+            <img src="{%static 'assets/results.jpg'%}" alt="">
+            <div class="caption">
+                <h4>Results</h4>
+            </div>
+        </a>
+    </div>
+
+<!-- second row Features -->
+<!-- <div class="row text-center">
+    <div class="col-md-3 col-sm-6 hero-feature">
+        <a href="set_benchmark" class="btn thumbnail" data-toggle="tooltip" data-placement="auto" title="Set the challening benchmark images and tag them">
+            <img src="{%static 'assets/set_benchmark.jpg'%}" alt="">
+            <div class="caption">
+                <h4>Schools</h4>
+            </div>
+        </a>
+    </div>
+</div> -->
+
+{% endblock %}

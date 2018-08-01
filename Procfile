@@ -1,0 +1,1 @@
+web: gunicorn asogt.wsgi --log-file -

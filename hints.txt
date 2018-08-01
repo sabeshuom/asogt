@@ -1,0 +1,4 @@
+SQL server connections and queries
+
+# Populate the databases
+EXEC sp_databases

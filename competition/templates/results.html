@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block head_content %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script>
+    function openNav() {
+      $("#mySidenav").addClass('active');
+    }
+    function closeNav() {
+      $("#mySidenav").removeClass('active');
+    }
+    function export_excel(){
+        $(".results").hide();
+        $("#export_excel").show();
+        closeNav();
+        $("#dashboar_span").html(" Results > Export");
+    }
+    function resultlist2017(){
+        $(".results").hide();
+        $("#resultlist2017").show();
+        closeNav() 
+        $("#dashboar_span").html(" Results > 2017");
+    }
+    function resultlist2018(){
+        $(".results").hide();
+        $("#resultlist2018").show();
+        closeNav() 
+        $("#dashboar_span").html(" Results > 2018");
+    }
+
+    //hide it when clicking anywhere else except the popup and the trigger
+    $(document).on('click touch', function(event) {
+    if (!$(event.target).parents().addBack().is('#mySidenav') && !$(event.target).parents().addBack().is('#dash_board_icon')) {
+        $("#mySidenav").removeClass('active');
+    }
+    });
+
+    $(document).ready(function() {
+        export_excel()
+    });
+
+</script>
+{% endblock %}
+
+{% block page_content %}
+<div id="dash_board_icon" class="dashboard-span" onclick="openNav()">&#9776;  <span id="dashboar_span"></span></div>
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a onClick='export_excel()'>Export to Excel</a>
+    <a onClick='result2018()'>Result List 2018</a>
+    <a onclick='resultlist2017()'>Result List 2017</a>
+</div>
+
+<div class='main-content'>
+    <div id="export_excel" class ="results" style="display: none">
+        <h4>TC Results Workbook 2018</h4>
+            <ul class="excel-ul">
+                <li>
+                    <a data-state="NSW" class="btn btn-primary" onclick="get_per_exam_details(this)">Per-exam result details-NSW</a>
+                </li>
+                <li>
+                    <a data-state="QLD" class="btn btn-primary" onclick="get_per_exam_details(this)">Per-exam result details-QLD</a>
+                </li>
+                <li>
+                    <a  class="btn btn-primary disable">Mark Sheet-QLD</a>
+                </li>
+                <li>
+                    <a class="btn btn-primary disable">Mark Sheet-NSW</a>
+                </li>
+            </ul>
+    </div>
+
+    <div id="resultlist2018" class ="result" style="display: none">
+            <h4>Result List 2018</h4>
+    </div>
+
+    <div id="resultlist2017" class ="result" style="display: none">
+            <h4>Result List 2017</h4>
+    </div>
+</div>
+
+
+
+{% endblock %}
