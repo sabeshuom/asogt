@@ -193,7 +193,7 @@ a{
                     background-size: contain;
                 } 
                 &::before{
-                    content: ".. downloading data";
+                    content: ".. processing data";
                     position: absolute;
                     color: black;
                     left: 255px;

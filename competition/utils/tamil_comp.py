@@ -260,7 +260,7 @@ def write_competition_spreadsheet(sess, xls_wb= OUTPUT_XLS):
 
 	## common formats
 	tamil_format = wb.add_format({
-	'font_name': "Bamini",
+	'font_name': "Calibri (Body)",
 	'font_size': 10,
 	'border':1,
 	'align': 'left'})

@@ -153,7 +153,7 @@ a {
           top: 0px;
           background-size: contain; }
         .excel-ul li a.loading::before {
-          content: ".. downloading data";
+          content: ".. processing data";
           position: absolute;
           color: black;
           left: 255px;
