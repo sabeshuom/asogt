@@ -21,7 +21,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_ROOT = os.path.join(BASE_DIR, 'proj_static')
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'proj_static'),
 ]
 
 # Quick-start development settings - unsuitable for production
@@ -31,7 +31,7 @@ STATICFILES_DIRS = [
 SECRET_KEY = 'b=$+-(hm(9k$nkvngwk_8burn(vaax(*$)ej^j(e^^lfk_m7t2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
