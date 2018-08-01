@@ -1,0 +1,95 @@
+body {
+  font-size: 16px;
+  padding-top: 0px;
+  font-family: Muli, sans-serif; }
+  body a {
+    font-family: Dosis, sans-serif;
+    text-decoration: none;
+    cursor: pointer; }
+  body a:hover {
+    text-decoration: none; }
+
+a {
+  cursor: pointer;
+  text-decoration: none; }
+
+.container {
+  width: 90%; }
+
+.topmenu.right {
+  float: right; }
+
+.topmenu li a:hover:not(.active) {
+  border-top: 2px solid #ec971f;
+  background: white; }
+
+.topmenu .active {
+  border-top: 5px solid #31b0d5; }
+
+.affix {
+  top: 0;
+  width: 100%;
+  z-index: 9999 !important; }
+
+.navbar {
+  margin-bottom: 0px;
+  background: white;
+  -webkit-transition-duration: 2s;
+  /* Safari */
+  transition-duration: 2s; }
+
+.affix ~ .container-fluid {
+  position: relative;
+  top: 50px;
+  box-shadow: 0 0 5px #EDEDED; }
+
+.landing-image {
+  width: 100%;
+  height: 100px;
+  text-align: center;
+  background: #d3e792; }
+  .landing-image img {
+    height: 100%;
+    width: auto; }
+
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 100px;
+  left: 0;
+  background-color: #79d3ee;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px; }
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #313030;
+  display: block;
+  transition: 0.3s; }
+
+.sidenav a:hover {
+  color: #061942; }
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px; }
+
+@media screen and (max-height: 450px) {
+  .sidenav {
+    padding-top: 15px; }
+  .sidenav a {
+    font-size: 18px; } }
+
+.dashboard-span {
+  font-size: 30px;
+  cursor: pointer;
+  position: absolute;
+  top: 100px; }

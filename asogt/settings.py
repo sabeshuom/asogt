@@ -26,7 +26,7 @@ MEDIA_URL = '/media/'
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 STATICFILES_DIRS = [
-    # os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'static'),
 ]
 
 # Quick-start development settings - unsuitable for production
@@ -36,7 +36,7 @@ STATICFILES_DIRS = [
 SECRET_KEY = 'b=$+-(hm(9k$nkvngwk_8burn(vaax(*$)ej^j(e^^lfk_m7t2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
