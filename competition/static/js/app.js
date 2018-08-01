@@ -22,7 +22,7 @@ function get_per_exam_details(id) {
             }
         }
     };
-    xhttp.open("POST", "/get_per_exam_details/", true);
+    xhttp.open("POST", "/asogt/get_per_exam_details/", true);
     xhttp.setRequestHeader("Content-Type", "application/json");
     xhttp.responseType = 'blob';
     xhttp.send(JSON.stringify({

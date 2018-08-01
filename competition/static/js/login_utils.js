@@ -2,7 +2,7 @@ function check_authentication(require_login){
     $("#a-login").html("login");
     $.ajax({
         method: 'GET',
-        url: '/is_authenticated/',
+        url: '/asogt/is_authenticated/',
         success: function(d) {
             if (d.is_authenticated == true)
                 $("#a-login").html("logout");
@@ -22,7 +22,7 @@ function authenticate_user(){
     event.preventDefault();
     $.ajax({
         method: 'POST',
-        url: '/login_ajax/',
+        url: '/asogt/login_ajax/',
         data: $('#loginForm').serialize(),
         success: function(d) {
             $("#loginError").html("");
@@ -60,10 +60,10 @@ function alternate_login(){
      else{
         $.ajax({
             method: 'GET',
-            url: '/logout_ajax/',
+            url: '/asogt/logout_ajax/',
             success: function(d) {
                 if (d.success == true) {
-                    window.location.href = "/";
+                    window.location.href = "/asogt/";
                     $("#a-login").html("login");
                 }
                 else
