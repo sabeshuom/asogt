@@ -14,7 +14,7 @@ from asogt.settings import MEDIA_ROOT, MEDIA_URL
 from django.http import HttpResponse
 
 def index(request):
-   return render(request, 'index.html')
+   return render(request, 'asogt.html')
 
 def students(request):
    return render(request, 'students.html')

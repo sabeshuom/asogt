@@ -17,11 +17,13 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from asogt import settings
 from django.conf.urls.static import static
+from . import views
 
 urlpatterns = [
-    url(r'^', include('competition.urls')), #default set to competition
+    url(r'^$', views.index, name='index'),
     url(r'^competition/', include('competition.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^asogt/', include('competition.urls')), #default set to competition
 ]
 
 """Set static and media routes"""
