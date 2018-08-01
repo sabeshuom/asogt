@@ -188,14 +188,15 @@ def write_competition_spreadsheet(sess, xls_wb= OUTPUT_XLS):
 	'font_name': "Bamini",
 	'bold': 2,
     'align': 'center',
-	'font_size': 24, 
+	'font_size': 26, 
     'valign': 'vcenter'})
 	comp_title1_height = 45
 
 	comp_title2_format = wb.add_format({
-	'font_name': "Bamini",
+	# 'font_name': "Bamini",
+	'font_name': "Calibri (Body)",
     'align': 'center',
-	'font_size': 18, 
+	'font_size': 16, 
     'valign': 'vcenter'})
 	comp_title2_height = 30
 
@@ -342,7 +343,8 @@ def write_competition_spreadsheet(sess, xls_wb= OUTPUT_XLS):
 		ws.merge_range('A1:F1', title1, comp_title1_format)
 		ws.set_row(0, comp_title1_height)
 		#  titile 2 for comp sheet
-		title2 = unicode2bamini(exam_details[exam_e]["exam_t"])
+		# title2 = unicode2bamini(exam_details[exam_e]["exam_t"])
+		title2 = exam_details[exam_e]["exam_t"]
 		ws.merge_range('A2:F2', title2, comp_title2_format)
 		ws.set_row(1, comp_title2_height)
 		#  titile 3 for comp sheet
