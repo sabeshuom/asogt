@@ -46,7 +46,7 @@ requests==2.10.0
 rospkg==1.0.39
 scandir==1.4
 scikit-image==0.12.3
-scipy==0.13.0b1
+scipy
 tornado==4.3
 traitlets==4.2.2
 urlgrabber==3.9.1
