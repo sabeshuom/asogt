@@ -1,5 +1,6 @@
 gunicorn
 django-heroku
+whitenoise==3.3.0
 absl-py==0.1.12
 altgraph==0.10.2
 amqp==1.4.9
