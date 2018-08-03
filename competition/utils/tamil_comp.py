@@ -6,6 +6,7 @@ import re
 import xlrd
 import string
 from write_timetable import add_time_table
+sys.path.append("../../")
 from   asogt.settings import MEDIA_ROOT, BASE_DIR
 # from lxml import html
 from unicode_to_bamini import unicode2bamini
@@ -262,7 +263,7 @@ def write_competition_spreadsheet(sess, xls_wb= OUTPUT_XLS):
 	## common formats
 	tamil_format = wb.add_format({
 	'font_name': "Calibri (Body)",
-	'font_size': 10,
+	'font_size': 16,
 	'border':1,
 	'align': 'left'})
 
@@ -358,6 +359,7 @@ def write_competition_spreadsheet(sess, xls_wb= OUTPUT_XLS):
 		ws.write("F4", "Comments", comp_header_right_border)
 		ws.set_row(3, comp_header_height)
 		header_rows = 4
+		comp_data = 	sorted(comp_data, key = lambda  x: x[6].replace("<br>", " "))
 		for row, r_data in enumerate(comp_data):
 			cur_row = row + header_rows
 			std_id = cleanhtml(r_data[0])
@@ -371,7 +373,7 @@ def write_competition_spreadsheet(sess, xls_wb= OUTPUT_XLS):
 
 		ws.set_column('A:B', 11)
 		ws.set_column('C:C', 35)
-		ws.set_column('D:D', 45)
+		ws.set_column('D:D', 55)
 		ws.set_column('E:E', 15)
 		ws.set_column('F:F', 15)
 
@@ -389,4 +391,8 @@ def write_competition_spreadsheet(sess, xls_wb= OUTPUT_XLS):
 # get_competition_details(division_id= "L", competition_type_id="P")
 # get_comp_details()
 if __name__ == "__main__":
+	username = "sabesan"
+	password = "Sabesan4NSW"
+
+        sess = init_sess(username, password, state)
 	write_competition_spreadsheet()
