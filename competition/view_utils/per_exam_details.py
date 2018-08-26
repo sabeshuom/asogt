@@ -25,6 +25,7 @@ def export_to_excel(xls_wb, state, username, password):
 
     comp_data_raw = get_competition_details(
         sess, state=state, competion="All")
+
     comp_data_sets = split_data(comp_data_raw)
 
     exam_details = get_exam_info(sess, state=state)

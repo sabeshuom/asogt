@@ -5,6 +5,7 @@ import json
 import xlsxwriter
 import re
 import xlrd
+import pandas as pd
 import string
 from write_timetable import add_time_table
 sys.path.append("../")
@@ -20,6 +21,16 @@ COMPET_XLS = os.path.join(MEDIA_ROOT, "comp_data_2018.xlsx")
 STATE_DETAILS = {"QLD": 6, "NSW": 2}
 COMPETITION_IDS = {"All": "Any"}
 
+def get_certificate_info():
+    df = pd.ExcelFile(COMPET_XLS)
+    cert_data = {}
+    cert_data['competitions'] = df.parse("certificate-competitions").transpose().to_dict()
+    cert_data['common_fields'] = df.parse("certificate-common_fields")['details'].to_dict()
+    cert_data['grades'] = df.parse("certificate-grades").transpose().to_dict()
+    cert_data['gender'] = df.parse("certificate-gender").transpose().to_dict()
+    cert_data['states'] = df.parse("certificate-states").transpose().to_dict()
+    cert_data['cols'] = df.parse("certificate-cols")['COLS'].tolist()
+    return cert_data
 
 def get_competition_info():
     wb = xlrd.open_workbook(COMPET_XLS)
@@ -90,18 +101,23 @@ def cleanhtml(raw_html):
 
 def get_data_table(sess, type_key="student_details"):
     max_len = -1
-    types = {"student_details": {
-        "url": "http://www.tamilcompetition.org.au/admin/student_details/get_data_table?draw=1&",
-        "number_of_columns": 15
-    },
+    types = {
+        "student_details": {
+            "url": "http://www.tamilcompetition.org.au/admin/student_details/get_data_table?draw=1&",
+            "number_of_columns": 15
+        },
         "student_competitions": {
-        "url": "http://www.tamilcompetition.org.au/admin/student_competitions/get_data_table?draw=1&",
-        "number_of_columns": 21
-    },
+            "url": "http://www.tamilcompetition.org.au/admin/student_competitions/get_data_table?draw=1&",
+            "number_of_columns": 21
+        },
         "exam": {
-        "url": "http://www.tamilcompetition.org.au/admin/exam/get_data_table?draw=1&",
-        "number_of_columns": 12
-    }
+            "url": "http://www.tamilcompetition.org.au/admin/exam/get_data_table?draw=1&",
+            "number_of_columns": 12
+        },
+        "results": {
+            "url": "http://www.tamilcompetition.org.au/admin/results/get_data_table?draw=1&",
+            "number_of_columns": 12
+        }
     }
     data_type = types[type_key]
     search_str = ""
@@ -151,7 +167,7 @@ def get_student_details(sess, state, division="All"):
 
 def get_competition_details(sess, state, division="",  competition_type="", competion=""):
     assert competion != "" or (division != "" and competition_type !=
-                                  ""), "have to give either competion id or competiion type id with division id"
+                               ""), "have to give either competion id or competiion type id with division id"
     competitions_url = "http://www.tamilcompetition.org.au/admin/student_competitions/searchcomp/"
     payload = {
         "state_id": STATE_DETAILS[state],
@@ -180,6 +196,28 @@ def get_competition_details(sess, state, division="",  competition_type="", comp
     return data
 
 
+def get_results(sess, state="6", competion=""):
+    competitions_url = "http://www.tamilcompetition.org.au/admin/results/searchcomp/"
+    payload = {
+        "state_id": STATE_DETAILS[state],
+        "year": "2018",
+        "division_id": "Any",
+        "gender": "2",
+        "student_no": "",
+        "competition_id": COMPETITION_IDS[competion],
+        "competition_type_id": "Any",
+        "exam_id": "Any",
+        "tamil_school_id": "Any",
+        "add": "Search",
+    }
+    res = sess.post(
+        competitions_url,
+        data=payload,
+    )
+    results_data = get_data_table(sess, "results")
+    return results_data
+
+
 def split_data(comp_data):
     comp_sets = {}
     for comp in comp_data:
@@ -190,9 +228,11 @@ def split_data(comp_data):
 
 
 if __name__ == "__main__":
-    username = "sabesan"
-    password = "Sabesan4NSW"
-    state = "NSW"
-    sess = init_sess(username, password)
-    get_student_details(sess, sate, division="All")
-    get_competition_details(sess, state, division="All", competion="All")
+    # username = "sabesan"
+    # password = "Sabesan4NSW"
+    # state = "NSW"
+    # sess = init_sess(username, password)
+    # get_student_details(sess, sate, division="All")
+    # get_competition_details(sess, state, division="All", competion="All")
+
+    cert_data = get_certificate_info()
