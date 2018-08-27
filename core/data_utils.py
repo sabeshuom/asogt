@@ -12,6 +12,7 @@ sys.path.append("../")
 from asogt.settings import MEDIA_ROOT, BASE_DIR
 # from lxml import html
 from unicode_to_bamini import unicode2bamini
+import numpy as np
 
 DIVISION_IDS = {"P": "15", "B": "14", "L": "12", "I": "10",
                 "S": "7", "AdS": "4", "Y": "3", "AY": "18", "All": "Any"}
@@ -24,12 +25,14 @@ COMPETITION_IDS = {"All": "Any"}
 def get_certificate_info():
     df = pd.ExcelFile(COMPET_XLS)
     cert_data = {}
-    cert_data['competitions'] = df.parse("certificate-competitions").transpose().to_dict()
-    cert_data['common_fields'] = df.parse("certificate-common_fields")['details'].to_dict()
-    cert_data['grades'] = df.parse("certificate-grades").transpose().to_dict()
-    cert_data['gender'] = df.parse("certificate-gender").transpose().to_dict()
-    cert_data['states'] = df.parse("certificate-states").transpose().to_dict()
-    cert_data['cols'] = df.parse("certificate-cols")['COLS'].tolist()
+    cert_data['competitions'] = df.parse("certificate-competitions").fillna('').transpose().to_dict()
+    cert_data['common_fields'] = df.parse("certificate-common_fields")['details'].fillna('').to_dict()
+    cert_data['grades'] = df.parse("certificate-grades").transpose().fillna('').to_dict()
+    cert_data['gender'] = df.parse("certificate-gender").transpose().fillna('').to_dict()
+    cert_data['states'] = df.parse("certificate-states").transpose().fillna('').to_dict()
+    col_data = df.parse("certificate-cols").fillna('')
+    cert_data['cols'] = col_data['COLS'].tolist()
+    cert_data['col_formats'] = col_data.set_index('COLS').transpose().to_dict() 
     return cert_data
 
 def get_competition_info():

@@ -6,6 +6,7 @@ import xlsxwriter
 import re
 import xlrd
 import string
+import numpy as np
 
 sys.path.append("../../")
 from asogt.settings import MEDIA_ROOT, BASE_DIR
@@ -17,7 +18,7 @@ from core.data_utils import init_sess,\
     cleanhtml,\
     split_data,\
     get_certificate_info
-from core import unicode_to_bamini
+from core import unicode_to_bamini2 as unicode_to_bamini
 
 from core.write_timetable import add_time_table
 
@@ -35,7 +36,8 @@ def merge_dicts(dict_list):
 def get_row_data(result, state, exam_info):
     std_no = result[0]
     name_e = result[1].replace("<br>", " ")
-    name_t = unicode_to_bamini.unicode2bamini(result[2].replace("<br>", " "))
+    name_t = result[2].replace("<br>", " ")
+    name_t_bamini = unicode_to_bamini.unicode2bamini(name_t)
     gender = result[3]
     exam = result[5]
     grade = result[6]
@@ -43,7 +45,9 @@ def get_row_data(result, state, exam_info):
 
     # get the corresponding keys
     name_info = {
-        "T2": name_t,
+        "STD ID": std_no,
+        "NAME": name_t,
+        "T2": name_t_bamini,
         "E3": name_e,
     }
 
@@ -61,8 +65,7 @@ def get_row_data(result, state, exam_info):
 
     row_data = merge_dicts([name_info, common_info, comp_info,
                            state_info, gender_info, grade_info])
-    row_list = [row_data[col] for col in CERT_INFO["cols"]]
-    return row_list
+    return row_data
 
 
 def export_to_excel(xls_wb, state, username, password):
@@ -101,28 +104,31 @@ def export_to_excel(xls_wb, state, username, password):
         'font_size': 14,
         'valign': 'vcenter'})
 
-    col_vals = CERT_INFO["cols"]
-    ws.write_row(0, 0, col_vals, row_title_format)
+    col_headers = CERT_INFO["cols"]
+    col_formats = CERT_INFO["col_formats"]
+    ws.write_row(0, 0, col_headers, row_title_format)
     ws.set_row(0, row_title_height)
     header_rows = 0
     data_row = 1
-    col_max_widths = [5]*len(col_vals)
+    col_max_widths = [5]*len(col_headers)
     for result in results:
-        row = get_row_data(result, state, exam_info)
-        if row is not None:
-            for col, val in enumerate(row):
-                if col_vals[col][0] == "E" or col_vals[col] == "T9":
+        row_data = get_row_data(result, state, exam_info)
+        if row_data is not None:
+            for col, header in enumerate(col_headers):
+                col_format = col_formats[header]['FORMAT']
+                val = row_data[header] 
+                if col_format == "ENG":
                     cell_format = eng_cell_format
                     font_width = 1.3
-                elif col_vals[col][0] == "T":
-                    cell_format = tamil_cell_format 
+                elif col_format == "TAMIL":
+                    cell_format = tamil_cell_format
                     font_width = 1.3
-                ws.write(data_row, col, val, cell_format)
+                ws.write_string(data_row, col, val, cell_format)
                 col_width = int(font_width * len(val))
                 if col_width > col_max_widths[col]:
                     col_max_widths[col] = col_width
             data_row += 1
-    for col, val in enumerate(col_vals):
+    for col, val in enumerate(col_headers):
         ws.set_column(col, col, col_max_widths[col])
     
     wb.close()
