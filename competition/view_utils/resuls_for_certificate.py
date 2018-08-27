@@ -111,7 +111,7 @@ def export_to_excel(xls_wb, state, username, password):
     header_rows = 0
     data_row = 1
     col_max_widths = [5]*len(col_headers)
-    for result in results:
+    for result in sorted(results, key=lambda x: x[0]):
         row_data = get_row_data(result, state, exam_info)
         if row_data is not None:
             for col, header in enumerate(col_headers):
