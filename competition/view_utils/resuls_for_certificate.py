@@ -18,7 +18,7 @@ from core.data_utils import init_sess,\
     cleanhtml,\
     split_data,\
     get_certificate_info
-from core import unicode_to_bamini2 as unicode_to_bamini
+from core import unicode_to_bamini
 
 from core.write_timetable import add_time_table
 

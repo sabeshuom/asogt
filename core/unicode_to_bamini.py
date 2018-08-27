@@ -1,781 +1,351 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 from __future__ import unicode_literals
 
+unicode_bamini_map = {
+    ",": ">",
+   "ஜோ": "N[h",
+   "ஜொ": "n[h",
+   "ஜா": "[h",
+   "ஜி": "[p",
+   "ஜீ": "[P",
+   "ஜு": "[{",
+   "ஜூ": "[_",
+   "ஜெ": "n[",
+   "ஜே": "N[",
+   "ஜை": "i[",
+   "ஜ்": "[;",
+   "ஜ": "[",
+
+   "கௌ": "nfs",
+   "கோ": "Nfh",
+   "கொ": "nfh",
+   "கா": "fh",
+   "கி": "fp",
+   "கீ": "fP",
+   "கு": "F",
+   "கூ": "$",
+   "கெ": "nf",
+   "கே": "Nf",
+   "கை": "if",
+   "க்": "f;",
+   "க": "f",
+
+   "ஙௌ": "nqs",
+   "ஙோ": "Nqh",
+   "ஙொ": "nqh",
+   "ஙா": "qh",
+   "ஙி": "qp",
+   "ஙீ": "qP",
+   "ஙு": "*",
+   "ஙூ": "*",
+   "ஙெ": "nq",
+   "ஙே": "Nq",
+   "ஙை": "iq",
+   "ங்": "q;",
+   "ங": "q",
+
+   "சௌ": "nrs",
+   "சோ": "Nrh",
+   "சொ": "nrh",
+   "சா": "rh",
+   "சி": "rp",
+   "சீ": "rP",
+   "சு": "R",
+   "சூ": "R+",
+   "செ": "nr",
+   "சே": "Nr",
+   "சை": "ir",
+   "ச்": "r;",
+   "ச": "r",
+
+   "ஞௌ": "nQs",
+   "ஞோ": "NQh",
+   "ஞொ": "nQh",
+   "ஞா": "Qh",
+   "ஞி": "Qp",
+   "ஞீ": "QP",
+   "ஞு": "*",
+   "ஞூ": "*",
+   "ஞெ": "nQ",
+   "ஞே": "NQ",
+   "ஞை": "iQ",
+   "ஞ்": "Q;",
+   "ஞ": "Q",
+
+   "டௌ": "nls",
+   "டோ": "Nlh",
+   "டொ": "nlh",
+   "டா": "lh",
+   "டி": "b",
+   "டீ": "B",
+   "டு": "L",
+   "டூ": "^",
+   "டெ": "nl",
+   "டே": "Nl",
+   "டை": "il",
+   "ட்": "l;",
+   "ட": "l",
+
+   "ணௌ": "nzs",
+   "ணோ": "Nzh",
+   "ணொ": "nzh",
+   "ணா": "zh",
+   "ணி": "zp",
+   "ணீ": "zP",
+   "ணு": "Z",
+   "ணூ": "Z}",
+   "ணெ": "nz",
+   "ணே": "Nz",
+   "ணை": "iz",
+   "ண்": "z;",
+   "ண": "z",
+
+   "தௌ": "njs",
+   "தோ": "Njh",
+   "தொ": "njh",
+   "தா": "jh",
+   "தி": "jp",
+   "தீ": "jP",
+   "து": "J",
+   "தூ": "J}",
+   "தெ": "nj",
+   "தே": "Nj",
+   "தை": "ij",
+   "த்": "j;",
+   "த": "j",
+
+   "நௌ": "nes",
+   "நோ": "Neh",
+   "நொ": "neh",
+   "நா": "eh",
+   "நி": "ep",
+   "நீ": "eP",
+   "நு": "E",
+   "நூ": "E}",
+   "நெ": "ne",
+   "நே": "Ne",
+   "நை": "ie",
+   "ந்": "e;",
+   "ந": "e",
+
+   "னௌ": "nds",
+   "னோ": "Ndh",
+   "னொ": "ndh",
+   "னா": "dh",
+   "னி": "dp",
+   "னீ": "dP",
+   "னு": "D",
+   "னூ": "D}",
+   "னெ": "nd",
+   "னே": "Nd",
+   "னை": "id",
+   "ன்": "d;",
+   "ன": "d",
+
+   "பௌ": "ngs",
+   "போ": "Ngh",
+   "பொ": "ngh",
+   "பா": "gh",
+   "பி": "gp",
+   "பீ": "gP",
+   "பு": "G",
+   "பூ": "G+",
+   "பெ": "ng",
+   "பே": "Ng",
+   "பை": "ig",
+   "ப்": "g;",
+   "ப": "g",
+
+   "மௌ": "nks",
+   "மோ": "Nkh",
+   "மொ": "nkh",
+   "மா": "kh",
+   "மி": "kp",
+   "மீ": "kP",
+   "மு": "K",
+   "மூ": "%",
+   "மெ": "nk",
+   "மே": "Nk",
+   "மை": "ik",
+   "ம்": "k;",
+   "ம": "k",
+
+   "யௌ": "nas",
+   "யோ": "Nah",
+   "யொ": "nah",
+   "யா": "ah",
+   "யி": "ap",
+   "யீ": "aP",
+   "யு": "A",
+   "யூ": "A+",
+   "யெ": "na",
+   "யே": "Na",
+   "யை": "ia",
+   "ய்": "a;",
+   "ய": "a",
+
+   "ரௌ": "nus",
+   "ரோ": "Nuh",
+   "ரொ": "nuh",
+   "ரா": "uh",
+   "ரி": "up",
+   "ரீ": "uP",
+   "ரு": "U",
+   "ரூ": "\&",
+   "ரெ": "nu",
+   "ரே": "Nu",
+   "ரை": "iu",
+   "ர்": "u;",
+   "ர": "u",
+
+   "லௌ": "nys",
+   "லோ": "Nyh",
+   "லொ": "nyh",
+   "லா": "yh",
+   "லி": "yp",
+   "லீ": "yP",
+   "லு": "Y",
+   "லூ": "Y}",
+   "லெ": "ny",
+   "லே": "Ny",
+   "லை": "iy",
+   "ல்": "y;",
+   "ல": "y",
+
+   "ளௌ": "nss",
+   "ளோ": "Nsh",
+   "ளொ": "nsh",
+   "ளா": "sh",
+   "ளி": "sp",
+   "ளீ": "sP",
+   "ளு": "S",
+   "ளூ": "Sh",
+   "ளெ": "ns",
+   "ளே": "Ns",
+   "ளை": "is",
+   "ள்": "s;",
+   "ள": "s",
+
+   "வௌ": "nts",
+   "வோ": "Nth",
+   "வொ": "nth",
+   "வா": "th",
+   "வி": "tp",
+   "வீ": "tP",
+   "வு": "T",
+   "வூ": "T+",
+   "வெ": "nt",
+   "வே": "Nt",
+   "வை": "it",
+   "வ்": "t;",
+   "வ": "t",
+
+   "ழௌ": "nos",
+   "ழோ": "Noh",
+   "ழொ": "noh",
+   "ழா": "oh",
+   "ழி": "op",
+   "ழீ": "oP",
+   "ழு": "O",
+   "ழூ": "*",
+   "ழெ": "no",
+   "ழே": "No",
+   "ழை": "io",
+   "ழ்": "o;",
+   "ழ": "o",
+
+   "றௌ": "nws",
+   "றோ": "Nwh",
+   "றொ": "nwh",
+   "றா": "wh",
+   "றி": "wp",
+   "றீ": "wP",
+   "று": "W",
+   "றூ": "W}",
+   "றெ": "nw",
+   "றே": "Nw",
+   "றை": "iw",
+   "ற்": "w;",
+   "ற": "w",
+
+   "ஹௌ": "n`s",
+   "ஹோ": "N`h",
+   "ஹொ": "n`h",
+   "ஹா": "`h",
+   "ஹி": "`p",
+   "ஹீ": "`P",
+   "ஹு": "{`",
+   "ஹூ": "`_",
+   "ஹெ": "n`",
+   "ஹே": "N`",
+   "ஹை": "i`",
+   "ஹ்": "`;",
+   "ஹ": "`",
+
+   "ஷௌ": "n\s",
+   "ஷோ": "N\h",
+   "ஷொ": "n\h",
+   "ஷா": "\h",
+   "ஷி": "\p",
+   "ஷீ": "\P",
+   "ஷு": "\{",
+   "ஷூ": "\_",
+   "ஷெ": "n\\",
+   "ஷே": "N\\",
+   "ஷை": "i\\",
+   "ஷ்": "\;",
+   "ஷ": "\\",
+
+   "ஸௌ": "n]s",
+   "ஸோ": "N]h",
+   "ஸொ": "n]h",
+   "ஸா": "]h",
+   "ஸி": "]p",
+   "ஸீ": "]P",
+   "ஸு": "]{",
+   "ஸூ": "]_",
+   "ஸெ": "n]",
+   "ஸே": "N]",
+   "ஸை": "i]",
+   "ஸ்": "];",
+   "ஸ": "]",
+
+   "அ": "m",
+   "ஆ": "M",
+   "இ": ",",
+   "ஈ": "<",
+   "உ": "c",
+   "ஊ": "C",
+   "எ": "v",
+   "ஏ": "V",
+   "ஐ": "I",
+   "ஒ": "x",
+   "ஓ": "X",
+   "ஔ": "xs",
+   "ஃ": "/",
+   "ஸ்ரீ": "=",
+
+   "வூ": "t+",
+   "பூ": "G+",
+   "யூ": "A+",
+   "ஹு": "`{",
+   "ஜு": "[{",
+   "ஸு": "]{",
+   "ஷு": "\{",
+   "யூ": "A+",
+   "ா": "h",
+   "ெ": "n",
+   "ே": "N",
+   "ை": "i",
+   "ு": "{",
+   "ூ": "_",
+   "ி": "p",
+   "ீ": "P"}
+
+unicode_chars = sorted(unicode_bamini_map.keys(), key=lambda x: len(x), reverse=True)
 
 def unicode2bamini(t):
-
-    text = t
-    text = text.replace(",", ">")
-
-    text = text.replace("ஜௌ", "n[s")
-    text = text.replace("ஜோ", "N[h")
-    text = text.replace("ஜொ", "n[h")
-    text = text.replace("ஜா", "[h")
-    text = text.replace("ஜி", "[p")
-    text = text.replace("ஜீ", "[P")
-    text = text.replace("ஜு", "[{")
-    text = text.replace("ஜூ", "[_")
-    text = text.replace("ஜெ", "n[")
-    text = text.replace("ஜே", "N[")
-    text = text.replace("ஜை", "i[")
-    text = text.replace("ஜ்", "[;")
-    text = text.replace("ஜ", "[")
-
-    text = text.replace("கௌ", "nfs")
-    text = text.replace("கோ", "Nfh")
-    text = text.replace("கொ", "nfh")
-    text = text.replace("கா", "fh")
-    text = text.replace("கி", "fp")
-    text = text.replace("கீ", "fP")
-    text = text.replace("கு", "F")
-    text = text.replace("கூ", "$")
-    text = text.replace("கெ", "nf")
-    text = text.replace("கே", "Nf")
-    text = text.replace("கை", "if")
-    text = text.replace("க்", "f;")
-    text = text.replace("க", "f")
-
-    text = text.replace("ஙௌ", "nqs")
-    text = text.replace("ஙோ", "Nqh")
-    text = text.replace("ஙொ", "nqh")
-    text = text.replace("ஙா", "qh")
-    text = text.replace("ஙி", "qp")
-    text = text.replace("ஙீ", "qP")
-    text = text.replace("ஙு", "*")
-    text = text.replace("ஙூ", "*")
-    text = text.replace("ஙெ", "nq")
-    text = text.replace("ஙே", "Nq")
-    text = text.replace("ஙை", "iq")
-    text = text.replace("ங்", "q;")
-    text = text.replace("ங", "q")
-
-    text = text.replace("சௌ", "nrs")
-    text = text.replace("சோ", "Nrh")
-    text = text.replace("சொ", "nrh")
-    text = text.replace("சா", "rh")
-    text = text.replace("சி", "rp")
-    text = text.replace("சீ", "rP")
-    text = text.replace("சு", "R")
-    text = text.replace("சூ", "R+")
-    text = text.replace("செ", "nr")
-    text = text.replace("சே", "Nr")
-    text = text.replace("சை", "ir")
-    text = text.replace("ச்", "r;")
-    text = text.replace("ச", "r")
-
-    text = text.replace("ஞௌ", "nQs")
-    text = text.replace("ஞோ", "NQh")
-    text = text.replace("ஞொ", "nQh")
-    text = text.replace("ஞா", "Qh")
-    text = text.replace("ஞி", "Qp")
-    text = text.replace("ஞீ", "QP")
-    text = text.replace("ஞு", "*")
-    text = text.replace("ஞூ", "*")
-    text = text.replace("ஞெ", "nQ")
-    text = text.replace("ஞே", "NQ")
-    text = text.replace("ஞை", "iQ")
-    text = text.replace("ஞ்", "Q;")
-    text = text.replace("ஞ", "Q")
-
-    text = text.replace("டௌ", "nls")
-    text = text.replace("டோ", "Nlh")
-    text = text.replace("டொ", "nlh")
-    text = text.replace("டா", "lh")
-    text = text.replace("டி", "b")
-    text = text.replace("டீ", "B")
-    text = text.replace("டு", "L")
-    text = text.replace("டூ", "^")
-    text = text.replace("டெ", "nl")
-    text = text.replace("டே", "Nl")
-    text = text.replace("டை", "il")
-    text = text.replace("ட்", "l;")
-    text = text.replace("ட", "l")
-
-    text = text.replace("ணௌ", "nzs")
-    text = text.replace("ணோ", "Nzh")
-    text = text.replace("ணொ", "nzh")
-    text = text.replace("ணா", "zh")
-    text = text.replace("ணி", "zp")
-    text = text.replace("ணீ", "zP")
-    text = text.replace("ணு", "Z")
-    text = text.replace("ணூ", "Z}")
-    text = text.replace("ணெ", "nz")
-    text = text.replace("ணே", "Nz")
-    text = text.replace("ணை", "iz")
-    text = text.replace("ண்", "z;")
-    text = text.replace("ண", "z")
-
-    text = text.replace("தௌ", "njs")
-    text = text.replace("தோ", "Njh")
-    text = text.replace("தொ", "njh")
-    text = text.replace("தா", "jh")
-    text = text.replace("தி", "jp")
-    text = text.replace("தீ", "jP")
-    text = text.replace("து", "J")
-    text = text.replace("தூ", "J}")
-    text = text.replace("தெ", "nj")
-    text = text.replace("தே", "Nj")
-    text = text.replace("தை", "ij")
-    text = text.replace("த்", "j;")
-    text = text.replace("த", "j")
-
-    text = text.replace("நௌ", "nes")
-    text = text.replace("நோ", "Neh")
-    text = text.replace("நொ", "neh")
-    text = text.replace("நா", "eh")
-    text = text.replace("நி", "ep")
-    text = text.replace("நீ", "eP")
-    text = text.replace("நு", "E")
-    text = text.replace("நூ", "E}")
-    text = text.replace("நெ", "ne")
-    text = text.replace("நே", "Ne")
-    text = text.replace("நை", "ie")
-    text = text.replace("ந்", "e;")
-    text = text.replace("ந", "e")
-
-    text = text.replace("னௌ", "nds")
-    text = text.replace("னோ", "Ndh")
-    text = text.replace("னொ", "ndh")
-    text = text.replace("னா", "dh")
-    text = text.replace("னி", "dp")
-    text = text.replace("னீ", "dP")
-    text = text.replace("னு", "D")
-    text = text.replace("னூ", "D}")
-    text = text.replace("னெ", "nd")
-    text = text.replace("னே", "Nd")
-    text = text.replace("னை", "id")
-    text = text.replace("ன்", "d;")
-    text = text.replace("ன", "d")
-
-    text = text.replace("பௌ", "ngs")
-    text = text.replace("போ", "Ngh")
-    text = text.replace("பொ", "ngh")
-    text = text.replace("பா", "gh")
-    text = text.replace("பி", "gp")
-    text = text.replace("பீ", "gP")
-    text = text.replace("பு", "G")
-    text = text.replace("பூ", "G+")
-    text = text.replace("பெ", "ng")
-    text = text.replace("பே", "Ng")
-    text = text.replace("பை", "ig")
-    text = text.replace("ப்", "g;")
-    text = text.replace("ப", "g")
-
-    text = text.replace("மௌ", "nks")
-    text = text.replace("மோ", "Nkh")
-    text = text.replace("மொ", "nkh")
-    text = text.replace("மா", "kh")
-    text = text.replace("மி", "kp")
-    text = text.replace("மீ", "kP")
-    text = text.replace("மு", "K")
-    text = text.replace("மூ", "%")
-    text = text.replace("மெ", "nk")
-    text = text.replace("மே", "Nk")
-    text = text.replace("மை", "ik")
-    text = text.replace("ம்", "k;")
-    text = text.replace("ம", "k")
-
-    text = text.replace("யௌ", "nas")
-    text = text.replace("யோ", "Nah")
-    text = text.replace("யொ", "nah")
-    text = text.replace("யா", "ah")
-    text = text.replace("யி", "ap")
-    text = text.replace("யீ", "aP")
-    text = text.replace("யு", "A")
-    text = text.replace("யூ", "A+")
-    text = text.replace("யெ", "na")
-    text = text.replace("யே", "Na")
-    text = text.replace("யை", "ia")
-    text = text.replace("ய்", "a;")
-    text = text.replace("ய", "a")
-
-    text = text.replace("ரௌ", "nus")
-    text = text.replace("ரோ", "Nuh")
-    text = text.replace("ரொ", "nuh")
-    text = text.replace("ரா", "uh")
-    text = text.replace("ரி", "up")
-    text = text.replace("ரீ", "uP")
-    text = text.replace("ரு", "U")
-    text = text.replace("ரூ", "\&")
-    text = text.replace("ரெ", "nu")
-    text = text.replace("ரே", "Nu")
-    text = text.replace("ரை", "iu")
-    text = text.replace("ர்", "u;")
-    text = text.replace("ர", "u")
-
-    text = text.replace("லௌ", "nys")
-    text = text.replace("லோ", "Nyh")
-    text = text.replace("லொ", "nyh")
-    text = text.replace("லா", "yh")
-    text = text.replace("லி", "yp")
-    text = text.replace("லீ", "yP")
-    text = text.replace("லு", "Y")
-    text = text.replace("லூ", "Y}")
-    text = text.replace("லெ", "ny")
-    text = text.replace("லே", "Ny")
-    text = text.replace("லை", "iy")
-    text = text.replace("ல்", "y;")
-    text = text.replace("ல", "y")
-
-    text = text.replace("ளௌ", "nss")
-    text = text.replace("ளோ", "Nsh")
-    text = text.replace("ளொ", "nsh")
-    text = text.replace("ளா", "sh")
-    text = text.replace("ளி", "sp")
-    text = text.replace("ளீ", "sP")
-    text = text.replace("ளு", "S")
-    text = text.replace("ளூ", "Sh")
-    text = text.replace("ளெ", "ns")
-    text = text.replace("ளே", "Ns")
-    text = text.replace("ளை", "is")
-    text = text.replace("ள்", "s;")
-    text = text.replace("ள", "s")
-
-    text = text.replace("வௌ", "nts")
-    text = text.replace("வோ", "Nth")
-    text = text.replace("வொ", "nth")
-    text = text.replace("வா", "th")
-    text = text.replace("வி", "tp")
-    text = text.replace("வீ", "tP")
-    text = text.replace("வு", "T")
-    text = text.replace("வூ", "T+")
-    text = text.replace("வெ", "nt")
-    text = text.replace("வே", "Nt")
-    text = text.replace("வை", "it")
-    text = text.replace("வ்", "t;")
-    text = text.replace("வ", "t")
-
-    text = text.replace("ழௌ", "nos")
-    text = text.replace("ழோ", "Noh")
-    text = text.replace("ழொ", "noh")
-    text = text.replace("ழா", "oh")
-    text = text.replace("ழி", "op")
-    text = text.replace("ழீ", "oP")
-    text = text.replace("ழு", "O")
-    text = text.replace("ழூ", "*")
-    text = text.replace("ழெ", "no")
-    text = text.replace("ழே", "No")
-    text = text.replace("ழை", "io")
-    text = text.replace("ழ்", "o;")
-    text = text.replace("ழ", "o")
-
-    text = text.replace("றௌ", "nws")
-    text = text.replace("றோ", "Nwh")
-    text = text.replace("றொ", "nwh")
-    text = text.replace("றா", "wh")
-    text = text.replace("றி", "wp")
-    text = text.replace("றீ", "wP")
-    text = text.replace("று", "W")
-    text = text.replace("றூ", "W}")
-    text = text.replace("றெ", "nw")
-    text = text.replace("றே", "Nw")
-    text = text.replace("றை", "iw")
-    text = text.replace("ற்", "w;")
-    text = text.replace("ற", "w")
-
-    text = text.replace("ஹௌ", "n`s")
-    text = text.replace("ஹோ", "N`h")
-    text = text.replace("ஹொ", "n`h")
-    text = text.replace("ஹா", "`h")
-    text = text.replace("ஹி", "`p")
-    text = text.replace("ஹீ", "`P")
-    text = text.replace("ஹு", "{`")
-    text = text.replace("ஹூ", "`_")
-    text = text.replace("ஹெ", "n`")
-    text = text.replace("ஹே", "N`")
-    text = text.replace("ஹை", "i`")
-    text = text.replace("ஹ்", "`;")
-    text = text.replace("ஹ", "`")
-
-    text = text.replace("ஷௌ", "n\s")
-    text = text.replace("ஷோ", "N\h")
-    text = text.replace("ஷொ", "n\h")
-    text = text.replace("ஷா", "\h")
-    text = text.replace("ஷி", "\p")
-    text = text.replace("ஷீ", "\P")
-    text = text.replace("ஷு", "\{")
-    text = text.replace("ஷூ", "\_")
-    text = text.replace("ஷெ", "n\\")
-    text = text.replace("ஷே", "N\\")
-    text = text.replace("ஷை", "i\\")
-    text = text.replace("ஷ்", "\;")
-    text = text.replace("ஷ", "\\")
-
-    text = text.replace("ஸௌ", "n]s")
-    text = text.replace("ஸோ", "N]h")
-    text = text.replace("ஸொ", "n]h")
-    text = text.replace("ஸா", "]h")
-    text = text.replace("ஸி", "]p")
-    text = text.replace("ஸீ", "]P")
-    text = text.replace("ஸு", "]{")
-    text = text.replace("ஸூ", "]_")
-    text = text.replace("ஸெ", "n]")
-    text = text.replace("ஸே", "N]")
-    text = text.replace("ஸை", "i]")
-    text = text.replace("ஸ்", "];")
-    text = text.replace("ஸ", "]")
-
-    text = text.replace("அ", "m")
-    text = text.replace("ஆ", "M")
-    text = text.replace("இ", ",")
-    text = text.replace("ஈ", "<")
-    text = text.replace("உ", "c")
-    text = text.replace("ஊ", "C")
-    text = text.replace("எ", "v")
-    text = text.replace("ஏ", "V")
-    text = text.replace("ஐ", "I")
-    text = text.replace("ஒ", "x")
-    text = text.replace("ஓ", "X")
-    text = text.replace("ஔ", "xs")
-    text = text.replace("ஃ", "/")
-    text = text.replace("ஸ்ரீ", "=")
-
-    text = text.replace("வூ", "t+")
-    text = text.replace("பூ", "G+")
-    text = text.replace("யூ", "A+")
-    text = text.replace("ஹு", "`{")
-    text = text.replace("ஜு", "[{")
-    text = text.replace("ஸு", "]{")
-    text = text.replace("ஷு", "\{")
-    text = text.replace("யூ", "A+")
-    text = text.replace("ா", "h")
-    text = text.replace("ெ", "n")
-    text = text.replace("ே", "N")
-    text = text.replace("ை", "i")
-    text = text.replace("ு", "{")
-    text = text.replace("ூ", "_")
-    text = text.replace("ி", "p")
-    text = text.replace("ீ", "P")
-
-    return text
-
-
-# def unicode2bamini(input_text):
-#     # input_text = input_text.replace(','.encode("utf-8").decode("utf-8"), ">")
-#     input_text = input_text.replace(
-#         'ஜௌ'.encode("utf-8").decode("utf-8"), "n\[s")
-#     input_text = input_text.replace(
-#         'ஜோ'.encode("utf-8").decode("utf-8"), "N\[h")
-#     input_text = input_text.replace(
-#         'ஜொ'.encode("utf-8").decode("utf-8"), "n\[h")
-#     input_text = input_text.replace(
-#         'ஜா'.encode("utf-8").decode("utf-8"), "\[h")
-#     input_text = input_text.replace(
-#         'ஜி'.encode("utf-8").decode("utf-8"), "\[p")
-#     input_text = input_text.replace(
-#         'ஜீ'.encode("utf-8").decode("utf-8"), "\[P")
-#     input_text = input_text.replace(
-#         'ஜு'.encode("utf-8").decode("utf-8"), "\[{")
-#     input_text = input_text.replace(
-#         'ஜூ'.encode("utf-8").decode("utf-8"), "\[_")
-#     input_text = input_text.replace(
-#         'ஜெ'.encode("utf-8").decode("utf-8"), "n\[")
-#     input_text = input_text.replace(
-#         'ஜே'.encode("utf-8").decode("utf-8"), "N\[")
-#     input_text = input_text.replace(
-#         'ஜை'.encode("utf-8").decode("utf-8"), "i\[")
-#     input_text = input_text.replace(
-#         'ஜ்'.encode("utf-8").decode("utf-8"), "\[;")
-#     input_text = input_text.replace('ஜ'.encode("utf-8").decode("utf-8"), "\[")
-
-#     input_text = input_text.replace(
-#         'கௌ'.encode("utf-8").decode("utf-8"), "nfs")
-#     input_text = input_text.replace(
-#         'கோ'.encode("utf-8").decode("utf-8"), "Nfh")
-#     input_text = input_text.replace(
-#         'கொ'.encode("utf-8").decode("utf-8"), "nfh")
-#     input_text = input_text.replace('கா'.encode("utf-8").decode("utf-8"), "fh")
-#     input_text = input_text.replace('கி'.encode("utf-8").decode("utf-8"), "fp")
-#     input_text = input_text.replace('கீ'.encode("utf-8").decode("utf-8"), "fP")
-#     input_text = input_text.replace('கு'.encode("utf-8").decode("utf-8"), "F")
-#     input_text = input_text.replace('கூ'.encode("utf-8").decode("utf-8"), "$")
-#     input_text = input_text.replace('கெ'.encode("utf-8").decode("utf-8"), "nf")
-#     input_text = input_text.replace('கே'.encode("utf-8").decode("utf-8"), "Nf")
-#     input_text = input_text.replace('கை'.encode("utf-8").decode("utf-8"), "if")
-#     input_text = input_text.replace('க்'.encode("utf-8").decode("utf-8"), "f;")
-#     input_text = input_text.replace('க'.encode("utf-8").decode("utf-8"), "f")
-
-#     input_text = input_text.replace(
-#         'ஙௌ'.encode("utf-8").decode("utf-8"), "nqs")
-#     input_text = input_text.replace(
-#         'ஙோ'.encode("utf-8").decode("utf-8"), "Nqh")
-#     input_text = input_text.replace(
-#         'ஙொ'.encode("utf-8").decode("utf-8"), "nqh")
-#     input_text = input_text.replace('ஙா'.encode("utf-8").decode("utf-8"), "qh")
-#     input_text = input_text.replace('ஙி'.encode("utf-8").decode("utf-8"), "qp")
-#     input_text = input_text.replace('ஙீ'.encode("utf-8").decode("utf-8"), "qP")
-#     input_text = input_text.replace('ஙு'.encode("utf-8").decode("utf-8"), "*")
-#     input_text = input_text.replace('ஙூ'.encode("utf-8").decode("utf-8"), "*")
-#     input_text = input_text.replace('ஙெ'.encode("utf-8").decode("utf-8"), "nq")
-#     input_text = input_text.replace('ஙே'.encode("utf-8").decode("utf-8"), "Nq")
-#     input_text = input_text.replace('ஙை'.encode("utf-8").decode("utf-8"), "iq")
-#     input_text = input_text.replace('ங்'.encode("utf-8").decode("utf-8"), "q;")
-#     input_text = input_text.replace('ங'.encode("utf-8").decode("utf-8"), "q")
-
-#     input_text = input_text.replace(
-#         'சௌ'.encode("utf-8").decode("utf-8"), "nrs")
-#     input_text = input_text.replace(
-#         'சோ'.encode("utf-8").decode("utf-8"), "Nrh")
-#     input_text = input_text.replace(
-#         'சொ'.encode("utf-8").decode("utf-8"), "nrh")
-#     input_text = input_text.replace('சா'.encode("utf-8").decode("utf-8"), "rh")
-#     input_text = input_text.replace('சி'.encode("utf-8").decode("utf-8"), "rp")
-#     input_text = input_text.replace('சீ'.encode("utf-8").decode("utf-8"), "rP")
-#     input_text = input_text.replace('சு'.encode("utf-8").decode("utf-8"), "R")
-#     input_text = input_text.replace('சூ'.encode("utf-8").decode("utf-8"), "R+")
-#     input_text = input_text.replace('செ'.encode("utf-8").decode("utf-8"), "nr")
-#     input_text = input_text.replace('சே'.encode("utf-8").decode("utf-8"), "Nr")
-#     input_text = input_text.replace('சை'.encode("utf-8").decode("utf-8"), "ir")
-#     input_text = input_text.replace('ச்'.encode("utf-8").decode("utf-8"), "r;")
-#     input_text = input_text.replace('ச'.encode("utf-8").decode("utf-8"), "r")
-
-#     input_text = input_text.replace(
-#         'ஞௌ'.encode("utf-8").decode("utf-8"), "nQs")
-#     input_text = input_text.replace(
-#         'ஞோ'.encode("utf-8").decode("utf-8"), "NQh")
-#     input_text = input_text.replace(
-#         'ஞொ'.encode("utf-8").decode("utf-8"), "nQh")
-#     input_text = input_text.replace('ஞா'.encode("utf-8").decode("utf-8"), "Qh")
-#     input_text = input_text.replace('ஞி'.encode("utf-8").decode("utf-8"), "Qp")
-#     input_text = input_text.replace('ஞீ'.encode("utf-8").decode("utf-8"), "QP")
-#     input_text = input_text.replace('ஞு'.encode("utf-8").decode("utf-8"), "*")
-#     input_text = input_text.replace('ஞூ'.encode("utf-8").decode("utf-8"), "*")
-#     input_text = input_text.replace('ஞெ'.encode("utf-8").decode("utf-8"), "nQ")
-#     input_text = input_text.replace('ஞே'.encode("utf-8").decode("utf-8"), "NQ")
-#     input_text = input_text.replace('ஞை'.encode("utf-8").decode("utf-8"), "iQ")
-#     input_text = input_text.replace('ஞ்'.encode("utf-8").decode("utf-8"), "Q;")
-#     input_text = input_text.replace('ஞ'.encode("utf-8").decode("utf-8"), "Q")
-
-#     input_text = input_text.replace(
-#         'டௌ'.encode("utf-8").decode("utf-8"), "nls")
-#     input_text = input_text.replace(
-#         'டோ'.encode("utf-8").decode("utf-8"), "Nlh")
-#     input_text = input_text.replace(
-#         'டொ'.encode("utf-8").decode("utf-8"), "nlh")
-#     input_text = input_text.replace('டா'.encode("utf-8").decode("utf-8"), "lh")
-#     input_text = input_text.replace('டி'.encode("utf-8").decode("utf-8"), "b")
-#     input_text = input_text.replace('டீ'.encode("utf-8").decode("utf-8"), "B")
-#     input_text = input_text.replace('டு'.encode("utf-8").decode("utf-8"), "L")
-#     input_text = input_text.replace('டூ'.encode("utf-8").decode("utf-8"), "^")
-#     input_text = input_text.replace('டெ'.encode("utf-8").decode("utf-8"), "nl")
-#     input_text = input_text.replace('டே'.encode("utf-8").decode("utf-8"), "Nl")
-#     input_text = input_text.replace('டை'.encode("utf-8").decode("utf-8"), "il")
-#     input_text = input_text.replace('ட்'.encode("utf-8").decode("utf-8"), "l;")
-#     input_text = input_text.replace('ட'.encode("utf-8").decode("utf-8"), "l")
-
-#     input_text = input_text.replace(
-#         'ணௌ'.encode("utf-8").decode("utf-8"), "nzs")
-#     input_text = input_text.replace(
-#         'ணோ'.encode("utf-8").decode("utf-8"), "Nzh")
-#     input_text = input_text.replace(
-#         'ணொ'.encode("utf-8").decode("utf-8"), "nzh")
-#     input_text = input_text.replace('ணா'.encode("utf-8").decode("utf-8"), "zh")
-#     input_text = input_text.replace('ணி'.encode("utf-8").decode("utf-8"), "zp")
-#     input_text = input_text.replace('ணீ'.encode("utf-8").decode("utf-8"), "zP")
-#     input_text = input_text.replace('ணு'.encode("utf-8").decode("utf-8"), "Z")
-#     input_text = input_text.replace('ணூ'.encode("utf-8").decode("utf-8"), "Z}")
-#     input_text = input_text.replace('ணெ'.encode("utf-8").decode("utf-8"), "nz")
-#     input_text = input_text.replace('ணே'.encode("utf-8").decode("utf-8"), "Nz")
-#     input_text = input_text.replace('ணை'.encode("utf-8").decode("utf-8"), "iz")
-#     input_text = input_text.replace('ண்'.encode("utf-8").decode("utf-8"), "z;")
-#     input_text = input_text.replace('ண'.encode("utf-8").decode("utf-8"), "z")
-
-#     input_text = input_text.replace(
-#         'தௌ'.encode("utf-8").decode("utf-8"), "njs")
-#     input_text = input_text.replace(
-#         'தோ'.encode("utf-8").decode("utf-8"), "Njh")
-#     input_text = input_text.replace(
-#         'தொ'.encode("utf-8").decode("utf-8"), "njh")
-#     input_text = input_text.replace('தா'.encode("utf-8").decode("utf-8"), "jh")
-#     input_text = input_text.replace('தி'.encode("utf-8").decode("utf-8"), "jp")
-#     input_text = input_text.replace('தீ'.encode("utf-8").decode("utf-8"), "jP")
-#     input_text = input_text.replace('து'.encode("utf-8").decode("utf-8"), "J")
-#     input_text = input_text.replace('தூ'.encode("utf-8").decode("utf-8"), "J}")
-#     input_text = input_text.replace('தெ'.encode("utf-8").decode("utf-8"), "nj")
-#     input_text = input_text.replace('தே'.encode("utf-8").decode("utf-8"), "Nj")
-#     input_text = input_text.replace('தை'.encode("utf-8").decode("utf-8"), "ij")
-#     input_text = input_text.replace('த்'.encode("utf-8").decode("utf-8"), "j;")
-#     input_text = input_text.replace('த'.encode("utf-8").decode("utf-8"), "j")
-
-#     input_text = input_text.replace(
-#         'நௌ'.encode("utf-8").decode("utf-8"), "nes")
-#     input_text = input_text.replace(
-#         'நோ'.encode("utf-8").decode("utf-8"), "Neh")
-#     input_text = input_text.replace(
-#         'நொ'.encode("utf-8").decode("utf-8"), "neh")
-#     input_text = input_text.replace('நா'.encode("utf-8").decode("utf-8"), "eh")
-#     input_text = input_text.replace('நி'.encode("utf-8").decode("utf-8"), "ep")
-#     input_text = input_text.replace('நீ'.encode("utf-8").decode("utf-8"), "eP")
-#     input_text = input_text.replace('நு'.encode("utf-8").decode("utf-8"), "E")
-#     input_text = input_text.replace('நூ'.encode("utf-8").decode("utf-8"), "E}")
-#     input_text = input_text.replace('நெ'.encode("utf-8").decode("utf-8"), "ne")
-#     input_text = input_text.replace('நே'.encode("utf-8").decode("utf-8"), "Ne")
-#     input_text = input_text.replace('நை'.encode("utf-8").decode("utf-8"), "ie")
-#     input_text = input_text.replace('ந்'.encode("utf-8").decode("utf-8"), "e;")
-#     input_text = input_text.replace('ந'.encode("utf-8").decode("utf-8"), "e")
-
-#     input_text = input_text.replace(
-#         'னௌ'.encode("utf-8").decode("utf-8"), "nds")
-#     input_text = input_text.replace(
-#         'னோ'.encode("utf-8").decode("utf-8"), "Ndh")
-#     input_text = input_text.replace(
-#         'னொ'.encode("utf-8").decode("utf-8"), "ndh")
-#     input_text = input_text.replace('னா'.encode("utf-8").decode("utf-8"), "dh")
-#     input_text = input_text.replace('னி'.encode("utf-8").decode("utf-8"), "dp")
-#     input_text = input_text.replace('னீ'.encode("utf-8").decode("utf-8"), "dP")
-#     input_text = input_text.replace('னு'.encode("utf-8").decode("utf-8"), "D")
-#     input_text = input_text.replace('னூ'.encode("utf-8").decode("utf-8"), "D}")
-#     input_text = input_text.replace('னெ'.encode("utf-8").decode("utf-8"), "nd")
-#     input_text = input_text.replace('னே'.encode("utf-8").decode("utf-8"), "Nd")
-#     input_text = input_text.replace('னை'.encode("utf-8").decode("utf-8"), "id")
-#     input_text = input_text.replace('ன்'.encode("utf-8").decode("utf-8"), "d;")
-#     input_text = input_text.replace('ன'.encode("utf-8").decode("utf-8"), "d")
-
-#     input_text = input_text.replace(
-#         'பௌ'.encode("utf-8").decode("utf-8"), "ngs")
-#     input_text = input_text.replace(
-#         'போ'.encode("utf-8").decode("utf-8"), "Ngh")
-#     input_text = input_text.replace(
-#         'பொ'.encode("utf-8").decode("utf-8"), "ngh")
-#     input_text = input_text.replace('பா'.encode("utf-8").decode("utf-8"), "gh")
-#     input_text = input_text.replace('பி'.encode("utf-8").decode("utf-8"), "gp")
-#     input_text = input_text.replace('பீ'.encode("utf-8").decode("utf-8"), "gP")
-#     input_text = input_text.replace('பு'.encode("utf-8").decode("utf-8"), "G")
-#     input_text = input_text.replace('பூ'.encode("utf-8").decode("utf-8"), "G+")
-#     input_text = input_text.replace('பெ'.encode("utf-8").decode("utf-8"), "ng")
-#     input_text = input_text.replace('பே'.encode("utf-8").decode("utf-8"), "Ng")
-#     input_text = input_text.replace('பை'.encode("utf-8").decode("utf-8"), "ig")
-#     input_text = input_text.replace('ப்'.encode("utf-8").decode("utf-8"), "g;")
-#     input_text = input_text.replace('ப'.encode("utf-8").decode("utf-8"), "g")
-
-#     input_text = input_text.replace(
-#         'மௌ'.encode("utf-8").decode("utf-8"), "nks")
-#     input_text = input_text.replace(
-#         'மோ'.encode("utf-8").decode("utf-8"), "Nkh")
-#     input_text = input_text.replace(
-#         'மொ'.encode("utf-8").decode("utf-8"), "nkh")
-#     input_text = input_text.replace('மா'.encode("utf-8").decode("utf-8"), "kh")
-#     input_text = input_text.replace('மி'.encode("utf-8").decode("utf-8"), "kp")
-#     input_text = input_text.replace('மீ'.encode("utf-8").decode("utf-8"), "kP")
-#     input_text = input_text.replace('மு'.encode("utf-8").decode("utf-8"), "K")
-#     input_text = input_text.replace('மூ'.encode("utf-8").decode("utf-8"), "%")
-#     input_text = input_text.replace('மெ'.encode("utf-8").decode("utf-8"), "nk")
-#     input_text = input_text.replace('மே'.encode("utf-8").decode("utf-8"), "Nk")
-#     input_text = input_text.replace('மை'.encode("utf-8").decode("utf-8"), "ik")
-#     input_text = input_text.replace('ம்'.encode("utf-8").decode("utf-8"), "k;")
-#     input_text = input_text.replace('ம'.encode("utf-8").decode("utf-8"), "k")
-
-#     input_text = input_text.replace(
-#         'யௌ'.encode("utf-8").decode("utf-8"), "nas")
-#     input_text = input_text.replace(
-#         'யோ'.encode("utf-8").decode("utf-8"), "Nah")
-#     input_text = input_text.replace(
-#         'யொ'.encode("utf-8").decode("utf-8"), "nah")
-#     input_text = input_text.replace('யா'.encode("utf-8").decode("utf-8"), "ah")
-#     input_text = input_text.replace('யி'.encode("utf-8").decode("utf-8"), "ap")
-#     input_text = input_text.replace('யீ'.encode("utf-8").decode("utf-8"), "aP")
-#     input_text = input_text.replace('யு'.encode("utf-8").decode("utf-8"), "A")
-#     input_text = input_text.replace('யூ'.encode("utf-8").decode("utf-8"), "A+")
-#     input_text = input_text.replace('யெ'.encode("utf-8").decode("utf-8"), "na")
-#     input_text = input_text.replace('யே'.encode("utf-8").decode("utf-8"), "Na")
-#     input_text = input_text.replace('யை'.encode("utf-8").decode("utf-8"), "ia")
-#     input_text = input_text.replace('ய்'.encode("utf-8").decode("utf-8"), "a;")
-#     input_text = input_text.replace('ய'.encode("utf-8").decode("utf-8"), "a")
-
-#     input_text = input_text.replace(
-#         'ரௌ'.encode("utf-8").decode("utf-8"), "nus")
-#     input_text = input_text.replace(
-#         'ரோ'.encode("utf-8").decode("utf-8"), "Nuh")
-#     input_text = input_text.replace(
-#         'ரொ'.encode("utf-8").decode("utf-8"), "nuh")
-#     input_text = input_text.replace('ரா'.encode("utf-8").decode("utf-8"), "uh")
-#     input_text = input_text.replace('ரி'.encode("utf-8").decode("utf-8"), "up")
-#     input_text = input_text.replace('ரீ'.encode("utf-8").decode("utf-8"), "uP")
-#     input_text = input_text.replace('ரு'.encode("utf-8").decode("utf-8"), "U")
-#     input_text = input_text.replace('ரூ'.encode("utf-8").decode("utf-8"), "\&")
-#     input_text = input_text.replace('ரெ'.encode("utf-8").decode("utf-8"), "nu")
-#     input_text = input_text.replace('ரே'.encode("utf-8").decode("utf-8"), "Nu")
-#     input_text = input_text.replace('ரை'.encode("utf-8").decode("utf-8"), "iu")
-#     input_text = input_text.replace('ர்'.encode("utf-8").decode("utf-8"), "u;")
-#     input_text = input_text.replace('ர'.encode("utf-8").decode("utf-8"), "u")
-
-#     input_text = input_text.replace(
-#         'லௌ'.encode("utf-8").decode("utf-8"), "nys")
-#     input_text = input_text.replace(
-#         'லோ'.encode("utf-8").decode("utf-8"), "Nyh")
-#     input_text = input_text.replace(
-#         'லொ'.encode("utf-8").decode("utf-8"), "nyh")
-#     input_text = input_text.replace('லா'.encode("utf-8").decode("utf-8"), "yh")
-#     input_text = input_text.replace('லி'.encode("utf-8").decode("utf-8"), "yp")
-#     input_text = input_text.replace('லீ'.encode("utf-8").decode("utf-8"), "yP")
-#     input_text = input_text.replace('லு'.encode("utf-8").decode("utf-8"), "Y")
-#     input_text = input_text.replace('லூ'.encode("utf-8").decode("utf-8"), "Y}")
-#     input_text = input_text.replace('லெ'.encode("utf-8").decode("utf-8"), "ny")
-#     input_text = input_text.replace('லே'.encode("utf-8").decode("utf-8"), "Ny")
-#     input_text = input_text.replace('லை'.encode("utf-8").decode("utf-8"), "iy")
-#     input_text = input_text.replace('ல்'.encode("utf-8").decode("utf-8"), "y;")
-#     input_text = input_text.replace('ல'.encode("utf-8").decode("utf-8"), "y")
-
-#     input_text = input_text.replace(
-#         'ளௌ'.encode("utf-8").decode("utf-8"), "nss")
-#     input_text = input_text.replace(
-#         'ளோ'.encode("utf-8").decode("utf-8"), "Nsh")
-#     input_text = input_text.replace(
-#         'ளொ'.encode("utf-8").decode("utf-8"), "nsh")
-#     input_text = input_text.replace('ளா'.encode("utf-8").decode("utf-8"), "sh")
-#     input_text = input_text.replace('ளி'.encode("utf-8").decode("utf-8"), "sp")
-#     input_text = input_text.replace('ளீ'.encode("utf-8").decode("utf-8"), "sP")
-#     input_text = input_text.replace('ளு'.encode("utf-8").decode("utf-8"), "S")
-#     input_text = input_text.replace('ளூ'.encode("utf-8").decode("utf-8"), "Sh")
-#     input_text = input_text.replace('ளெ'.encode("utf-8").decode("utf-8"), "ns")
-#     input_text = input_text.replace('ளே'.encode("utf-8").decode("utf-8"), "Ns")
-#     input_text = input_text.replace('ளை'.encode("utf-8").decode("utf-8"), "is")
-#     input_text = input_text.replace('ள்'.encode("utf-8").decode("utf-8"), "s;")
-#     input_text = input_text.replace('ள'.encode("utf-8").decode("utf-8"), "s")
-
-#     input_text = input_text.replace(
-#         'வௌ'.encode("utf-8").decode("utf-8"), "nts")
-#     input_text = input_text.replace(
-#         'வோ'.encode("utf-8").decode("utf-8"), "Nth")
-#     input_text = input_text.replace(
-#         'வொ'.encode("utf-8").decode("utf-8"), "nth")
-#     input_text = input_text.replace('வா'.encode("utf-8").decode("utf-8"), "th")
-#     input_text = input_text.replace('வி'.encode("utf-8").decode("utf-8"), "tp")
-#     input_text = input_text.replace('வீ'.encode("utf-8").decode("utf-8"), "tP")
-#     input_text = input_text.replace('வு'.encode("utf-8").decode("utf-8"), "T")
-#     input_text = input_text.replace('வூ'.encode("utf-8").decode("utf-8"), "T+")
-#     input_text = input_text.replace('வெ'.encode("utf-8").decode("utf-8"), "nt")
-#     input_text = input_text.replace('வே'.encode("utf-8").decode("utf-8"), "Nt")
-#     input_text = input_text.replace('வை'.encode("utf-8").decode("utf-8"), "it")
-#     input_text = input_text.replace('வ்'.encode("utf-8").decode("utf-8"), "t;")
-#     input_text = input_text.replace('வ'.encode("utf-8").decode("utf-8"), "t")
-
-#     input_text = input_text.replace(
-#         'ழௌ'.encode("utf-8").decode("utf-8"), "nos")
-#     input_text = input_text.replace(
-#         'ழோ'.encode("utf-8").decode("utf-8"), "Noh")
-#     input_text = input_text.replace(
-#         'ழொ'.encode("utf-8").decode("utf-8"), "noh")
-#     input_text = input_text.replace('ழா'.encode("utf-8").decode("utf-8"), "oh")
-#     input_text = input_text.replace('ழி'.encode("utf-8").decode("utf-8"), "op")
-#     input_text = input_text.replace('ழீ'.encode("utf-8").decode("utf-8"), "oP")
-#     input_text = input_text.replace('ழு'.encode("utf-8").decode("utf-8"), "O")
-#     input_text = input_text.replace('ழூ'.encode("utf-8").decode("utf-8"), "*")
-#     input_text = input_text.replace('ழெ'.encode("utf-8").decode("utf-8"), "no")
-#     input_text = input_text.replace('ழே'.encode("utf-8").decode("utf-8"), "No")
-#     input_text = input_text.replace('ழை'.encode("utf-8").decode("utf-8"), "io")
-#     input_text = input_text.replace('ழ்'.encode("utf-8").decode("utf-8"), "o;")
-#     input_text = input_text.replace('ழ'.encode("utf-8").decode("utf-8"), "o")
-
-#     input_text = input_text.replace(
-#         'றௌ'.encode("utf-8").decode("utf-8"), "nws")
-#     input_text = input_text.replace(
-#         'றோ'.encode("utf-8").decode("utf-8"), "Nwh")
-#     input_text = input_text.replace(
-#         'றொ'.encode("utf-8").decode("utf-8"), "nwh")
-#     input_text = input_text.replace('றா'.encode("utf-8").decode("utf-8"), "wh")
-#     input_text = input_text.replace('றி'.encode("utf-8").decode("utf-8"), "wp")
-#     input_text = input_text.replace('றீ'.encode("utf-8").decode("utf-8"), "wP")
-#     input_text = input_text.replace('று'.encode("utf-8").decode("utf-8"), "W")
-#     input_text = input_text.replace('றூ'.encode("utf-8").decode("utf-8"), "W}")
-#     input_text = input_text.replace('றெ'.encode("utf-8").decode("utf-8"), "nw")
-#     input_text = input_text.replace('றே'.encode("utf-8").decode("utf-8"), "Nw")
-#     input_text = input_text.replace('றை'.encode("utf-8").decode("utf-8"), "iw")
-#     input_text = input_text.replace('ற்'.encode("utf-8").decode("utf-8"), "w;")
-#     input_text = input_text.replace('ற'.encode("utf-8").decode("utf-8"), "w")
-
-#     input_text = input_text.replace(
-#         'ஹௌ'.encode("utf-8").decode("utf-8"), "n`s")
-#     input_text = input_text.replace(
-#         'ஹோ'.encode("utf-8").decode("utf-8"), "N`h")
-#     input_text = input_text.replace(
-#         'ஹொ'.encode("utf-8").decode("utf-8"), "n`h")
-#     input_text = input_text.replace('ஹா'.encode("utf-8").decode("utf-8"), "`h")
-#     input_text = input_text.replace('ஹி'.encode("utf-8").decode("utf-8"), "`p")
-#     input_text = input_text.replace('ஹீ'.encode("utf-8").decode("utf-8"), "`P")
-#     input_text = input_text.replace('ஹு'.encode("utf-8").decode("utf-8"), "{`")
-#     input_text = input_text.replace('ஹூ'.encode("utf-8").decode("utf-8"), "`_")
-#     input_text = input_text.replace('ஹெ'.encode("utf-8").decode("utf-8"), "n`")
-#     input_text = input_text.replace('ஹே'.encode("utf-8").decode("utf-8"), "N`")
-#     input_text = input_text.replace('ஹை'.encode("utf-8").decode("utf-8"), "i`")
-#     input_text = input_text.replace('ஹ்'.encode("utf-8").decode("utf-8"), "`;")
-#     input_text = input_text.replace('ஹ'.encode("utf-8").decode("utf-8"), "`")
-
-#     input_text = input_text.replace(
-#         'ஷௌ'.encode("utf-8").decode("utf-8"), "n\\s")
-#     input_text = input_text.replace(
-#         'ஷோ'.encode("utf-8").decode("utf-8"), "N\\h")
-#     input_text = input_text.replace(
-#         'ஷொ'.encode("utf-8").decode("utf-8"), "n\\h")
-#     input_text = input_text.replace(
-#         'ஷா'.encode("utf-8").decode("utf-8"), "\\h")
-#     input_text = input_text.replace(
-#         'ஷி'.encode("utf-8").decode("utf-8"), "\\p")
-#     input_text = input_text.replace(
-#         'ஷீ'.encode("utf-8").decode("utf-8"), "\\P")
-#     input_text = input_text.replace('ஷு'.encode("utf-8").decode("utf-8"), "\{")
-#     input_text = input_text.replace(
-#         'ஷூ'.encode("utf-8").decode("utf-8"), "\\\_")
-#     input_text = input_text.replace(
-#         'ஷெ'.encode("utf-8").decode("utf-8"), "n\\")
-#     input_text = input_text.replace(
-#         'ஷே'.encode("utf-8").decode("utf-8"), "N\\")
-#     input_text = input_text.replace(
-#         'ஷை'.encode("utf-8").decode("utf-8"), "i\\")
-#     input_text = input_text.replace(
-#         'ஷ்'.encode("utf-8").decode("utf-8"), "\\;")
-#     input_text = input_text.replace('ஷ'.encode("utf-8").decode("utf-8"), "\\")
-
-#     input_text = input_text.replace(
-#         'ஸௌ'.encode("utf-8").decode("utf-8"), "n]s")
-#     input_text = input_text.replace(
-#         'ஸோ'.encode("utf-8").decode("utf-8"), "N]h")
-#     input_text = input_text.replace(
-#         'ஸொ'.encode("utf-8").decode("utf-8"), "n]h")
-#     input_text = input_text.replace('ஸா'.encode("utf-8").decode("utf-8"), "]h")
-#     input_text = input_text.replace('ஸி'.encode("utf-8").decode("utf-8"), "]p")
-#     input_text = input_text.replace('ஸீ'.encode("utf-8").decode("utf-8"), "]P")
-#     input_text = input_text.replace('ஸு'.encode("utf-8").decode("utf-8"), "]{")
-#     input_text = input_text.replace('ஸூ'.encode("utf-8").decode("utf-8"), "]_")
-#     input_text = input_text.replace('ஸெ'.encode("utf-8").decode("utf-8"), "n]")
-#     input_text = input_text.replace('ஸே'.encode("utf-8").decode("utf-8"), "N]")
-#     input_text = input_text.replace('ஸை'.encode("utf-8").decode("utf-8"), "i]")
-#     input_text = input_text.replace('ஸ்'.encode("utf-8").decode("utf-8"), "];")
-#     input_text = input_text.replace('ஸ'.encode("utf-8").decode("utf-8"), "]")
-
-#     input_text = input_text.replace('அ'.encode("utf-8").decode("utf-8"), "m")
-#     input_text = input_text.replace('ஆ'.encode("utf-8").decode("utf-8"), "M")
-#     input_text = input_text.replace('இ'.encode("utf-8").decode("utf-8"), ",")
-#     input_text = input_text.replace('ஈ'.encode("utf-8").decode("utf-8"), "<")
-#     input_text = input_text.replace('உ'.encode("utf-8").decode("utf-8"), "c")
-#     input_text = input_text.replace('ஊ'.encode("utf-8").decode("utf-8"), "C")
-#     input_text = input_text.replace('எ'.encode("utf-8").decode("utf-8"), "v")
-#     input_text = input_text.replace('ஏ'.encode("utf-8").decode("utf-8"), "V")
-#     input_text = input_text.replace('ஐ'.encode("utf-8").decode("utf-8"), "I")
-#     input_text = input_text.replace('ஒ'.encode("utf-8").decode("utf-8"), "x")
-#     input_text = input_text.replace('ஓ'.encode("utf-8").decode("utf-8"), "X")
-#     input_text = input_text.replace('ஔ'.encode("utf-8").decode("utf-8"), "xs")
-#     input_text = input_text.replace('ஃ'.encode("utf-8").decode("utf-8"), "\/")
-#     input_text = input_text.replace(
-#         'ஸ்ரீ'.encode("utf-8").decode("utf-8"), "=")
-
-#     input_text = input_text.replace('வூ'.encode("utf-8").decode("utf-8"), "t+")
-#     input_text = input_text.replace('பூ'.encode("utf-8").decode("utf-8"), "G+")
-#     input_text = input_text.replace('யூ'.encode("utf-8").decode("utf-8"), "A+")
-#     input_text = input_text.replace('ஹு'.encode("utf-8").decode("utf-8"), "`{")
-#     input_text = input_text.replace('ஜு'.encode("utf-8").decode("utf-8"), "[{")
-#     input_text = input_text.replace('ஸு'.encode("utf-8").decode("utf-8"), "]{")
-#     input_text = input_text.replace('ஷு'.encode("utf-8").decode("utf-8"), "\{")
-#     input_text = input_text.replace('யூ'.encode("utf-8").decode("utf-8"), "A+")
-#     input_text = input_text.replace('ா'.encode("utf-8").decode("utf-8"), "h")
-#     input_text = input_text.replace('ெ'.encode("utf-8").decode("utf-8"), "n")
-#     input_text = input_text.replace('ே'.encode("utf-8").decode("utf-8"), "N")
-#     input_text = input_text.replace('ை'.encode("utf-8").decode("utf-8"), "i")
-#     input_text = input_text.replace('ு'.encode("utf-8").decode("utf-8"), "{")
-#     input_text = input_text.replace('ூ'.encode("utf-8").decode("utf-8"), "_")
-#     input_text = input_text.replace('ி'.encode("utf-8").decode("utf-8"), "p")
-#     input_text = input_text.replace('ீ'.encode("utf-8").decode("utf-8"), "P")
-
-#     return input_text
+    for char in unicode_chars:
+        t = t.replace(char, unicode_bamini_map[char])
+    return t
