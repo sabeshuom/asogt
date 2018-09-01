@@ -10,5 +10,5 @@ urlpatterns = [
     url(r'^competitions/$', views.competitions, name='competitions'),
     url(r'^results/$', views.results, name='results'),
     url(r'^get_per_exam_details/$', views.get_per_exam_details, name='get_per_exam_details'),
-    url(r'^get_results_for_certificate/$', views.get_resuls_for_certificate , name='get_results_for_certificate'),
+    url(r'^get_results_for_certificate/$', views.get_results_for_certificate, name='get_results_for_certificate'),
 ]

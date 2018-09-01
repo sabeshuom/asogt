@@ -53,7 +53,7 @@ def get_competition_info():
 
 
 def get_exam_info(sess, state, competion="All"):
-    competitions_url = "http://www.tamilcompetition.org.au/admin/exam/searchcomp/"
+    competitions_url = "https://www.tamilcompetition.org.au/admin/exam/searchcomp/"
     payload = {
         "state_id": STATE_DETAILS[state],
         "year": "2018",
@@ -103,22 +103,22 @@ def cleanhtml(raw_html):
 
 
 def get_data_table(sess, type_key="student_details"):
-    max_len = -1
+    max_len = 5000
     types = {
         "student_details": {
-            "url": "http://www.tamilcompetition.org.au/admin/student_details/get_data_table?draw=1&",
+            "url": "https://www.tamilcompetition.org.au/admin/student_details/get_data_table?draw=1&",
             "number_of_columns": 15
         },
         "student_competitions": {
-            "url": "http://www.tamilcompetition.org.au/admin/student_competitions/get_data_table?draw=1&",
+            "url": "https://www.tamilcompetition.org.au/admin/student_competitions/get_data_table?draw=1&",
             "number_of_columns": 21
         },
         "exam": {
-            "url": "http://www.tamilcompetition.org.au/admin/exam/get_data_table?draw=1&",
+            "url": "https://www.tamilcompetition.org.au/admin/exam/get_data_table?draw=1&",
             "number_of_columns": 12
         },
         "results": {
-            "url": "http://www.tamilcompetition.org.au/admin/results/get_data_table?draw=1&",
+            "url": "https://www.tamilcompetition.org.au/admin/results/get_data_table?draw=1&",
             "number_of_columns": 12
         }
     }
@@ -142,7 +142,7 @@ def get_data_table(sess, type_key="student_details"):
 
     search_str += "order%5B0%5D%5Bcolumn%5D=0&order%5B0%5D%5Bdir%5D=desc&start=0&length={:d}&search%5Bvalue%5D=&search%5Bregex%5D=false".format(
         max_len)
-
+    import pdb; pdb.set_trace()
     data_table_url = data_table_url + search_str
     res = sess.get(data_table_url)
     data = json.loads(res.content)["data"]
@@ -150,7 +150,7 @@ def get_data_table(sess, type_key="student_details"):
 
 
 def get_student_details(sess, state, division="All"):
-    students_url = "http://www.tamilcompetition.org.au/admin/student_details/searchcomp/"
+    students_url = "https://www.tamilcompetition.org.au/admin/student_details/searchcomp/"
     payload = {
         "state_id": STATE_DETAILS[state],
         "year": 2018,
@@ -171,7 +171,7 @@ def get_student_details(sess, state, division="All"):
 def get_competition_details(sess, state, division="",  competition_type="", competion=""):
     assert competion != "" or (division != "" and competition_type !=
                                ""), "have to give either competion id or competiion type id with division id"
-    competitions_url = "http://www.tamilcompetition.org.au/admin/student_competitions/searchcomp/"
+    competitions_url = "https://www.tamilcompetition.org.au/admin/student_competitions/searchcomp/"
     payload = {
         "state_id": STATE_DETAILS[state],
         "year": "2018",
@@ -199,8 +199,8 @@ def get_competition_details(sess, state, division="",  competition_type="", comp
     return data
 
 
-def get_results(sess, state="6", competion=""):
-    competitions_url = "http://www.tamilcompetition.org.au/admin/results/searchcomp/"
+def get_results(sess, state="6", competion="All"):
+    competitions_url = "https://www.tamilcompetition.org.au/admin/results/searchcomp/"
     payload = {
         "state_id": STATE_DETAILS[state],
         "year": "2018",

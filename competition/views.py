@@ -7,7 +7,7 @@ import json
 import requests
 from io import BytesIO
 
-from view_utils import per_exam_details, resuls_for_certificate
+from view_utils import per_exam_details, results_for_certificate
 from asogt.settings import MEDIA_ROOT, MEDIA_URL
 
 # Create your views here.
@@ -51,7 +51,7 @@ def get_per_exam_details(request):
 
 
 @csrf_exempt
-def get_resuls_for_certificate(request):
+def get_results_for_certificate(request):
     if not request.user.is_authenticated():
         return HttpResponse(status=204)
     else:
@@ -63,7 +63,7 @@ def get_resuls_for_certificate(request):
             username = "sabesan"
             password = "Sabesan4NSW"
         output = BytesIO()
-        resuls_for_certificate.export_to_excel(output, state, username, password)
+        results_for_certificate.export_to_excel(output, state, username, password)
         output.seek(0)
         response = HttpResponse(output.read(
         ), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")

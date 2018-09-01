@@ -70,7 +70,9 @@ def get_row_data(result, state, exam_info):
 
 def export_to_excel(xls_wb, state, username, password):
     sess = init_sess(username, password)
+    import pdb; pdb.set_trace()
     results = get_results(sess, state, "All")
+
     exam_info = get_exam_info(sess, state)
 
 
