@@ -20,11 +20,11 @@ from core.write_timetable import add_time_table
 COMP_DETAILS, COMP_DETAILS_DICT = get_competition_info()
 
 
-def export_to_excel(xls_wb, state, username, password):
+def export_to_excel(xls_wb, state, year, username, password):
     sess = init_sess(username, password)
 
     comp_data_raw = get_competition_details(
-        sess, state=state, competion="All")
+        sess, state=state, year=year, competion="All")
 
     comp_data_sets = split_data(comp_data_raw)
 
@@ -249,4 +249,4 @@ if __name__ == "__main__":
     # password = "Yoges"
     state = "NSW"
     xls_wb = "test.xlsx"
-    export_to_excel(xls_wb, state, username, password)
+    export_to_excel(xls_wb, state, year, username, password)

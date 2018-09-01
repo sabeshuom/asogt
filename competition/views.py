@@ -7,7 +7,7 @@ import json
 import requests
 from io import BytesIO
 
-from view_utils import per_exam_details, results_for_certificate
+from view_utils import per_exam_details, results_for_certificate, results_for_trophy
 from asogt.settings import MEDIA_ROOT, MEDIA_URL
 
 # Create your views here.
@@ -31,11 +31,15 @@ def results(request):
 
 
 @csrf_exempt
-def get_per_exam_details(request):
+def get_student_details(request):
     if not request.user.is_authenticated():
         return HttpResponse(status=204)
     else:
-        state = json.loads(request.body)["state"]
+        json_data = json.loads(request.body)
+        state = json_data["state"]
+        year = json_data["year"]
+        req_format = json_data["format"]
+
         if state == "QLD":
             username = "yoges"
             password = "Yoges"
@@ -43,7 +47,7 @@ def get_per_exam_details(request):
             username = "sabesan"
             password = "Sabesan4NSW"
         output = BytesIO()
-        per_exam_details.export_to_excel(output, state, username, password)
+        per_exam_details.export_to_excel(output, state, year, username, password)
         output.seek(0)
         response = HttpResponse(output.read(
         ), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
@@ -51,11 +55,15 @@ def get_per_exam_details(request):
 
 
 @csrf_exempt
-def get_results_for_certificate(request):
+def get_results(request):
     if not request.user.is_authenticated():
         return HttpResponse(status=204)
     else:
-        state = json.loads(request.body)["state"]
+        json_data = json.loads(request.body)
+        state = json_data["state"]
+        year = json_data["year"]
+        req_format = json_data["format"]
+
         if state == "QLD":
             username = "yoges"
             password = "Yoges"
@@ -63,7 +71,10 @@ def get_results_for_certificate(request):
             username = "sabesan"
             password = "Sabesan4NSW"
         output = BytesIO()
-        results_for_certificate.export_to_excel(output, state, username, password)
+        if req_format.lower() == "certificate":
+            results_for_certificate.export_to_excel(output, state, year, username, password)
+        if req_format.lower() == "trophy":
+            results_for_trophy.export_to_excel(output, state, year, username, password)
         output.seek(0)
         response = HttpResponse(output.read(
         ), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")

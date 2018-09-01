@@ -1,50 +1,48 @@
-{% extends 'base.html' %}
-{% load staticfiles %}
-{% block head_content %}
+{% extends 'base.html' %} {% load staticfiles %} {% block head_content %}
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script>
     function openNav() {
-      $("#mySidenav").addClass('active');
+        $("#mySidenav").addClass('active');
     }
     function closeNav() {
-      $("#mySidenav").removeClass('active');
+        $("#mySidenav").removeClass('active');
     }
-    function export_excel(){
+    function export_excel() {
         $(".students").hide();
         $("#export_excel").show();
         closeNav();
         $("#dashboar_span").html(" Students > Export");
     }
-    function studentlist2017(){
+    function studentlist2017() {
         $(".students").hide();
         $("#studentlist2017").show();
-        closeNav() 
+        closeNav()
         $("#dashboar_span").html(" Students > 2017");
     }
-    function studentlist2018(){
+    function studentlist2018() {
         $(".students").hide();
         $("#studentlist2018").show();
-        closeNav() 
+        closeNav()
         $("#dashboar_span").html(" Students > 2018");
     }
 
     //hide it when clicking anywhere else except the popup and the trigger
-    $(document).on('click touch', function(event) {
-    if (!$(event.target).parents().addBack().is('#mySidenav') && !$(event.target).parents().addBack().is('#dash_board_icon')) {
-        $("#mySidenav").removeClass('active');
-    }
+    $(document).on('click touch', function (event) {
+        if (!$(event.target).parents().addBack().is('#mySidenav') && !$(event.target).parents().addBack().is('#dash_board_icon')) {
+            $("#mySidenav").removeClass('active');
+        }
     });
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         export_excel()
+        check_authentication(true);
     });
 
-</script>
-{% endblock %}
-
-{% block page_content %}
-<div id="dash_board_icon" class="dashboard-span" onclick="openNav()">&#9776;  <span id="dashboar_span"></span></div>
+</script> {% endblock %} {% block page_content %}
+<div id="dash_board_icon" class="dashboard-span" onclick="openNav()">&#9776;
+    <span id="dashboar_span"></span>
+</div>
 <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <a onClick='export_excel()'>Export to Excel</a>
@@ -52,8 +50,85 @@
     <a onclick='studentlist2017()'>Student List 2017</a>
 </div>
 
-<div class='main-content'>
-    <div id="export_excel" class ="students" style="display: none">
+<div>
+
+    <div id="export_excel" class="export_form students" style="display: none">
+        <h4>Export to Excel</h4>
+
+        <div class="row">
+            <div class="col-sm-offset-2 col-sm-4">
+                <div class="label"> State :</div>
+            </div>
+            <div class="col-sm-6">
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                        <span id="students_selected_state" class="selected">NSW</span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul id="drop-state" class="dropdown-menu">
+                        <li>
+                            <a>QLD</a>
+                        </li>
+                        <li>
+                            <a>NSW</a>
+                        </li>
+                        <li class="disabled">
+                            <a href="#">VIC</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-offset-2 col-sm-4">
+                <div class="label"> Year :</div>
+            </div>
+            <div class="col-sm-6">
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                        <span id="students_selected_year" class="selected">2018</span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul id="drop-year" class="dropdown-menu">
+                        <li>
+                            <a>2018</a>
+                        </li>
+                        <li class="disabled">
+                            <a href="#">2017</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-offset-2 col-sm-4">
+                <div class="label"> Format :</div>
+            </div>
+            <div class="col-sm-6">
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                        <span id="students_selected_format" class="selected">Per Exam</span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul id="drop-format" class="dropdown-menu">
+                        <li>
+                            <a>Per Exam</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-offset-2 col-sm-4">
+                <a class="btn btn-primary " onclick="get_student_details(this)">Download</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div id="export_excel" class ="students" style="display: none">
         <h4>TC List Workbook 2018</h4>
             <ul class="excel-ul">
                 <li>
@@ -62,28 +137,15 @@
                 <li>
                     <a data-state="QLD" class="btn btn-primary" onclick="get_per_exam_details(this)">Per-exam student details-QLD</a>
                 </li>
-                <li>
-                    <a data-state="NSW" class="btn btn-primary" onclick="get_resuls_for_certificate(this)">Results for certificate-NSW</a>
-                </li>
-                <li>
-                    <a data-state="QLD" class="btn btn-primary" onclick="get_resuls_for_certificate(this)">Results for certificate-QLD</a>
-                </li>
-                <li>
-                    <a data-state="NSW" class="btn btn-primary disabled" onclick="get_resuls_for_trophy(this)">Results for trophy-NSW</a>
-                </li>
-                <li>
-                    <a data-state="QLD" class="btn btn-primary disabled" onclick="get_resuls_for_trophy(this)">Results for trophy-QLD</a>
-                </li>
-
             </ul>
+    </div> -->
+
+    <div id="studentlist2018" class="students" style="display: none">
+        <h4>Student List 2018</h4>
     </div>
 
-    <div id="studentlist2018" class ="students" style="display: none">
-            <h4>Student List 2018</h4>
-    </div>
-
-    <div id="studentlist2017" class ="students" style="display: none">
-            <h4>Student List 2017</h4>
+    <div id="studentlist2017" class="students" style="display: none">
+        <h4>Student List 2017</h4>
     </div>
 </div>
 

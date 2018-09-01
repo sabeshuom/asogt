@@ -167,47 +167,77 @@ a{
     padding-top: 50%;
 }
 
-.excel-ul{
-    list-style: none;
-    padding-left: 10px;
-    li{
-        margin: 10px;
-        a{
-            width: 250px;
-            text-align: left;
-            &.loading{
-                cursor: crosshair;
-                pointer-events: none;
-                color:black;
-                background-color:#68c0e2;
-                position: relative;
-                &::after{
-                    display: block;
-                    content: "";
-                    width: 30px;
-                    height: 30px;
-                    background: transparent url(/static/assets/loading_bluedots.gif) no-repeat;
-                    position: absolute;
-                    right: -0px;
-                    top: 0px;
-                    background-size: contain;
-                } 
-                &::before{
-                    content: ".. processing data";
-                    position: absolute;
-                    color: black;
-                    left: 255px;
-                    top: 0px;
-                    height: 100%;
-                    line-height: 200%;
-                }
-            }
-            
-   
-        }
-        
+.export_form {
+    background: #fff;
+    width: 50%;
+    margin-top: 40px;
+    margin-left: 25%;
+    padding: 20px;
+    padding-top: 10px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    display: inline-block;
+    h4{
+        margin-bottom: 30px;
     }
-}
+    .label{
+        border-radius: 0px;
+        display: inline-block;
+        width: 100%;
+        margin: 0px;
+        margin-right: 5px;
+        text-align:right;
+        color: black;
+        font-size: 14px;
+        line-height: 18px;
+        height:25px;
+        border: 1px solid rgba(11,89,156,.1);
+        border-left: 2px solid #1587a9;
+    }
+    button{
+        border-radius: 0px;
+        height: 25px;
+        line-height: 14px;
+        font-size: 14px;
+    }
+    .row{
+        margin-bottom: 20px;
+        margin-top: 10px;
+    }
+    a{
+        width: 120px;
+        text-align: left;
+
+        &.loading{
+            cursor: crosshair;
+            pointer-events: none;
+            color:black;
+            background-color:#68c0e2;
+            position: relative;
+            &::after{
+                display: block;
+                content: "";
+                width: 30px;
+                height: 30px;
+                background: transparent url(/static/assets/loading_bluedots.gif) no-repeat;
+                position: absolute;
+                right: -0px;
+                top: 0px;
+                background-size: contain;
+            } 
+            &::before{
+                content: ".. processing data";
+                position: absolute;
+                color: black;
+                left: 125px;
+                top: 0px;
+                height: 100%;
+                line-height: 200%;
+            }
+        }
+    }
+
+  }
+
 .main-content{
     h4{
         font-weight: bolder;

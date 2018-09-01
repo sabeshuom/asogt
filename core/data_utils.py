@@ -168,13 +168,13 @@ def get_student_details(sess, state, division="All"):
     data = get_data_table("student_details")
 
 
-def get_competition_details(sess, state, division="",  competition_type="", competion=""):
+def get_competition_details(sess, state, year="2018", division="",  competition_type="", competion=""):
     assert competion != "" or (division != "" and competition_type !=
                                ""), "have to give either competion id or competiion type id with division id"
     competitions_url = "https://www.tamilcompetition.org.au/admin/student_competitions/searchcomp/"
     payload = {
         "state_id": STATE_DETAILS[state],
-        "year": "2018",
+        "year": year,
         "division_id": "Any",
         "gender": "2",
         "student_no": "",
@@ -199,11 +199,11 @@ def get_competition_details(sess, state, division="",  competition_type="", comp
     return data
 
 
-def get_results(sess, state="6", competion="All"):
+def get_results(sess, state="6", year="2018", competion="All"):
     competitions_url = "https://www.tamilcompetition.org.au/admin/results/searchcomp/"
     payload = {
         "state_id": STATE_DETAILS[state],
-        "year": "2018",
+        "year": year,
         "division_id": "Any",
         "gender": "2",
         "student_no": "",

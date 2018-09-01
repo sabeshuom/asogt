@@ -68,13 +68,11 @@ def get_row_data(result, state, exam_info):
     return row_data
 
 
-def export_to_excel(xls_wb, state, username, password):
+def export_to_excel(xls_wb, state,  year, username, password):
     sess = init_sess(username, password)
-    results = get_results(sess, state, "All")
+    results = get_results(sess, state, year, "All")
 
     exam_info = get_exam_info(sess, state)
-
-
     wb = xlsxwriter.Workbook(xls_wb)
     ws = wb.add_worksheet("Certificate_template")
   

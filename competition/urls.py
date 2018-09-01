@@ -9,6 +9,6 @@ urlpatterns = [
     url(r'^students/$', views.students, name='stundetns'),
     url(r'^competitions/$', views.competitions, name='competitions'),
     url(r'^results/$', views.results, name='results'),
-    url(r'^get_per_exam_details/$', views.get_per_exam_details, name='get_per_exam_details'),
-    url(r'^get_results_for_certificate/$', views.get_results_for_certificate, name='get_results_for_certificate'),
+    url(r'^get_student_details/$', views.get_student_details, name='get_student_details'),
+    url(r'^get_results/$', views.get_results, name='get_results'),
 ]

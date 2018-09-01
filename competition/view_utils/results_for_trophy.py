@@ -24,63 +24,103 @@ from core.write_timetable import add_time_table
 
 
 CERT_INFO = get_certificate_info()
+TROPHY_GRADES = ["First Prize",
+                 "Second Prize",
+                 "Third Prize",
+                 "Grade A",
+                 "Grade B",
+                 "Grade C",
+                 "Participated"]
 
 
-def merge_dicts(dict_list):
-    new_dict = {}
-    for c_dict in dict_list:
-        new_dict.update(c_dict)
-    return new_dict
-
-
-def get_row_data(result, state, exam_info):
-    std_no = result[0]
-    name_e = result[1].replace("<br>", " ")
-    name_t = result[2].replace("<br>", " ")
-    name_t_bamini = unicode_to_bamini.unicode2bamini(name_t)
-    gender = result[3]
-    exam = result[5]
-    grade = result[6]
-    comp = exam_info[exam]["comp"]
-
-    # get the corresponding keys
-    name_info = {
-        "STD ID": std_no,
-        "NAME": name_t,
-        "T2": name_t_bamini,
-        "E3": name_e,
-    }
-
-    if (comp not in CERT_INFO["competitions"]) or (state not in CERT_INFO["states"]) or\
-            (gender not in CERT_INFO["gender"]) or (grade not in CERT_INFO["grades"]):
-        print("Not found comp: {:s}, stae: {:s}, gender: {:s} , grade : {:s}".format(
-            comp, state, gender, grade))
-        return None
-
-    comp_info = CERT_INFO["competitions"][comp]
-    common_info = CERT_INFO["common_fields"]
-    state_info = CERT_INFO["states"][state]
-    gender_info = CERT_INFO["gender"][gender]
-    grade_info = CERT_INFO["grades"][grade]
-
-    row_data = merge_dicts([name_info, common_info, comp_info,
-                           state_info, gender_info, grade_info])
-    return row_data
-
-
-def export_to_excel(xls_wb, state, username, password):
+def get_results_per_student(state, year, username, password):
     sess = init_sess(username, password)
-    results = get_results(sess, state, "All")
-
+    results = get_results(sess, state, year,  "All")
     exam_info = get_exam_info(sess, state)
 
+    student_data = {}
+    for result in results:
+        try:
+            # get comp grade details
+            exam = result[5]
+            grade = result[6]
+            if grade in TROPHY_GRADES:
+                std_no = result[0]
+                fullname_eng = result[1].replace("<br>", " ")
+                std_data = student_data.get(std_no, [std_no, fullname_eng])
+                comp = exam_info[exam]["comp"]
+                comp_grade_info = "{:s} {:s} - {:s}".format(CERT_INFO["competitions"][comp]["E7"],
+                                                            CERT_INFO["competitions"][comp]["E9"],
+                                                            grade)
+                std_data.append(comp_grade_info)
+                student_data[std_no] = std_data
+        except:
+            import pdb
+            pdb.set_trace()
 
+    return student_data
+
+
+def export_to_excel(xls_wb, state,  year, username, password):
+    results = get_results_per_student(state, year, username, password)
     wb = xlsxwriter.Workbook(xls_wb)
-    ws = wb.add_worksheet("Certificate_template")
-  
+    ws = wb.add_worksheet("Trophy_template")
+
+    row_height = 20
+    ws.set_default_row(row_height)
     # comps
+    trophy1_format = wb.add_format({
+        'font_name': "Arial",
+        'align': 'center',
+        'bg_color': 'yellow',
+        'bold': 1,
+        'right': 2,
+        'font_size': 14,
+        'valign': 'vcenter'})
+
+    trophy2_format = wb.add_format({
+        'font_name': "Arial",
+        'align': 'center',
+        'bg_color': 'yellow',
+        'bold': 1,
+        'right': 2,
+        'font_size': 14,
+        'valign': 'vcenter'})
+
+    trophy3_format = wb.add_format({
+        'font_name': "Arial",
+        'align': 'center',
+        'bg_color': 'yellow',
+        'bold': 1,
+        'right': 2,
+        'font_size': 14,
+        'valign': 'vcenter'})
+
+    trophy4_format = wb.add_format({
+        'font_name': "Arial",
+        'align': 'center',
+        'bg_color': 'yellow',
+        'right': 2,
+        'font_size': 14,
+        'valign': 'vcenter'})
+
+    trophy5_format = wb.add_format({
+        'font_name': "Arial",
+        'align': 'center',
+        'bg_color': 'yellow',
+        'right': 2,
+        'bottom': 2,
+        'font_size': 14,
+        'valign': 'vcenter'})
+    note_format = wb.add_format({
+        'font_name': "Arial",
+        'align': 'center',
+        'bg_color': 'yellow',
+        'font_size': 14,
+        'valign': 'vcenter'})
+
     row_title_format = wb.add_format({
-        'font_name': "Calibri (Body)",
+        'font_name': "Arial",
         'align': 'center',
         'bg_color': '#ebf0df',
         'bold': 1,
@@ -90,49 +130,44 @@ def export_to_excel(xls_wb, state, username, password):
         'right': 2,
         'font_size': 14,
         'valign': 'vcenter'})
-    row_title_height = 20
 
-    tamil_cell_format = wb.add_format({
-        'font_name': "Bamini",
+    row_format = wb.add_format({
+        'font_name': "Calibri (Body)",
         'border': 1,
         'align': 'left',
-        'font_size': 14,
-        'valign': 'vcenter'})
-    eng_cell_format = wb.add_format({
-        'font_name': "Calibri (Body)",
-        'border' : 1,
-        'align': 'left',
-        'font_size': 14,
+        'font_size': 11,
         'valign': 'vcenter'})
 
-    col_headers = CERT_INFO["cols"]
-    col_formats = CERT_INFO["col_formats"]
-    ws.write_row(0, 0, col_headers, row_title_format)
-    ws.set_row(0, row_title_height)
-    header_rows = 0
-    data_row = 1
-    col_max_widths = [5]*len(col_headers)
-    for result in sorted(results, key=lambda x: x[0]):
-        row_data = get_row_data(result, state, exam_info)
-        if row_data is not None:
-            for col, header in enumerate(col_headers):
-                col_format = col_formats[header]['FORMAT']
-                val = row_data[header] 
-                if col_format == "ENG":
-                    cell_format = eng_cell_format
-                    font_width = 1.3
-                elif col_format == "TAMIL":
-                    cell_format = tamil_cell_format
-                    font_width = 1.3
-                ws.write_string(data_row, col, val, cell_format)
-                col_width = int(font_width * len(val))
-                if col_width > col_max_widths[col]:
-                    col_max_widths[col] = col_width
-            data_row += 1
-    for col, val in enumerate(col_headers):
-        ws.set_column(col, col, col_max_widths[col])
-    
+    # trophy headers
+    trophy1 = "Australian Society of Graduate Tamils (ASoGT)"
+    ws.merge_range('A1:D1', trophy1, trophy1_format)
+    trophy2 = "Tamil Competitions 2018 - QLD"
+    ws.merge_range('A2:D2', trophy2, trophy2_format)
+    trophy3 = "Full Name (Eg: Asvetha Senthilkumaran) - Number (Eg: P001)"
+    ws.merge_range('A3:D3', trophy3, trophy3_format)
+    trophy4 = "Grade (Eg: First Prize)  - Competition Name (Eg:Palar - Poetry) "
+    ws.merge_range('A4:D4', trophy4, trophy4_format)
+    trophy5 = "Grade (Eg: First Prize)  - Competition Name (Eg:Palar - Poetry) "
+    ws.merge_range('A5:D5', trophy5, trophy5_format)
+
+    # write note
+    note = "Note: Black Print on Gold Plate"
+    ws.write("E4", note, note_format)
+
+    # write row headers
+    headers = ["Number", "Full Nmae", "Line1",
+               "Line2", "Line3", "Line4", "Trophy", "Size"]
+    ws.write_row(5, 0, headers, row_title_format)
+
+    num_of_header_rows = 6
+    for i, std_no in enumerate(sorted(results)):
+        ws.write_row(num_of_header_rows + i, 0, results[std_no])
+    ws.set_column('A:A', 15)
+    ws.set_column('B:B', 30)
+    ws.set_column('C:F', 45)
+
     wb.close()
+
 
 if __name__ == "__main__":
     username = "sabesan"
@@ -141,4 +176,4 @@ if __name__ == "__main__":
     # password = "Yoges"
     state = "NSW"
     xls_wb = "test.xlsx"
-    export_to_excel(xls_wb, state, username, password)
+    export_to_excel(xls_wb, state, year, username, password)

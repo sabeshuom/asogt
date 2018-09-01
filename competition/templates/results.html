@@ -29,6 +29,8 @@
         $("#dashboar_span").html(" Results > 2018");
     }
 
+
+
     //hide it when clicking anywhere else except the popup and the trigger
     $(document).on('click touch', function(event) {
     if (!$(event.target).parents().addBack().is('#mySidenav') && !$(event.target).parents().addBack().is('#dash_board_icon')) {
@@ -38,9 +40,15 @@
 
     $(document).ready(function() {
         export_excel()
+        check_authentication(true);
+        $('.dropdown-menu a').click(function(){
+            $(this).parent().parent().parent().find(".selected").text($(this).text());
+        });
     });
 
 </script>
+
+<link href="{% static 'css/results.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block page_content %}
@@ -52,34 +60,78 @@
     <a onclick='resultlist2017()'>Result List 2017</a>
 </div>
 
-<div class='main-content'>
-    <div id="export_excel" class ="results" style="display: none">
-        <h4>TC Results Workbook 2018</h4>
-            <ul class="excel-ul">
-                <li>
-                    <a data-state="NSW" class="btn btn-primary" onclick="get_per_exam_details(this)">Per-exam result details-NSW</a>
-                </li>
-                <li>
-                    <a data-state="QLD" class="btn btn-primary" onclick="get_per_exam_details(this)">Per-exam result details-QLD</a>
-                </li>
-                <li>
-                    <a  class="btn btn-primary disable">Mark Sheet-QLD</a>
-                </li>
-                <li>
-                    <a class="btn btn-primary disable">Mark Sheet-NSW</a>
-                </li>
-            </ul>
+<div>
+    <div id="export_excel" class ="export_form results" style="display: none">
+        <h4>Export to Excel</h4>
+
+
+        <div class="row">
+                <div class="col-sm-offset-2 col-sm-4">
+                    <div class="label"> State :</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                        <span id="results_selected_state" class="selected">NSW</span>
+                        <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a>QLD</a></li>
+                            <li><a>NSW</a></li>
+                            <li class="disabled"> <a href="#">VIC</a></li>
+                        </ul>
+                    </div>
+                </div>
+        </div>
+
+        <div class="row">
+                <div class="col-sm-offset-2 col-sm-4">
+                    <div class="label"> Year :</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                        <span id="results_selected_year" class="selected">2018</span>
+                        <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a>2018</a></li>
+                            <li class="disabled"><a href="#">2017</a></li>
+                        </ul>
+                    </div>
+                </div>
+        </div>
+   
+        <div class="row">
+                <div class="col-sm-offset-2 col-sm-4">
+                    <div class="label"> Format :</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                        <span id="results_selected_format" class="selected">Certificate</span>
+                        <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a>Certificate</a></li>
+                            <li><a>Trophy</a></li>
+                            <li><a>Book</li>
+                        </ul>
+                    </div>
+                </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-offset-2 col-sm-4">
+                <a data-state="QLD" data-format="for_trophy" data-year="2018"class="btn btn-primary " onclick="get_results(this)">Download</a>
+            </div>
+        </div>
     </div>
 
-    <div id="resultlist2018" class ="result" style="display: none">
+    <div id="resultlist2018" class ="results" style="display: none">
             <h4>Result List 2018</h4>
     </div>
 
-    <div id="resultlist2017" class ="result" style="display: none">
+    <div id="resultlist2017" class ="results" style="display: none">
             <h4>Result List 2017</h4>
     </div>
 </div>
-
-
 
 {% endblock %}
