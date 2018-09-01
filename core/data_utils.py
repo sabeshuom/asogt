@@ -142,7 +142,7 @@ def get_data_table(sess, type_key="student_details"):
 
     search_str += "order%5B0%5D%5Bcolumn%5D=0&order%5B0%5D%5Bdir%5D=desc&start=0&length={:d}&search%5Bvalue%5D=&search%5Bregex%5D=false".format(
         max_len)
-    import pdb; pdb.set_trace()
+ 
     data_table_url = data_table_url + search_str
     res = sess.get(data_table_url)
     data = json.loads(res.content)["data"]
