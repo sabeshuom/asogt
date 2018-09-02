@@ -54,9 +54,11 @@ def get_results_per_student(state, year, username, password):
                                                             grade)
                 std_data.append(comp_grade_info)
                 student_data[std_no] = std_data
-        except:
+        except Exception as e:
+            print(e)
             import pdb
             pdb.set_trace()
+
 
     return student_data
 
@@ -156,7 +158,7 @@ def export_to_excel(xls_wb, state,  year, username, password):
 
     # write row headers
     headers = ["Number", "Full Nmae", "Line1",
-               "Line2", "Line3", "Line4", "Trophy", "Size"]
+               "Line2", "Line3", "Line4", "Line5", "Trophy", "Size"]
     ws.write_row(5, 0, headers, row_title_format)
 
     num_of_header_rows = 6
@@ -164,7 +166,7 @@ def export_to_excel(xls_wb, state,  year, username, password):
         ws.write_row(num_of_header_rows + i, 0, results[std_no])
     ws.set_column('A:A', 15)
     ws.set_column('B:B', 30)
-    ws.set_column('C:F', 45)
+    ws.set_column('C:G', 45)
 
     wb.close()
 
