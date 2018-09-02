@@ -162,8 +162,9 @@ a {
     margin-top: 10px; }
   .export_form a {
     width: 120px;
-    text-align: left; }
+    text-align: centre; }
     .export_form a.loading {
+      text-align: left;
       cursor: crosshair;
       pointer-events: none;
       color: black;

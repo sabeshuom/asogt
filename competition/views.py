@@ -40,12 +40,12 @@ def get_student_details(request):
         year = json_data["year"]
         req_format = json_data["format"]
 
-        if state == "QLD":
-            username = "yoges"
-            password = "Yoges"
-        if state == "NSW":
-            username = "sabesan"
-            password = "Sabesan4NSW"
+        # if state == "QLD":
+        #     username = "yoges"
+        #     password = "Yoges"
+        # if state == "NSW":
+        username = "sabesan"
+        password = "Sabesan4NSW"
         output = BytesIO()
         per_exam_details.export_to_excel(output, state, year, username, password)
         output.seek(0)
@@ -64,12 +64,12 @@ def get_results(request):
         year = json_data["year"]
         req_format = json_data["format"]
 
-        if state == "QLD":
-            username = "yoges"
-            password = "Yoges"
-        if state == "NSW":
-            username = "sabesan"
-            password = "Sabesan4NSW"
+        # if state == "QLD":
+        #     username = "yoges"
+        #     password = "Yoges"
+        # if state == "NSW":
+        username = "sabesan"
+        password = "Sabesan4NSW"
         output = BytesIO()
         if req_format.lower() == "certificate":
             results_for_certificate.export_to_excel(output, state, year, username, password)

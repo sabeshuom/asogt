@@ -43,6 +43,8 @@ def get_row_data(result, state, exam_info):
     grade = result[6]
     comp = exam_info[exam]["comp"]
 
+ 
+
     # get the corresponding keys
     name_info = {
         "STD ID": std_no,

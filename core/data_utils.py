@@ -19,7 +19,8 @@ DIVISION_IDS = {"P": "15", "B": "14", "L": "12", "I": "10",
 COMPETITION_TYPE_IDS = {"P": "1", "S": "2", "V": "4", "SpP-A": "9", "SpP-T": "8", "W": "3", "A": "5", "Q": "7",
                         "D": "6", "All": "Any"}
 COMPET_XLS = os.path.join(MEDIA_ROOT, "comp_data_2018.xlsx")
-STATE_DETAILS = {"QLD": 6, "NSW": 2}
+STATE_DETAILS = {"NSW": 2, "VIC": 3, "SA": 5, "QLD": 6, "WA": 1, "ACT": 8, "NZW": 9, "NZH": 10}
+#7,8,9,
 COMPETITION_IDS = {"All": "Any"}
 
 def get_certificate_info():
@@ -58,7 +59,7 @@ def get_exam_info(sess, state, competion="All"):
         "state_id": STATE_DETAILS[state],
         "year": "2018",
         "division_id": "Any",
-        "exam_category_id": "1",
+        "exam_category_id": "Any",
         "location_id": "Any",
         "competition_id": COMPETITION_IDS[competion],
         "exam_id": "Any",
@@ -103,7 +104,7 @@ def cleanhtml(raw_html):
 
 
 def get_data_table(sess, type_key="student_details"):
-    max_len = 5000
+    max_len = -1
     types = {
         "student_details": {
             "url": "https://www.tamilcompetition.org.au/admin/student_details/get_data_table?draw=1&",

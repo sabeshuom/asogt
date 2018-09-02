@@ -205,9 +205,9 @@ a{
     }
     a{
         width: 120px;
-        text-align: left;
-
+        text-align: centre;
         &.loading{
+            text-align: left;
             cursor: crosshair;
             pointer-events: none;
             color:black;
