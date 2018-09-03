@@ -7,7 +7,7 @@ import json
 import requests
 from io import BytesIO
 
-from view_utils import per_exam_details, results_for_certificate, results_for_trophy
+from view_utils import per_exam_details, results_for_certificate, results_for_trophy, results_for_book
 from asogt.settings import MEDIA_ROOT, MEDIA_URL
 
 # Create your views here.
@@ -75,6 +75,9 @@ def get_results(request):
             results_for_certificate.export_to_excel(output, state, year, username, password)
         if req_format.lower() == "trophy":
             results_for_trophy.export_to_excel(output, state, year, username, password)
+        if req_format.lower() == "book":
+            results_for_book.export_to_excel(output, state, year, username, password)
+
         output.seek(0)
         response = HttpResponse(output.read(
         ), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")

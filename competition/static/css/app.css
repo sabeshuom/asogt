@@ -130,13 +130,16 @@ a {
 
 .export_form {
   background: #fff;
-  width: 50%;
+  width: 30%;
   margin-top: 40px;
-  margin-left: 25%;
+  margin-left: 35%;
   padding: 20px;
   padding-top: 10px;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
   display: inline-block; }
+  .export_form .disabled a {
+    color: red;
+    pointer-events: none; }
   .export_form h4 {
     margin-bottom: 30px; }
   .export_form .label {
@@ -149,9 +152,7 @@ a {
     color: black;
     font-size: 14px;
     line-height: 18px;
-    height: 25px;
-    border: 1px solid rgba(11, 89, 156, 0.1);
-    border-left: 2px solid #1587a9; }
+    height: 25px; }
   .export_form button {
     border-radius: 0px;
     height: 25px;

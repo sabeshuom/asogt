@@ -19,20 +19,28 @@ from core.data_utils import init_sess,\
     split_data,\
     get_certificate_info,\
     DIVISION_IDS
-from core import unicode_to_bamini
+from core.unicode_to_bamini import unicode2bamini
 
 from core.write_timetable import add_time_table
 
 
 BOOK_GRADES = ["First Prize",
-                 "Second Prize",
-                 "Third Prize",
-                 "Grade A",
-                 "Grade B",
-                 "Grade C",
-                 "Participated"]
+               "Second Prize",
+               "Third Prize",
+               "Grade A",
+               "Grade B",
+               "Grade C",
+               "Participated"]
 
-GRADE_WEGHTS = {"First Prize": 2000, "Second Prize": 500, "Thrid Prize": 100, "Grade A": 20, "Grade B": 10, "Grade C": 5}
+GRADE_INFO = {"First Prize": {"weight": 2000, "grade": (" ", "Kjw; ghpR")},
+              "Second Prize": {"weight": 500, "grade": (" ", ",uz;lhk; ghpR")},
+              "Third Prize": {"weight": 100, "grade": (" ", "%d;whk; ghpR")},
+              "Grade A": {"weight": 20, "grade": ("A ", "epiy")},
+              "Grade B": {"weight": 10, "grade": ("B ", "epiy")},
+              "Grade C": {"weight": 5, "grade": ("C ", "epiy")},
+              "Participated": {"weight": 0, "grade": (" ", "gq;Fgw;wpdhu;")},
+              }
+
 
 def get_results_for_book(state, year, username, password):
     sess = init_sess(username, password)
@@ -40,7 +48,7 @@ def get_results_for_book(state, year, username, password):
     exam_info = get_exam_info(sess, state)
 
     book_data = {}
-    division_comp_map  = {}
+    division_comp_map = {}
     for result in results:
         try:
             # get comp grade details
@@ -49,17 +57,18 @@ def get_results_for_book(state, year, username, password):
             grade = result[6]
             comp = result[10]
 
-            if grade in BOOK_GRADES:
+            if grade in GRADE_INFO:
                 if division not in book_data:
                     book_data[division] = {}
                 if division not in division_comp_map:
-                    division_comp_map[division] = []
-                if comp not in division_comp_map:
-                    division_comp_map[division].append(comp)
+                    division_comp_map[division] = {}
+                if comp not in division_comp_map[division]:
+                    division_comp_map[division][comp] = 0
+                division_comp_map[division][comp] += 1
 
                 fullname_uc = result[2].replace("<br>", " ")
                 name_key = "--".join([std_no, fullname_uc])
-                
+
                 if name_key not in book_data[division]:
                     book_data[division][name_key] = {}
 
@@ -69,132 +78,87 @@ def get_results_for_book(state, year, username, password):
             import pdb
             pdb.set_trace()
 
-    return book_data,division_comp_map
+    return book_data, division_comp_map
+
 
 def sort_division_keys(division_data):
-    std_weights  = {}
+    std_weights = {}
     for student in division_data:
         std_weights[student] = 0
         for comp in division_data[student]:
-            weight = GRADE_WEGHTS[division_data[student][comp]]
+            weight = GRADE_INFO[division_data[student][comp]]["weight"]
             std_weights[student] += weight
-    return sorted(std_weights, key=lambda x : std_weights[x], reverse=True)
+    return sorted(std_weights, key=lambda x: std_weights[x], reverse=True)
 
 
 def export_to_excel(xls_wb, state,  year, username, password):
-    book_data, division_map = get_results_for_book(state, year, username, password)
+    book_data, division_map = get_results_for_book(
+        state, year, username, password)
 
     wb = xlsxwriter.Workbook(xls_wb)
+    row_height = 25
+    row_title_height = 35
 
-
-    for division in division_map:
-        ws = wb.add_worksheet("division")
-        comps = division_map[division]
-        row_data = ["std_no", "Namae"]
-        ws.write_row(num_of_header_rows + i, 0, results[std_no])
-
-            for i, std_no in enumerate(sorted(results)):
-        ws.write_row(num_of_header_rows + i, 0, results[std_no])
-
-    row_height = 20
-    ws.set_default_row(row_height)
-    # comps
-    trophy1_format = wb.add_format({
-        'font_name': "Arial",
-        'align': 'center',
-        'bg_color': 'yellow',
-        'bold': 1,
-        'right': 2,
-        'font_size': 14,
-        'valign': 'vcenter'})
-
-    trophy2_format = wb.add_format({
-        'font_name': "Arial",
-        'align': 'center',
-        'bg_color': 'yellow',
-        'bold': 1,
-        'right': 2,
-        'font_size': 14,
-        'valign': 'vcenter'})
-
-    trophy3_format = wb.add_format({
-        'font_name': "Arial",
-        'align': 'center',
-        'bg_color': 'yellow',
-        'bold': 1,
-        'right': 2,
-        'font_size': 14,
-        'valign': 'vcenter'})
-
-    trophy4_format = wb.add_format({
-        'font_name': "Arial",
-        'align': 'center',
-        'bg_color': 'yellow',
-        'right': 2,
-        'font_size': 14,
-        'valign': 'vcenter'})
-
-    trophy5_format = wb.add_format({
-        'font_name': "Arial",
-        'align': 'center',
-        'bg_color': 'yellow',
-        'right': 2,
-        'bottom': 2,
-        'font_size': 14,
-        'valign': 'vcenter'})
-    note_format = wb.add_format({
-        'font_name': "Arial",
-        'align': 'center',
-        'bg_color': 'yellow',
-        'font_size': 14,
-        'valign': 'vcenter'})
-
-    row_title_format = wb.add_format({
-        'font_name': "Arial",
-        'align': 'center',
+    div_header_format = wb.add_format({
+        'font_name': "Bamini",
+        'align': 'left',
         'bg_color': '#ebf0df',
         'bold': 1,
-        'bottom': 2,
-        'top': 2,
-        'left': 2,
-        'right': 2,
+        'border': 2,
         'font_size': 14,
         'valign': 'vcenter'})
 
-    row_format = wb.add_format({
-        'font_name': "Calibri (Body)",
-        'border': 1,
+    bamini_cell_format = wb.add_format({
+        'font_name': "Bamini",
         'align': 'left',
-        'font_size': 11,
+        'font_size': 14,
+        'border': 1,
         'valign': 'vcenter'})
 
-    # trophy headers
-    trophy1 = "Australian Society of Graduate Tamils (ASoGT)"
-    ws.merge_range('A1:D1', trophy1, trophy1_format)
-    trophy2 = "Tamil Competitions 2018 - QLD"
-    ws.merge_range('A2:D2', trophy2, trophy2_format)
-    trophy3 = "Full Name (Eg: Asvetha Senthilkumaran) - Number (Eg: P001)"
-    ws.merge_range('A3:D3', trophy3, trophy3_format)
-    trophy4 = "Grade (Eg: First Prize)  - Competition Name (Eg:Palar - Poetry) "
-    ws.merge_range('A4:D4', trophy4, trophy4_format)
-    trophy5 = "Grade (Eg: First Prize)  - Competition Name (Eg:Palar - Poetry) "
-    ws.merge_range('A5:D5', trophy5, trophy5_format)
+    uc_cell_format = wb.add_format({
+        'font_name': "Calibri (Body)",
+        'align': 'left',
+        'font_size': 14,
+        'border': 1,
+        'valign': 'vcenter'})
 
-    # write note
-    note = "Note: Black Print on Gold Plate"
-    ws.write("E4", note, note_format)
+    for division in division_map:
+        ws = wb.add_worksheet(division)
+        ws.set_default_row(row_height)
+        comps = [comp for comp in sorted(division_map[division], key=lambda x: division_map[division][x], reverse=True)]
+        comps_bamini = [unicode2bamini(comp) for comp in comps]
+        div_header = ["khztu; ,y.", "KOg; ngau;", "KOg; ngau;"] + comps_bamini
+        ws.write_row(0, 0, div_header, div_header_format)
+        ws.set_row(0, row_title_height)
 
-    # write row headers
-    headers = ["Number", "Full Nmae", "Line1",
-               "Line2", "Line3", "Line4", "Line5", "Trophy", "Size"]
-    ws.write_row(5, 0, headers, row_title_format)
+        division_data = book_data[division]
+        std_ids = sort_division_keys(division_data)
+        header_r = 1
+        for r, std in enumerate(std_ids):
+            std_data = division_data[std]
+            std_no, name_uc = std.split("--")
 
-    num_of_header_rows = 6
-    for i, std_no in enumerate(sorted(results)):
-        ws.write_row(num_of_header_rows + i, 0, results[std_no])
-    ws.set_column('A:A', 15)
-    ws.set_column('B:B', 30)
-    ws.set_column('C:G', 45)
+            name_bamini = unicode2bamini(name_uc)
+            c = 0
+            ws.write_string(header_r + r, c, std_no, uc_cell_format)
+            c += 1
+            ws.write_string(header_r + r, c, name_uc, uc_cell_format)
+            c += 1
+            ws.write_string(header_r + r, c, name_bamini, bamini_cell_format)
+
+            for comp in comps:
+                c += 1
+                ws.write_rich_string(header_r +r, c, " ", uc_cell_format)
+                if comp in std_data:
+                    grade = std_data[comp]
+                    grade_e, grade_bamini = GRADE_INFO[grade]["grade"]
+                    ws.write_rich_string(header_r + r, c,
+                                         uc_cell_format, grade_e, bamini_cell_format, grade_bamini, uc_cell_format)
+
+        ws.set_column('A:A', 15)
+        ws.set_column('B:B', 45)
+        ws.set_column('C:C', 35)
+        ws.set_column('D:G', 45)
 
     wb.close()
 
@@ -202,15 +166,9 @@ def export_to_excel(xls_wb, state,  year, username, password):
 if __name__ == "__main__":
     username = "sabesan"
     password = "Sabesan4NSW"
-    # username = "yoges"
-    # password = "Yoges"
-    state = "NSW"
-    xls_wb = "test.xlsx"
-    # export_to_excel(xls_wb, state, year, username, password)
-
     state = "NSW"
     year = "2018"
+    xls_wb = "test.xlsx"
+    export_to_excel(xls_wb, state, year, username, password)
 
-    book_data, div_map = get_results_for_book(state, year, username, password)
-
-    import pdb; pdb.set_trace()
+    # book_data, div_map = get_results_for_book(state, year, username, password)
