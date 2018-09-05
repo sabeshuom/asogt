@@ -167,6 +167,10 @@ a{
     padding-top: 50%;
 }
 
+.dropdown-menu>li>a{
+    width: 100% !important;
+}
+
 .export_form {
     // background: #fff;
     background-color: #f2f2f2;
