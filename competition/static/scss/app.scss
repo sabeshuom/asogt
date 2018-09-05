@@ -168,10 +168,11 @@ a{
 }
 
 .export_form {
-    background: #fff;
-    width: 30%;
+    // background: #fff;
+    background-color: #f2f2f2;
+    width: 40%;
     margin-top: 40px;
-    margin-left: 35%;
+    margin-left: 30%;
     padding: 20px;
     padding-top: 10px;
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
@@ -199,16 +200,65 @@ a{
         // border: 1px solid rgba(11,89,156,.1);
         // border-left: 2px solid #1587a9;
     }
-    button{
-        border-radius: 0px;
-        height: 25px;
-        line-height: 14px;
-        font-size: 14px;
+    .col-40 {
+        float: left;
+        width: calc(40% - 10px);
+        margin-top: 6px;
+        margin-left: 10px;
+    }
+    
+    .col-60 {
+        float: left;
+        width: calc(60% - 10px);
+        margin-top: 6px;
+        margin-right: 10px;
+        button{
+            width: 100%;
+            span.selected{
+                width: 100%;
+                float: left;
+                text-align: left;
+            }
+        }
+    }
+    .download-btn{
+        text-align: right;
+        padding-right: 10px;
+    }
+    /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+    @media screen and (max-width: 800px) {
+        width: 70%;
+        margin-top: 40px;
+        margin-left: 15%;
+        padding: 30px;
+        .col-40, .col-60 {
+            width: 100%;
+            margin-top: 0;
+            margin-left: 0px;
+            margin-right: 0px;
+            .label{
+                text-align: left
+            }
+        }
+        .download-btn{
+            width: 100%;
+            padding-right: 0px;
+            a{
+                width: 100%;
+            }
+        }
     }
     .row{
         margin-bottom: 20px;
         margin-top: 10px;
     }
+    /* Clear floats after the columns */
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
     a{
         width: 120px;
         text-align: centre;
@@ -230,19 +280,21 @@ a{
                 top: 0px;
                 background-size: contain;
             } 
-            &::before{
-                content: ".. processing data";
-                position: absolute;
-                color: black;
-                left: 125px;
-                top: 0px;
-                height: 100%;
-                line-height: 200%;
-            }
+            // &::before{
+            //     content: "Processing data ...";
+            //     position: absolute;
+            //     color: black;
+            //     left: 125px;
+            //     top: 0px;
+            //     height: 100%;
+            //     line-height: 200%;
+            // }
         }
     }
 
   }
+
+
 
 .main-content{
     h4{

@@ -129,14 +129,16 @@ a {
   padding-top: 50%; }
 
 .export_form {
-  background: #fff;
-  width: 30%;
+  background-color: #f2f2f2;
+  width: 40%;
   margin-top: 40px;
-  margin-left: 35%;
+  margin-left: 30%;
   padding: 20px;
   padding-top: 10px;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
-  display: inline-block; }
+  display: inline-block;
+  /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+  /* Clear floats after the columns */ }
   .export_form .disabled a {
     color: red;
     pointer-events: none; }
@@ -153,14 +155,50 @@ a {
     font-size: 14px;
     line-height: 18px;
     height: 25px; }
-  .export_form button {
-    border-radius: 0px;
-    height: 25px;
-    line-height: 14px;
-    font-size: 14px; }
+  .export_form .col-40 {
+    float: left;
+    width: calc(40% - 10px);
+    margin-top: 6px;
+    margin-left: 10px; }
+  .export_form .col-60 {
+    float: left;
+    width: calc(60% - 10px);
+    margin-top: 6px;
+    margin-right: 10px; }
+    .export_form .col-60 button {
+      width: 100%; }
+      .export_form .col-60 button span.selected {
+        width: 100%;
+        float: left;
+        text-align: left; }
+  .export_form .download-btn {
+    text-align: right;
+    padding-right: 10px; }
+  @media screen and (max-width: 800px) {
+    .export_form {
+      width: 70%;
+      margin-top: 40px;
+      margin-left: 15%;
+      padding: 30px; }
+      .export_form .col-40, .export_form .col-60 {
+        width: 100%;
+        margin-top: 0;
+        margin-left: 0px;
+        margin-right: 0px; }
+        .export_form .col-40 .label, .export_form .col-60 .label {
+          text-align: left; }
+      .export_form .download-btn {
+        width: 100%;
+        padding-right: 0px; }
+        .export_form .download-btn a {
+          width: 100%; } }
   .export_form .row {
     margin-bottom: 20px;
     margin-top: 10px; }
+  .export_form .row:after {
+    content: "";
+    display: table;
+    clear: both; }
   .export_form a {
     width: 120px;
     text-align: centre; }
@@ -181,14 +219,6 @@ a {
         right: -0px;
         top: 0px;
         background-size: contain; }
-      .export_form a.loading::before {
-        content: ".. processing data";
-        position: absolute;
-        color: black;
-        left: 125px;
-        top: 0px;
-        height: 100%;
-        line-height: 200%; }
 
 .main-content {
   width: 90%;

@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import os
 import sys
 import requests
@@ -7,6 +11,8 @@ import re
 import xlrd
 import string
 import numpy as np
+from docx import Document
+from docx.shared import Inches
 
 sys.path.append("../../")
 from asogt.settings import MEDIA_ROOT, BASE_DIR
@@ -23,6 +29,8 @@ from core.unicode_to_bamini import unicode2bamini
 
 from core.write_timetable import add_time_table
 
+DIVISION_ORDER = ["பாலர் பிரிவு", "ஆரம்பப் பிரிவு", "கீழ்ப் பிரிவு",
+                  "மத்திய பிரிவு", "மேற் பிரிவு", "அதிமேற் பிரிவு", "இளைஞர் பிரிவு"]
 
 BOOK_GRADES = ["First Prize",
                "Second Prize",
@@ -31,6 +39,16 @@ BOOK_GRADES = ["First Prize",
                "Grade B",
                "Grade C",
                "Participated"]
+
+STATE_TAMIL = {"QLD": "Fapd;];yhe;J",
+               "NSW":	"epA+ rTj; Nty;];",
+               "VIC": "tpf;Nuhupah",
+               "SA": "njw;F M];jpNuypah",
+               "ACT": "fd;nguh",
+               "WA": "Nkw;F M];jpNuypah",
+               "NZW": "ntypq;ld;> epA+rpyhe;J",
+               "NZH": "`hkpy;ld;> epA+rpyhe;J"}
+
 
 GRADE_INFO = {"First Prize": {"weight": 2000, "grade": (" ", "Kjw; ghpR")},
               "Second Prize": {"weight": 500, "grade": (" ", ",uz;lhk; ghpR")},
@@ -122,10 +140,11 @@ def export_to_excel(xls_wb, state,  year, username, password):
         'border': 1,
         'valign': 'vcenter'})
 
-    for division in division_map:
+    for division in DIVISION_ORDER:
         ws = wb.add_worksheet(division)
         ws.set_default_row(row_height)
-        comps = [comp for comp in sorted(division_map[division], key=lambda x: division_map[division][x], reverse=True)]
+        comps = [comp for comp in sorted(
+            division_map[division], key=lambda x: division_map[division][x], reverse=True)]
         comps_bamini = [unicode2bamini(comp) for comp in comps]
         div_header = ["khztu; ,y.", "KOg; ngau;", "KOg; ngau;"] + comps_bamini
         ws.write_row(0, 0, div_header, div_header_format)
@@ -148,12 +167,16 @@ def export_to_excel(xls_wb, state,  year, username, password):
 
             for comp in comps:
                 c += 1
-                ws.write_rich_string(header_r +r, c, " ", uc_cell_format)
+                ws.write_rich_string(header_r + r, c, " ", uc_cell_format)
                 if comp in std_data:
                     grade = std_data[comp]
                     grade_e, grade_bamini = GRADE_INFO[grade]["grade"]
-                    ws.write_rich_string(header_r + r, c,
-                                         uc_cell_format, grade_e, bamini_cell_format, grade_bamini, uc_cell_format)
+                    if grade_e != "":
+                        ws.write_rich_string(header_r + r, c,
+                                             uc_cell_format, grade_e, bamini_cell_format, grade_bamini, uc_cell_format)
+                    else:
+                        ws.write_rich_string(
+                            header_r + r, c, bamini_cell_format, grade_bamini, uc_cell_format)
 
         ws.set_column('A:A', 15)
         ws.set_column('B:B', 45)
@@ -162,6 +185,58 @@ def export_to_excel(xls_wb, state,  year, username, password):
 
     wb.close()
 
+def export_to_docx(word_doc, state,  year, username, password):
+    book_data, division_map = get_results_for_book(
+        state, year, username, password)
+    template = os.path.join(MEDIA_ROOT, "book_template.docx")
+    document = Document(template)
+
+    for division in DIVISION_ORDER:
+        comps = [comp for comp in sorted(
+            division_map[division], key=lambda x: division_map[division][x], reverse=True)]
+        comps_bamini = [unicode2bamini(comp) for comp in comps]
+        division_bamini = unicode2bamini(division)
+        division_heading = "{:s} - {:s} -  ghpRngw;Nwhh; gl;bay".format(
+            division_bamini, STATE_TAMIL[state])
+
+        document.add_paragraph(division_heading, style='Section Title Tamil')
+
+        table = document.add_table(
+            rows=1, cols=len(comps) + 1, style='Table Grid')
+        hdr_cells = table.rows[0].cells
+
+        # write headers
+        hdr_cells[0].text = "KOg;ngah;"
+        hdr_cells[0].paragraphs[0].style = document.styles["Table Header Tamil"]
+        for c, comp_bamini in enumerate(comps_bamini):
+            cell = hdr_cells[c+1]
+            cell.text = comp_bamini
+            cell.paragraphs[0].style = document.styles["Table Header Tamil"]
+
+        division_data = book_data[division]
+        std_ids = sort_division_keys(division_data)
+        for std_id in std_ids:
+            std_data = division_data[std_id]
+            std_no, name_uc = std_id.split("--")
+            name_bamini = unicode2bamini(name_uc)
+            row_cells = table.add_row().cells
+            row_cells[0].text = name_bamini
+            row_cells[0].paragraphs[0].style = document.styles["Table Cell Tamil Left"]
+            for c, comp in enumerate(comps):
+                cell = row_cells[c+1]
+                cell.text = ""
+                if comp in std_data:
+                    grade = std_data[comp]
+                    grade_e, grade_bamini = GRADE_INFO[grade]["grade"]
+                    if grade_e != " ":
+                        eng = cell.paragraphs[0].add_run(grade_e + " ")
+                        eng.font.name = "Calibri"
+                    tamil = cell.paragraphs[0].add_run(grade_bamini)
+                    tamil.font.name = "Bamini"
+
+    # document.add_page_break()
+    document.save(word_doc)
+
 
 if __name__ == "__main__":
     username = "sabesan"
@@ -169,6 +244,6 @@ if __name__ == "__main__":
     state = "NSW"
     year = "2018"
     xls_wb = "test.xlsx"
-    export_to_excel(xls_wb, state, year, username, password)
-
-    # book_data, div_map = get_results_for_book(state, year, username, password)
+    word_doc = "test.docx"
+    export_to_excel(xls_wb, state,  year, username, password)
+    export_to_docx(word_doc, state,  year, username, password)

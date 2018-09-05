@@ -47,13 +47,15 @@ def get_student_details(request):
         username = "sabesan"
         password = "Sabesan4NSW"
         output = BytesIO()
-        per_exam_details.export_to_excel(output, state, year, username, password)
+        per_exam_details.export_to_excel(
+            output, state, year, username, password)
         output.seek(0)
         response = HttpResponse(output.read(
         ), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         return response
 
-
+# Content types reference:
+# https://stackoverflow.com/questions/4212861/what-is-a-correct-mime-type-for-docx-pptx-etc
 @csrf_exempt
 def get_results(request):
     if not request.user.is_authenticated():
@@ -71,14 +73,21 @@ def get_results(request):
         username = "sabesan"
         password = "Sabesan4NSW"
         output = BytesIO()
+        content_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         if req_format.lower() == "certificate":
-            results_for_certificate.export_to_excel(output, state, year, username, password)
+            results_for_certificate.export_to_excel(
+                output, state, year, username, password)
         if req_format.lower() == "trophy":
-            results_for_trophy.export_to_excel(output, state, year, username, password)
-        if req_format.lower() == "book":
-            results_for_book.export_to_excel(output, state, year, username, password)
+            results_for_trophy.export_to_excel(
+                output, state, year, username, password)
+        if req_format.lower() == "book excel":
+            results_for_book.export_to_excel(
+                output, state, year, username, password)
+        if req_format.lower() == "book word":
+            content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            results_for_book.export_to_docx(
+                output, state, year, username, password)
 
         output.seek(0)
-        response = HttpResponse(output.read(
-        ), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        response = HttpResponse(output.read(), content_type=content_type)
         return response

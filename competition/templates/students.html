@@ -56,12 +56,12 @@
         <h4>Export Student Details to Excel</h4>
 
         <div class="row">
-            <div class="col-sm-offset-2 col-sm-4">
+            <div class="col-40">
                 <div class="label"> State :</div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-60">
                 <div class="dropdown">
-                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                    <button class="btn btn-default dropdown-toggle btn-download" type="button" data-toggle="dropdown">
                         <span id="students_selected_state" class="selected">NSW</span>
                         <span class="caret"></span>
                     </button>
@@ -69,21 +69,21 @@
                         <li><a>QLD</a></li>
                         <li><a>NSW</a></li>
                         <li><a>VIC</a></li>
-                        <li><a>ACT</a></li>
                         <li><a>SA</a></li>
-                        <li><a>WA</a></li>
-                        <li><a>NZW</a></li>
-                        <li><a>NZH</a></li>
+                        <li class="disabled"><a>ACT</a></li>
+                        <li class="disabled"><a>WA</a></li>
+                        <li class="disabled"><a>NZW</a></li>
+                        <li class="disabled"><a>NZH</a></li>
                     </ul>
                 </div>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-sm-offset-2 col-sm-4">
+            <div class="col-40">
                 <div class="label"> Year :</div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-60">
                 <div class="dropdown">
                     <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
                         <span id="students_selected_year" class="selected">2018</span>
@@ -102,10 +102,10 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-offset-2 col-sm-4">
+            <div class="col-40">
                 <div class="label"> Format :</div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-60">
                 <div class="dropdown">
                     <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
                         <span id="students_selected_format" class="selected">Per Exam</span>
@@ -121,7 +121,7 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-offset-2 col-sm-4">
+            <div class="download-btn">
                 <a class="btn btn-primary " onclick="get_student_details(this)">Download</a>
             </div>
         </div>
