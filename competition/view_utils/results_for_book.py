@@ -196,7 +196,7 @@ def export_to_docx(word_doc, state,  year, username, password):
             division_map[division], key=lambda x: division_map[division][x], reverse=True)]
         comps_bamini = [unicode2bamini(comp) for comp in comps]
         division_bamini = unicode2bamini(division)
-        division_heading = "{:s} - {:s} -  ghpRngw;Nwhh; gl;bay".format(
+        division_heading = "{:s} - {:s} -  ghpRngw;Nwhh; gl;bay;".format(
             division_bamini, STATE_TAMIL[state])
 
         document.add_paragraph(division_heading, style='Section Title Tamil')
