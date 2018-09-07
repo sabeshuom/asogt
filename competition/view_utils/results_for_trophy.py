@@ -24,13 +24,17 @@ from core.write_timetable import add_time_table
 
 
 CERT_INFO = get_certificate_info()
-TROPHY_GRADES = ["First Prize",
-                 "Second Prize",
-                 "Third Prize",
-                 "Grade A",
-                 "Grade B",
-                 "Grade C",
-                 "Participated"]
+TROPHY_GRADES = {"First Prize": 1,
+                 "Second Prize": 2,
+                 "Third Prize": 3,
+                 "Grade A": 4,
+                 "Grade B": 5,
+                 "Grade C": 6,
+                 "Participated": 7}
+
+
+def grade_weight(grade):
+    return TROPHY_GRADES.get(grade, 1000)
 
 
 def get_results_per_student(state, year, username, password):
@@ -39,7 +43,8 @@ def get_results_per_student(state, year, username, password):
     exam_info = get_exam_info(sess, state)
 
     student_data = {}
-    for result in results:
+    num_of_lines = 0
+    for result in sorted(results, key=lambda x: grade_weight(x[6])):
         try:
             # get comp grade details
             exam = result[5]
@@ -54,17 +59,18 @@ def get_results_per_student(state, year, username, password):
                                                             grade)
                 std_data.append(comp_grade_info)
                 student_data[std_no] = std_data
+                num_of_lines = max(num_of_lines, len(std_data) -2)
         except Exception as e:
             print(e)
             import pdb
             pdb.set_trace()
 
 
-    return student_data
+    return student_data, num_of_lines
 
 
 def export_to_excel(xls_wb, state,  year, username, password):
-    results = get_results_per_student(state, year, username, password)
+    results, num_of_lines = get_results_per_student(state, year, username, password)
     wb = xlsxwriter.Workbook(xls_wb)
     ws = wb.add_worksheet("Trophy_template")
 
@@ -157,8 +163,9 @@ def export_to_excel(xls_wb, state,  year, username, password):
     ws.write("E4", note, note_format)
 
     # write row headers
-    headers = ["Number", "Full Nmae", "Line1",
-               "Line2", "Line3", "Line4", "Line5", "Trophy", "Size"]
+    headers = ["Number", "Full Nmae"] +\
+        ["Line{:d}".format(line_no + 1) for line_no in range(num_of_lines)] +\
+        ["Trophy", "Size"]
     ws.write_row(5, 0, headers, row_title_format)
 
     num_of_header_rows = 6
