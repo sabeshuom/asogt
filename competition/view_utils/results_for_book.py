@@ -72,7 +72,7 @@ def get_results_for_book(state, year, username, password):
             # get comp grade details
             std_no = result[0]
             division = result[4]
-            grade = result[6]
+            grade = result[6] if result[7] == "" else result[7]
             comp = result[10]
 
             if grade in GRADE_INFO:
@@ -89,10 +89,12 @@ def get_results_for_book(state, year, username, password):
 
                 if name_key not in book_data[division]:
                     book_data[division][name_key] = {}
+            else:
+                print("Info for Grade {:s} not found.".format(grade))
 
                 book_data[division][name_key][comp] = grade
         except Exception as e:
-            print(e)
+            print("Getting exception on getting results for book, Error - {}".format(e))
             import pdb
             pdb.set_trace()
 

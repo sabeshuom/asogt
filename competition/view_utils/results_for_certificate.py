@@ -34,16 +34,19 @@ def merge_dicts(dict_list):
 
 
 def get_row_data(result, state, exam_info):
-    std_no = result[0]
-    name_e = result[1].replace("<br>", " ")
-    name_t = result[2].replace("<br>", " ")
-    name_t_bamini = unicode_to_bamini.unicode2bamini(name_t)
-    gender = result[3]
-    exam = result[5]
-    grade = result[6]
-    comp = exam_info[exam]["comp"]
-
- 
+    try:
+        std_no = result[0]
+        name_e = result[1].replace("<br>", " ")
+        name_t = result[2].replace("<br>", " ")
+        name_t_bamini = unicode_to_bamini.unicode2bamini(name_t)
+        gender = result[3]
+        exam = result[5]
+        res = result[6]
+        award = result[7]
+        grade = res if award == "" else award + "-" + res
+        comp = exam_info[exam]["comp"]
+    except Exception, e:
+        print("Geetting Exception when getting row data {:s}".format(str(e)))
 
     # get the corresponding keys
     name_info = {
