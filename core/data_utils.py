@@ -43,7 +43,7 @@ DIVISION_ORDER = [("பாலர் பிரிவு", "P"),
                   ("மத்திய பிரிவு", "I"), ("மேற் பிரிவு", "S"),
                   ("அதிமேற் பிரிவு", "AS"), ("இளைஞர் பிரிவு", "Y"),
                   (__group_comp__,
-                   "GRP"), (__special_comp__, "SPB"),
+                   "G"), (__special_comp__, "SP"),
                   ]
 GROUP_COMPS = ["வினாடி வினாப் போட்டி - அதிமேற் பிரிவு",
                "வினாடி வினாப் போட்டி - இளைஞர் பிரிவு", "விவாத போட்டி - இளைஞர் பிரிவு"
@@ -66,7 +66,7 @@ class Result(object):
         self.exam_e = result[6].split("<br>")[0]
         self.grade = result[7]
         self.award = result[8]
-        self.comp_t = result[12]
+        self.comp_t = result[12].strip()
         self.result_type = result[5]
 
 
@@ -335,7 +335,7 @@ def sort_std_keys_for_division(division_data):
 
 
 class Student(object):
-    def __init__(self, std_no, name_t="", name_e="", seat_pos="9999"):
+    def __init__(self, std_no, name_t="", name_e="", seat_pos="999"):
         self.std_no = std_no
         self.name_t = name_t
         self.name_e = name_e
@@ -379,15 +379,15 @@ def process_results_for_seating_number(results):
             print("division {} not found in ordered results".format(division))
             continue
         division_data = ordered_results[division]
-        if division_prefix == "GRP":
+        if division_prefix == "G":
             ordered_stds = sort_std_no_group(division_data)
         else:
             ordered_stds = sort_std_keys_for_division(division_data)
 
         for std_no in ordered_stds:
-            if student_data_map[std_no].seat_pos in ["", "9999"]:
+            if student_data_map[std_no].seat_pos in ["", "999"]:
                 seat_count += 1
-                seat_pos = '{:s}{:04d}'.format(
+                seat_pos = '{:s}{:03d}'.format(
                     division_prefix, seat_count)
                 student_data_map[std_no].seat_pos = seat_pos
 

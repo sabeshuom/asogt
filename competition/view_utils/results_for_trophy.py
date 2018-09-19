@@ -72,18 +72,18 @@ def get_trophy_data_by_rows(ordered_results, student_data_map):
 
         division_data = ordered_results[division]
 
-        if division_prefix == "GRP":
+        if division_prefix == "G":
             add_trophy_rows_for_group(division_data)
             continue
 
         ordered_std_nos = sorted(division_data.keys(), key=lambda x: int(
-            student_data_map[x].seat_pos[-4:]))
+            student_data_map[x].seat_pos[-3:]))
         for std_no in ordered_std_nos:
             std = student_data_map[std_no]
             seat_pos = std.seat_pos
             name_e = std.name_e
             std_comps = division_data[std_no]
-            if division_prefix not in ["SPB"]:
+            if division_prefix not in ["SP"]:
                 num_of_lines = max(num_of_lines, len(std_comps))
                 trophy_rows.append([seat_pos, std_no, name_e])
             for comp_t in sorted(std_comps, key=lambda x: GRADE_WEIGHTS.get(std_comps[x], 0), reverse=True):
@@ -103,7 +103,7 @@ def get_trophy_data_by_rows(ordered_results, student_data_map):
                 comp_grade_info = "{:s} {:s} - {:s}".format(comp_division,
                                                             comp_type,
                                                             grade)
-                if division_prefix in ["SPB"]:
+                if division_prefix in ["SP"]:
                     trophy_rows.append(
                         [seat_pos, std_no, name_e, comp_grade_info])
                 else:
@@ -317,7 +317,7 @@ def export_to_excel(xls_wb, state,  year, result_type, username, password):
     ws.set_column(3, trophy_column - 1, 45)
     ws.set_column(trophy_column, trophy_column, 15)
 
-    # for i, seating_no in enumerate(sorted(results, key=lambda x: int(x[-4:]))):
+    # for i, seating_no in enumerate(sorted(results, key=lambda x: int(x[-3:]))):
     #     result_row = results[seating_no]
     #     ws.write_row(num_of_header_rows + i, 0, result_row)
     #     trophy_size = compute_trophy_size(result_row)

@@ -103,11 +103,11 @@ def export_to_excel(xls_wb, state,  year, result_type, username, password):
 
         division_data = ordered_results[division]
         header_r = 1
-        if division_prefix == "GRP":
+        if division_prefix == "G":
             sorted_stds = sort_std_keys_for_division(division_data)
         else:
             sorted_stds = sorted(division_data, key=lambda x: int(
-                student_data_map[x].seat_pos[-4:]))
+                student_data_map[x].seat_pos[-3:]))
 
         for r, std_no in enumerate(sorted_stds):
             std_data = student_data_map[std_no]
@@ -168,7 +168,7 @@ def export_to_docx(word_doc, state,  year,  result_type, username, password):
 
         # add table for each division
         table = document.add_table(
-            rows=1, cols=len(comps) + 1, style='Table Grid')
+            rows=1, cols=len(comps) + 2, style='Table Grid')
         hdr_cells = table.rows[0].cells
 
         # write headers
@@ -176,19 +176,23 @@ def export_to_docx(word_doc, state,  year,  result_type, username, password):
         hdr_cells[0].text = "KOg;ngah;"
         hdr_cells[0].paragraphs[0].style = document.styles["Table Header Tamil"]
 
+        # aasana ilakkam
+        hdr_cells[1].text = "Mrd ,y."
+        hdr_cells[1].paragraphs[0].style = document.styles["Table Header Tamil"]
+
         # next columns with competitions details in bamini
         for c, comp_bamini in enumerate(comps_bamini):
-            cell = hdr_cells[c+1]
+            cell = hdr_cells[c+2]
             cell.text = comp_bamini
             cell.paragraphs[0].style = document.styles["Table Header Tamil"]
 
         division_data = ordered_results[division]
 
-        if division_prefix == "GRP":
+        if division_prefix == "G":
             sorted_stds = sort_std_keys_for_division(division_data)
         else:
             sorted_stds = sorted(division_data, key=lambda x: int(
-                student_data_map[x].seat_pos[-4:]))
+                student_data_map[x].seat_pos[-3:]))
 
         for std_no in sorted_stds:
             std_data = student_data_map[std_no]
@@ -200,10 +204,12 @@ def export_to_docx(word_doc, state,  year,  result_type, username, password):
             row_cells = table.add_row().cells
             row_cells[0].text = name_bamini
             row_cells[0].paragraphs[0].style = document.styles["Table Cell Tamil Left"]
+            row_cells[1].text = seat_pos
+            row_cells[1].paragraphs[0].style = document.styles["Table Cell Eng"]
 
             # loop through sored order on comps
             for c, comp in enumerate(comps):
-                cell = row_cells[c+1]
+                cell = row_cells[c+2]
                 cell.text = ""
                 if comp in std_comps:
                     grade = std_comps[comp]
