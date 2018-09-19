@@ -65,6 +65,7 @@ def get_results(request):
         state = json_data["state"]
         year = json_data["year"]
         req_format = json_data["format"]
+        result_type = "State"
 
         # if state == "QLD":
         #     username = "yoges"
@@ -76,17 +77,17 @@ def get_results(request):
         content_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         if req_format.lower() == "certificate":
             results_for_certificate.export_to_excel(
-                output, state, year, username, password)
+                output, state, year, result_type,  username, password)
         if req_format.lower() == "trophy":
             results_for_trophy.export_to_excel(
-                output, state, year, username, password)
+                output, state, year, result_type, username, password)
         if req_format.lower() == "book excel":
             results_for_book.export_to_excel(
-                output, state, year, username, password)
+                output, state, year, result_type, username, password)
         if req_format.lower() == "book word":
             content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
             results_for_book.export_to_docx(
-                output, state, year, username, password)
+                output, state, year, result_type, username, password)
 
         output.seek(0)
         response = HttpResponse(output.read(), content_type=content_type)

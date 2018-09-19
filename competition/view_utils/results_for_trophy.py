@@ -11,74 +11,164 @@ import numpy as np
 sys.path.append("../../")
 from asogt.settings import MEDIA_ROOT, BASE_DIR
 from core.data_utils import init_sess,\
-    get_competition_details,\
-    get_competition_info,\
-    get_exam_info,\
     get_results,\
-    cleanhtml,\
-    split_data,\
-    get_certificate_info
+    sort_std_keys_for_division,\
+    get_ref_data_from_excel,\
+    process_results_for_seating_number,\
+    GRADE_WEIGHTS,\
+    DIVISION_ORDER,\
+    GRADES
+
 from core import unicode_to_bamini
 
 from core.write_timetable import add_time_table
 
 
-CERT_INFO = get_certificate_info()
-TROPHY_GRADES = {"First Prize": 2000,
-                 "Second Prize": 500,
-                 "Third Prize": 100,
-                 "Grade A": 20,
-                 "Grade B": 10,
-                 "Grade C": 5,
-                 "Participated": 1}
+REF_DATA = get_ref_data_from_excel()
 
 
-def grade_weight(x):
-    grade = x[6] if x[7] == "" else x[7]
-    return TROPHY_GRADES.get(grade, 0)
-
-
-def get_student_weight(std_data):
-    std_weight = 0
-    for res in std_data[2:]:
-        grade = res.split(" - ")[-1]
-        try:
-            std_weight += TROPHY_GRADES[grade]
-        except Exception, e:
-            print("Error in getting student weight for grade {:s}".format(grade))
-    return std_weight
-
-
-def get_results_per_student(state, year, username, password):
-    sess = init_sess(username, password)
-    results = get_results(sess, state, year,  "All")
-    exam_info = get_exam_info(sess, state)
-
-    student_data = {}
+def get_trophy_data_by_rows(ordered_results, student_data_map):
+    trophy_rows = []
     num_of_lines = 0
-    for result in sorted(results, key=lambda x: grade_weight(x), reverse=True):
-        try:
-            # get comp grade details
-            exam = result[5]
-            grade = result[6] if result[7] == "" else result[7]
-            if grade in TROPHY_GRADES:
-                std_no = result[0]
-                fullname_eng = result[1].replace("<br>", " ")
-                std_data = student_data.get(std_no, [std_no, fullname_eng])
-                comp = exam_info[exam]["comp"]
-                comp_grade_info = "{:s} {:s} - {:s}".format(CERT_INFO["competitions"][comp]["E7"],
-                                                            CERT_INFO["competitions"][comp]["E9"],
+    name_cols = 3
+    comp_details = REF_DATA.competition_details
+    cert_comp_data = REF_DATA.cert_competitions
+
+    # get trophy details for the group information
+    def add_trophy_rows_for_group(division_data):
+        comps = {}
+        for std_no in division_data:
+            std_comps = division_data[std_no]
+            for comp_t in std_comps:
+                if comp_t not in comps:
+                    comps[comp_t] = {grade: [] for grade in GRADES}
+                grade = std_comps[comp_t]
+                comps[comp_t][grade].append(std_no)
+
+        for grade in GRADES:
+            for comp_t in comps:
+                comp_code = comp_details[comp_details["Comp Tamil"]
+                                        == comp_t]["Comp Code"].item()
+                comp_division = cert_comp_data[comp_code]["E7"]
+                comp_type = cert_comp_data[comp_code]["E9"]
+                if grade not in comps[comp_t]:
+                    continue
+                else:
+                    comp_grade_info = "{:s} {:s} - {:s}".format(comp_division,
+                                                                comp_type,
+                                                                grade)
+                    for std_no in comps[comp_t][grade]:
+                        std = student_data_map[std_no]
+                        seat_pos = std.seat_pos
+                        name_e = std.name_e
+                        trophy_rows.append(
+                            [seat_pos, std_no, name_e, comp_grade_info])
+
+    # loop through the division
+    for division, division_prefix in DIVISION_ORDER:
+        if division not in ordered_results:
+            print("division {} not found.".format(division))
+            continue
+
+        division_data = ordered_results[division]
+
+        if division_prefix == "GRP":
+            add_trophy_rows_for_group(division_data)
+            continue
+
+        ordered_std_nos = sorted(division_data.keys(), key=lambda x: int(
+            student_data_map[x].seat_pos[-4:]))
+        for std_no in ordered_std_nos:
+            std = student_data_map[std_no]
+            seat_pos = std.seat_pos
+            name_e = std.name_e
+            std_comps = division_data[std_no]
+            if division_prefix not in ["SPB"]:
+                num_of_lines = max(num_of_lines, len(std_comps))
+                trophy_rows.append([seat_pos, std_no, name_e])
+            for comp_t in sorted(std_comps, key=lambda x: GRADE_WEIGHTS.get(std_comps[x], 0), reverse=True):
+                try:
+                    comp_code = comp_details[comp_details["Comp Tamil"]
+                                             == comp_t]["Comp Code"].item()
+                    comp_division = cert_comp_data[comp_code]["E7"]
+                    comp_type = cert_comp_data[comp_code]["E9"]
+                except Exception, e:
+                    print("getting error on processing row {}".format(str(e)))
+                    import pdb
+                    pdb.set_trace()
+
+                grade = std_comps[comp_t]
+                if grade not in GRADES:
+                    continue
+                comp_grade_info = "{:s} {:s} - {:s}".format(comp_division,
+                                                            comp_type,
                                                             grade)
-                std_data.append(comp_grade_info)
-                student_data[std_no] = std_data
-                num_of_lines = max(num_of_lines, len(std_data) - 2)
-            else:
-                print("Grade not found {:s}".format(grade))
-        except Exception as e:
-            print(e)
-            import pdb
-            pdb.set_trace()
-    return student_data, num_of_lines
+                if division_prefix in ["SPB"]:
+                    trophy_rows.append(
+                        [seat_pos, std_no, name_e, comp_grade_info])
+                else:
+                    trophy_rows[-1].append(comp_grade_info)
+            # check there whehter there is enough competitions there:
+            if len(trophy_rows[-1]) == 3:
+                print(
+                    "No valid competitions grades fround for std_no : {} ".format(std_no))
+                del trophy_rows[-1]
+
+    return trophy_rows, num_of_lines
+
+    # for result in sorted(results, key=lambda x: result_weight(x), reverse=True):
+    #     try:
+    #         # get comp grade details
+    #         exam_e = result.exam_e
+    #         grade = result.grade if result.award == "" else result.award
+    #         if grade in GRADE_WEIGHTS:
+    #             std_no = result.std_no
+    #             seating_no = seating_num_map[std_no]
+    #             name_e = result.name_e
+    #             std_data = student_data.get(seating_no, [seating_no, std_no, name_e])
+    #             comp_code = exam_info[exam_e].comp_code
+    #             comp_grade_info = "{:s} {:s} - {:s}".format(CERT_INFO["competitions"][comp_code]["E7"],
+    #                                                         CERT_INFO["competitions"][comp_code]["E9"],
+    #                                                         grade)
+    #             std_data.append(comp_grade_info)
+    #             student_data[seating_no] = std_data
+    #             num_of_lines = max(num_of_lines, len(std_data) - name_cols)
+    #         else:
+    #             print("Grade not found {:s}".format(grade))
+    #     except Exception as e:
+    #         print(e)
+    #         import pdb
+    #         pdb.set_trace()
+    # return student_data, num_of_lines
+
+# def get_results_per_student(results, exam_info, seating_num_map):
+#     student_data = {}
+#     num_of_lines = 0
+#     name_cols = 3
+#     for result in sorted(results, key=lambda x: result_weight(x), reverse=True):
+#         try:
+#             # get comp grade details
+#             exam_e = result.exam_e
+#             grade = result.grade if result.award == "" else result.award
+#             if grade in GRADE_WEIGHTS:
+#                 std_no = result.std_no
+#                 seating_no = seating_num_map[std_no]
+#                 name_e = result.name_e
+#                 std_data = student_data.get(seating_no, [seating_no, std_no, name_e])
+#                 comp_code = exam_info[exam_e].comp_code
+#                 comp_grade_info = "{:s} {:s} - {:s}".format(CERT_INFO["competitions"][comp_code]["E7"],
+#                                                             CERT_INFO["competitions"][comp_code]["E9"],
+#                                                             grade)
+#                 std_data.append(comp_grade_info)
+#                 student_data[seating_no] = std_data
+#                 num_of_lines = max(num_of_lines, len(std_data) - name_cols)
+#             else:
+#                 print("Grade not found {:s}".format(grade))
+#         except Exception as e:
+#             print(e)
+#             import pdb
+#             pdb.set_trace()
+#     return student_data, num_of_lines
 
 
 def sort_students(std_result):
@@ -91,8 +181,32 @@ def sort_students(std_result):
     return sorted(std_weights, key=lambda x: std_weights[x], reverse=True)
 
 
-def export_to_excel(xls_wb, state,  year, username, password):
-    results, num_of_lines = get_results_per_student(state, year, username, password)
+def compute_trophy_size(result_row):
+    """
+     compute the trophy size according to below:
+    if there is first price: trophy size =1
+    else if there is second price: trophy size =2
+    else if there is thrid price: trophy size = 3
+    otherwise : 4
+    """
+    grades = [r.split(" - ")[-1] for r in result_row]
+    if "First Prize" in grades:
+        return 1
+    if "Second Prize" in grades:
+        return 2
+    if "Third Prize" in grades:
+        return 3
+    return 4
+
+
+def export_to_excel(xls_wb, state,  year, result_type, username, password):
+    sess = init_sess(username, password)
+    results = get_results(sess, state=state, year=year,
+                          competion="All", result_type=result_type)
+    ordered_results, division_comp_map, student_data_map = process_results_for_seating_number(
+        results)
+    trophy_rows, num_of_lines = get_trophy_data_by_rows(
+        ordered_results, student_data_map)
     wb = xlsxwriter.Workbook(xls_wb)
     ws = wb.add_worksheet("Trophy_template")
 
@@ -185,17 +299,33 @@ def export_to_excel(xls_wb, state,  year, username, password):
     ws.write("E4", note, note_format)
 
     # write row headers
-    headers = ["Number", "Full Nmae"] +\
+    headers = ["Seat No", "Std No", "Full Nmae"] +\
         ["Line{:d}".format(line_no + 1) for line_no in range(num_of_lines)] +\
-        ["Trophy", "Size"]
+        ["Trophy Size"]
     ws.write_row(5, 0, headers, row_title_format)
 
     num_of_header_rows = 6
-    for i, std_no in enumerate(sorted(results, key=lambda x: get_student_weight(results[x]), reverse=True)):
-        ws.write_row(num_of_header_rows + i, 0, results[std_no])
-    ws.set_column('A:A', 15)
-    ws.set_column('B:B', 30)
-    ws.set_column('C:G', 45)
+    trophy_column = num_of_lines + 3
+
+    for i, trophy_row in enumerate(trophy_rows):
+        ws.write_row(num_of_header_rows + i, 0, trophy_row)
+        trophy_size = compute_trophy_size(trophy_row)
+        ws.write(num_of_header_rows + i, trophy_column, trophy_size)
+
+    ws.set_column(0, 1, 15)
+    ws.set_column(2, 2, 30)
+    ws.set_column(3, trophy_column - 1, 45)
+    ws.set_column(trophy_column, trophy_column, 15)
+
+    # for i, seating_no in enumerate(sorted(results, key=lambda x: int(x[-4:]))):
+    #     result_row = results[seating_no]
+    #     ws.write_row(num_of_header_rows + i, 0, result_row)
+    #     trophy_size = compute_trophy_size(result_row)
+    #     ws.write(num_of_header_rows + i, trophy_column, trophy_size)
+    # ws.set_column(0, 1, 15)
+    # ws.set_column(2, 2, 30)
+    # ws.set_column(3, trophy_column - 1, 45)
+    # ws.set_column(trophy_column, trophy_column, 15)
 
     wb.close()
 
@@ -207,4 +337,6 @@ if __name__ == "__main__":
     # password = "Yoges"
     state = "NSW"
     xls_wb = "test.xlsx"
-    export_to_excel(xls_wb, state, year, username, password)
+    year = "2018"
+    result_type = "State"
+    export_to_excel(xls_wb, state, year, result_type, username, password)

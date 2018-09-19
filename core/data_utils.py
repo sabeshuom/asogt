@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import os
 import sys
 import requests
@@ -19,22 +23,120 @@ DIVISION_IDS = {"P": "15", "B": "14", "L": "12", "I": "10",
 COMPETITION_TYPE_IDS = {"P": "1", "S": "2", "V": "4", "SpP-A": "9", "SpP-T": "8", "W": "3", "A": "5", "Q": "7",
                         "D": "6", "All": "Any"}
 COMPET_XLS = os.path.join(MEDIA_ROOT, "comp_data_2018.xlsx")
-STATE_DETAILS = {"NSW": 2, "VIC": 3, "SA": 5, "QLD": 6, "WA": 1, "ACT": 8, "NZW": 9, "NZH": 10}
-#7,8,9,
+STATE_DETAILS = {"NSW": 2, "VIC": 3, "SA": 5,
+                 "QLD": 6, "WA": 7, "ACT": 4, "NZW": 8, "NZH": 9}
+# 7,8,9,
 COMPETITION_IDS = {"All": "Any"}
+
+GRADE_WEIGHTS = {"First Prize": 2000,
+                 "Second Prize": 500,
+                 "Third Prize": 100,
+                 "Grade A": 20,
+                 "Grade B": 10,
+                 "Grade C": 5,
+                 "Participated": 1}
+
+__group_comp__ = "குழுநிலைப் போட்டிகள்"
+__special_comp__ = "விசேட தமிழார்வ தேர்வு"
+DIVISION_ORDER = [("பாலர் பிரிவு", "P"),
+                  ("ஆரம்பப் பிரிவு", "B"), ("கீழ்ப் பிரிவு", "L"),
+                  ("மத்திய பிரிவு", "I"), ("மேற் பிரிவு", "S"),
+                  ("அதிமேற் பிரிவு", "AS"), ("இளைஞர் பிரிவு", "Y"),
+                  (__group_comp__,
+                   "GRP"), (__special_comp__, "SPB"),
+                  ]
+GROUP_COMPS = ["வினாடி வினாப் போட்டி - அதிமேற் பிரிவு",
+               "வினாடி வினாப் போட்டி - இளைஞர் பிரிவு", "விவாத போட்டி - இளைஞர் பிரிவு"
+               ]
+SPECIAL_COMPS = ["விசேட அடிப்படை தமிழார்வ எழுத்தறிவுத் தேர்வு - இடைநிலை",
+                 "விசேட அடிப்படை தமிழார்வ எழுத்தறிவுத் தேர்வு - மேல்நிலை"]
+
+GRADES = ["First Prize", "Second Prize",
+          "Third Prize", "Grade A", "Grade B", "Grade C"]
+
+
+class Result(object):
+    def __init__(self, result):
+        self.std_no = result[0]
+        self.name_e = result[1].replace("<br>", " ")
+        self.name_t = result[2].replace("<br>", " ")
+        self.name_bamini = unicode2bamini(self.name_t)
+        self.gender = result[3]
+        self.division_t = result[4]
+        self.exam_e = result[6].split("<br>")[0]
+        self.grade = result[7]
+        self.award = result[8]
+        self.comp_t = result[12]
+        self.result_type = result[5]
+
+
+class Exam(object):
+    def __init__(self, exam):
+        self.exam_code = exam[0]
+        self.exam_e = exam[1]
+        self.exam_t = exam[2]
+        self.comp_code = exam[3]
+
+
+def get_student_weight(std_data):
+    std_weight = 0
+    for res in std_data[2:]:
+        grade = res.split(" - ")[-1]
+        try:
+            std_weight += GRADE_WEIGHTS[grade]
+        except Exception, e:
+            print(
+                "Error in getting student weight for grade {:s}".format(grade))
+    return std_weight
+
+
+def result_weight(result):
+    grade = result.grade if result.award == "" else result.award
+    return GRADE_WEIGHTS.get(grade, 0)
+
+
+def get_ref_data_from_excel():
+    class RefData(object):
+        pass
+    df = pd.ExcelFile(COMPET_XLS)
+    ref_data = RefData()
+    ref_data.competition_details = df.parse(
+        "competitions").fillna('')
+    ref_data.cert_competitions = df.parse(
+        "certificate-competitions").fillna('').transpose()
+    ref_data.cert_common_fields = df.parse(
+        "certificate-common_fields")['details'].fillna('')
+    ref_data.cert_grades = df.parse(
+        "certificate-grades").transpose().fillna('')
+    ref_data.cert_gender = df.parse(
+        "certificate-gender").transpose().fillna('')
+    ref_data.cert_states = df.parse(
+        "certificate-states").transpose().fillna('')
+    col_data = df.parse("certificate-cols").fillna('')
+    ref_data.cert_cols_list = col_data['COLS'].tolist()
+    ref_data.cert_cols_format = col_data.set_index('COLS').transpose()
+
+    return ref_data
+
 
 def get_certificate_info():
     df = pd.ExcelFile(COMPET_XLS)
     cert_data = {}
-    cert_data['competitions'] = df.parse("certificate-competitions").fillna('').transpose().to_dict()
-    cert_data['common_fields'] = df.parse("certificate-common_fields")['details'].fillna('').to_dict()
-    cert_data['grades'] = df.parse("certificate-grades").transpose().fillna('').to_dict()
-    cert_data['gender'] = df.parse("certificate-gender").transpose().fillna('').to_dict()
-    cert_data['states'] = df.parse("certificate-states").transpose().fillna('').to_dict()
+    cert_data['competitions'] = df.parse(
+        "certificate-competitions").fillna('').transpose().to_dict()
+    cert_data['common_fields'] = df.parse(
+        "certificate-common_fields")['details'].fillna('').to_dict()
+    cert_data['grades'] = df.parse(
+        "certificate-grades").transpose().fillna('').to_dict()
+    cert_data['gender'] = df.parse(
+        "certificate-gender").transpose().fillna('').to_dict()
+    cert_data['states'] = df.parse(
+        "certificate-states").transpose().fillna('').to_dict()
     col_data = df.parse("certificate-cols").fillna('')
     cert_data['cols'] = col_data['COLS'].tolist()
-    cert_data['col_formats'] = col_data.set_index('COLS').transpose().to_dict() 
+    cert_data['col_formats'] = col_data.set_index('COLS').transpose().to_dict()
     return cert_data
+
 
 def get_competition_info():
     wb = xlrd.open_workbook(COMPET_XLS)
@@ -54,6 +156,9 @@ def get_competition_info():
 
 
 def get_exam_info(sess, state, competion="All"):
+    # get exam infor for each state
+    # Returns:
+    #   Exam objext for each exam
     competitions_url = "https://www.tamilcompetition.org.au/admin/exam/searchcomp/"
     payload = {
         "state_id": STATE_DETAILS[state],
@@ -69,19 +174,16 @@ def get_exam_info(sess, state, competion="All"):
         competitions_url,
         data=payload,
     )
-    data = get_data_table(sess, "exam")
+    exams = get_data_table(sess, "exam")
     exam_details = {}
-    for exam in data:
-        exam_code = exam[0]
-        exam_e = exam[1]
-        exam_t = exam[2]
-        comp = exam[3]
-        exam_details[exam_e] = {'code': exam_code,
-                                "exam_t": exam_t, "exam_e": exam_e, "comp": comp}
+    for exam in exams:
+        exam_obj = Exam(exam)
+        exam_details[exam_obj.exam_e] = exam_obj
     return exam_details
 
 
 def init_sess(username="yoges", password="Yoges"):
+    # init session to retrieve data
     payload = {
         "login": username,
         "password": password,
@@ -143,7 +245,7 @@ def get_data_table(sess, type_key="student_details"):
 
     search_str += "order%5B0%5D%5Bcolumn%5D=0&order%5B0%5D%5Bdir%5D=desc&start=0&length={:d}&search%5Bvalue%5D=&search%5Bregex%5D=false".format(
         max_len)
- 
+
     data_table_url = data_table_url + search_str
     res = sess.get(data_table_url)
     data = json.loads(res.content)["data"]
@@ -200,7 +302,7 @@ def get_competition_details(sess, state, year="2018", division="",  competition_
     return data
 
 
-def get_results(sess, state="6", year="2018", competion="All"):
+def get_results(sess, state="6", year="2018", competion="All", result_type="State"):
     competitions_url = "https://www.tamilcompetition.org.au/admin/results/searchcomp/"
     payload = {
         "state_id": STATE_DETAILS[state],
@@ -218,8 +320,100 @@ def get_results(sess, state="6", year="2018", competion="All"):
         competitions_url,
         data=payload,
     )
-    results_data = get_data_table(sess, "results")
-    return results_data
+    results = get_data_table(sess, "results")
+    return [Result(result) for result in results if result[5] == result_type]
+
+
+def sort_std_keys_for_division(division_data):
+    std_weights = {}
+    for student in division_data:
+        std_weights[student] = 0
+        for comp in division_data[student]:
+            weight = GRADE_WEIGHTS[division_data[student][comp]]
+            std_weights[student] += weight
+    return sorted(std_weights, key=lambda x: std_weights[x], reverse=True)
+
+
+class Student(object):
+    def __init__(self, std_no, name_t="", name_e="", seat_pos="9999"):
+        self.std_no = std_no
+        self.name_t = name_t
+        self.name_e = name_e
+        self.seat_pos = seat_pos
+        self.name_bamini = unicode2bamini(name_t)
+
+
+def process_results_for_seating_number(results):
+    ordered_results = {division: {} for division, _ in DIVISION_ORDER}
+    division_comp_map = {division: {} for division, _ in DIVISION_ORDER}
+    student_data_map = {}
+    for result in results:
+        try:
+            # get comp grade details
+            std_no = result.std_no
+            division = result.division_t
+            grade = result.grade if result.award == "" else result.award
+            comp = result.comp_t
+            if std_no not in student_data_map:
+                student_data_map[std_no] = Student(
+                    std_no, name_t=result.name_t, name_e=result.name_e)
+
+            if comp in GROUP_COMPS:
+                division = __group_comp__
+            if comp in SPECIAL_COMPS:
+                division = __special_comp__
+            if grade in GRADE_WEIGHTS:
+                if comp not in division_comp_map[division]:
+                    division_comp_map[division][comp] = 0
+                division_comp_map[division][comp] += 1
+
+                if std_no not in ordered_results[division]:
+                    ordered_results[division][std_no] = {}
+                ordered_results[division][std_no][comp] = grade
+        except Exception as e:
+            print("Getting exception on getting results for book, Error - {}".format(e))
+
+    seat_count = 0
+    for division, division_prefix in DIVISION_ORDER:
+        if division not in ordered_results:
+            print("division {} not found in ordered results".format(division))
+            continue
+        division_data = ordered_results[division]
+        if division_prefix == "GRP":
+            ordered_stds = sort_std_no_group(division_data)
+        else:
+            ordered_stds = sort_std_keys_for_division(division_data)
+
+        for std_no in ordered_stds:
+            if student_data_map[std_no].seat_pos in ["", "9999"]:
+                seat_count += 1
+                seat_pos = '{:s}{:04d}'.format(
+                    division_prefix, seat_count)
+                student_data_map[std_no].seat_pos = seat_pos
+
+    return ordered_results, division_comp_map, student_data_map
+
+
+def sort_std_no_group(division_data):
+    comps = {}
+    ordered_stds = []
+    for std_no in division_data:
+        std_comps = division_data[std_no]
+        for comp_t in std_comps:
+            if comp_t not in comps:
+                comps[comp_t] = {grade: [] for grade in GRADES}
+            grade = std_comps[comp_t]
+            comps[comp_t][grade].append(std_no)
+
+    for grade in GRADES:
+        for comp_t in comps:
+            if grade not in comps[comp_t]:
+                continue
+            else:
+                for std_no in comps[comp_t][grade]:
+                    if std_no not in ordered_stds:
+                        ordered_stds.append(std_no)
+    return ordered_stds
 
 
 def split_data(comp_data):
@@ -236,7 +430,14 @@ if __name__ == "__main__":
     # password = "Sabesan4NSW"
     # state = "NSW"
     # sess = init_sess(username, password)
-    # get_student_details(sess, sate, division="All")
-    # get_competition_details(sess, state, division="All", competion="All")
+    # # get_student_details(sess, sate, division="All")
+    # # get_competition_details(sess, state, division="All", competion="All")
 
-    cert_data = get_certificate_info()
+    # # cert_data = get_certificate_info()
+
+    # results = get_results(sess, state)
+    # ordered_results, divisin_comp = process_results_for_seating_number(results)
+    # import pdb
+    # pdb.set_trace()
+
+    get_data_from_excel()
