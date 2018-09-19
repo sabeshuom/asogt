@@ -91,7 +91,6 @@ def export_to_excel(xls_wb, state,  year, result_type, username, password):
         'valign': 'vcenter'})
 
     for division, division_prefix in DIVISION_ORDER:
-        print(division)
         ws = wb.add_worksheet(division)
         ws.set_default_row(row_height)
         comps = [comp for comp in sorted(
