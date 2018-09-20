@@ -3,7 +3,6 @@
 from __future__ import unicode_literals
 
 unicode_bamini_map = {
-    ",": ">",
    "ஜோ": "N[h",
    "ஜொ": "n[h",
    "ஜா": "[h",
@@ -349,3 +348,8 @@ def unicode2bamini(t):
     for char in unicode_chars:
         t = t.replace(char, unicode_bamini_map[char])
     return t
+
+
+if __name__ == "__main__":
+
+    print(unicode2bamini())

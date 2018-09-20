@@ -52,7 +52,7 @@ SPECIAL_COMPS = ["விசேட அடிப்படை தமிழார்
                  "விசேட அடிப்படை தமிழார்வ எழுத்தறிவுத் தேர்வு - மேல்நிலை"]
 
 GRADES = ["First Prize", "Second Prize",
-          "Third Prize", "Grade A", "Grade B", "Grade C"]
+          "Third Prize", "Grade A", "Grade B", "Grade C", "Participated"]
 
 
 class Result(object):

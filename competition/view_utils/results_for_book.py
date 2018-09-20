@@ -172,12 +172,12 @@ def export_to_docx(word_doc, state,  year,  result_type, username, password):
         hdr_cells = table.rows[0].cells
 
         # write headers
-        # first column = fullname in bamini
-        hdr_cells[0].text = "KOg;ngah;"
+        # First column Aasana ilakkam
+        hdr_cells[0].text = "Mrd ,y."
         hdr_cells[0].paragraphs[0].style = document.styles["Table Header Tamil"]
 
-        # aasana ilakkam
-        hdr_cells[1].text = "Mrd ,y."
+        # first column = fullname in bamini
+        hdr_cells[1].text = "KOg;ngah;"
         hdr_cells[1].paragraphs[0].style = document.styles["Table Header Tamil"]
 
         # next columns with competitions details in bamini
@@ -202,10 +202,10 @@ def export_to_docx(word_doc, state,  year,  result_type, username, password):
             std_comps = division_data[std_no]
 
             row_cells = table.add_row().cells
-            row_cells[0].text = name_bamini
-            row_cells[0].paragraphs[0].style = document.styles["Table Cell Tamil Left"]
-            row_cells[1].text = seat_pos
-            row_cells[1].paragraphs[0].style = document.styles["Table Cell Eng"]
+            row_cells[0].text = seat_pos
+            row_cells[0].paragraphs[0].style = document.styles["Table Cell Eng"]
+            row_cells[1].text = name_bamini
+            row_cells[1].paragraphs[0].style = document.styles["Table Cell Tamil Left"]
 
             # loop through sored order on comps
             for c, comp in enumerate(comps):
