@@ -128,7 +128,7 @@ def export_to_excel(xls_wb, state,  year, result_type, username, password):
     data_row = 1
     col_max_widths = [8]*len(col_headers)
     for result in sorted(results, key=lambda x: int(student_data_map[x.std_no].seat_pos[-3:])):
-        if result.result_type != result_type:
+        if result.result_type not in result_type:
             continue
 
         row_data = get_row_data(result, state, student_data_map)
