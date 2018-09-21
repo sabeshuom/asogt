@@ -65,7 +65,7 @@ def get_results(request):
         state = json_data["state"]
         year = json_data["year"]
         req_format = json_data["format"]
-        result_type = "State"
+        result_type = ["State", "Final"]
 
         # if state == "QLD":
         #     username = "yoges"

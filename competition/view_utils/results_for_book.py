@@ -229,7 +229,7 @@ if __name__ == "__main__":
     password = "Sabesan4NSW"
     state = "NSW"
     year = "2018"
-    result_type = "State"
+    result_type = ["State", "Final"]
     xls_wb = "test.xlsx"
     word_doc = "test.docx"
     #export_to_excel(xls_wb, state,  year, result_type, username, password)

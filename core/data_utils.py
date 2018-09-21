@@ -302,7 +302,7 @@ def get_competition_details(sess, state, year="2018", division="",  competition_
     return data
 
 
-def get_results(sess, state="6", year="2018", competion="All", result_type="State"):
+def get_results(sess, state="6", year="2018", competion="All", result_type=["State"]):
     competitions_url = "https://www.tamilcompetition.org.au/admin/results/searchcomp/"
     payload = {
         "state_id": STATE_DETAILS[state],
@@ -321,7 +321,7 @@ def get_results(sess, state="6", year="2018", competion="All", result_type="Stat
         data=payload,
     )
     results = get_data_table(sess, "results")
-    return [Result(result) for result in results if result[5] == result_type]
+    return [Result(result) for result in results if result[5] in result_type]
 
 
 def sort_std_keys_for_division(division_data):

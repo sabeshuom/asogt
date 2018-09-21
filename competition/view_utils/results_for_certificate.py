@@ -161,5 +161,5 @@ if __name__ == "__main__":
     # password = "Yoges"
     state = "NSW"
     xls_wb = "test.xlsx"
-    result_type = "State"
+    result_type = ["State", "Final"]
     export_to_excel(xls_wb, state, year, result_type, username, password)
