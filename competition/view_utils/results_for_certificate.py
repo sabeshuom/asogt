@@ -15,7 +15,8 @@ from core.data_utils import init_sess,\
     cleanhtml,\
     split_data,\
     get_ref_data_from_excel,\
-    process_results_for_seating_number
+    process_results_for_seating_number,\
+    sort_national_results
 from core import unicode_to_bamini
 
 from core.write_timetable import add_time_table
@@ -32,7 +33,7 @@ def merge_dicts(dict_list):
     return new_dict
 
 
-def get_row_data(result, state, student_data_map):
+def get_row_data(result, cert_state, student_data_map):
     comp_details = REF_DATA.competition_details
     cert_competitions = REF_DATA.cert_competitions.to_dict()
     cert_common_fields = REF_DATA.cert_common_fields.to_dict()
@@ -49,7 +50,10 @@ def get_row_data(result, state, student_data_map):
         grade = result.grade
         award = result.award
         comp_t = result.comp_t
-        grade_award = grade if award == "" else award + "-" + grade
+        if cert_state == "National":
+            grade_award = award if award != "" else grade
+        else:
+            grade_award = grade if award == "" else award + "-" + grade
         comp_code = comp_details[comp_details["Comp Tamil"]
                                  == comp_t]["Comp Code"].item()
 
@@ -66,16 +70,19 @@ def get_row_data(result, state, student_data_map):
         "E3": name_e,
     }
 
-    if (comp_code not in cert_competitions) or (state not in cert_states) or\
+    if (comp_code not in cert_competitions) or (cert_state not in cert_states) or\
             (gender not in cert_gender) or (grade_award not in cert_grades):
-        # print("STD: {:s} -- Not found comp: {:s}, stae: {:s}, gender: {:s} , grade : {:s}".format(std_no,
-        #                                                                                           comp_code, state, gender, grade_award))
+        print("STD: {:s} -- Not found comp: {:s}, stae: {:s}, gender: {:s} , grade : {:s}".format(std_no,
+                                                                                                  comp_code, cert_state,
+                                                                                                  gender, grade_award))
+        import pdb
+        pdb.set_trace()
         return None
 
     name_info["SEAT POS"] = student_data_map[std_no].seat_pos
     comp_info = cert_competitions[comp_code]
     common_info = cert_common_fields
-    state_info = cert_states[state]
+    state_info = cert_states[cert_state]
     gender_info = cert_gender[gender]
     grade_info = cert_grades[grade_award]
 
@@ -88,9 +95,15 @@ def export_to_excel(xls_wb, state,  year, exam_category, username, password):
     sess = init_sess(username, password)
     results = get_results(sess, state=state, year=year,
                           competition="All", exam_category=exam_category)
-    
-    ordered_results, division_comp_map, student_data_map = process_results_for_seating_number(
-        results)
+
+    if exam_category == "National":
+        sorted_results, student_data_map = sort_national_results(results)
+    else:
+        ordered_results, division_comp_map, student_data_map = process_results_for_seating_number(
+            results, exam_category=exam_category)
+        sorted_results = sorted(results, key=lambda x: int(
+            student_data_map[x.std_no].seat_pos[-3:]))
+
     wb = xlsxwriter.Workbook(xls_wb)
     ws = wb.add_worksheet("Certificate_template")
 
@@ -128,11 +141,16 @@ def export_to_excel(xls_wb, state,  year, exam_category, username, password):
     header_rows = 0
     data_row = 1
     col_max_widths = [8]*len(col_headers)
-    for result in sorted(results, key=lambda x: int(student_data_map[x.std_no].seat_pos[-3:])):
+
+    for result in sorted_results:
         if result.exam_category not in exam_category:
             continue
 
-        row_data = get_row_data(result, state, student_data_map)
+        if exam_category == "National":
+            cert_state = exam_category
+        else:
+            cert_state = state
+        row_data = get_row_data(result, cert_state, student_data_map)
         if row_data is not None:
             for col, header in enumerate(col_headers):
                 col_format = col_formats[header]['FORMAT']
@@ -162,5 +180,6 @@ if __name__ == "__main__":
     # password = "Yoges"
     state = "NSW"
     xls_wb = "test.xlsx"
-    exam_category = ["State", "Final"]
+    #exam_category = ["State", "Final"]
+    exam_category = "National"
     export_to_excel(xls_wb, state, year, exam_category, username, password)

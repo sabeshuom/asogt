@@ -17,6 +17,7 @@ from core.data_utils import init_sess,\
     process_results_for_seating_number,\
     GRADE_WEIGHTS,\
     DIVISION_ORDER,\
+    sort_national_results,\
     GRADES
 
 from core import unicode_to_bamini
@@ -25,6 +26,28 @@ from core.write_timetable import add_time_table
 
 
 REF_DATA = get_ref_data_from_excel()
+
+
+def get_trophy_data_rows_national(results):
+    sorted_results, student_data_map = sort_national_results(results)
+    comp_details = REF_DATA.competition_details
+    cert_comp_data = REF_DATA.cert_competitions
+    trophy_rows = []
+    num_of_lines = 1
+    for result in sorted_results:
+        std_no = result.std_no
+        std = student_data_map[std_no]
+        seat_pos = std.seat_pos
+        name_e = std.name_e
+        comp_t = result.comp_t
+        grade = result.grade if result.award == "" else result.award
+        comp_code = comp_details[comp_details["Comp Tamil"] == comp_t]["Comp Code"].item()
+        comp_division = cert_comp_data[comp_code]["E7"]
+        comp_type = cert_comp_data[comp_code]["E9"]
+
+        comp_grade_info = "{:s} {:s} - {:s}".format(comp_division, comp_type, grade)
+        trophy_rows.append([seat_pos, std_no, name_e, comp_grade_info])
+    return trophy_rows, num_of_lines
 
 
 def get_trophy_data_by_rows(ordered_results, student_data_map):
@@ -203,10 +226,12 @@ def export_to_excel(xls_wb, state,  year, exam_category, username, password):
     sess = init_sess(username, password)
     results = get_results(sess, state=state, year=year,
                           competition="All", exam_category=exam_category)
-    ordered_results, division_comp_map, student_data_map = process_results_for_seating_number(
-        results)
-    trophy_rows, num_of_lines = get_trophy_data_by_rows(
-        ordered_results, student_data_map)
+    if exam_category == "National":
+        trophy_rows, num_of_lines = get_trophy_data_rows_national(results)
+    else:
+        ordered_results, division_comp_map, student_data_map = process_results_for_seating_number(results)
+        trophy_rows, num_of_lines = get_trophy_data_by_rows(ordered_results, student_data_map)
+
     wb = xlsxwriter.Workbook(xls_wb)
     ws = wb.add_worksheet("Trophy_template")
 
@@ -310,6 +335,10 @@ def export_to_excel(xls_wb, state,  year, exam_category, username, password):
     for i, trophy_row in enumerate(trophy_rows):
         ws.write_row(num_of_header_rows + i, 0, trophy_row)
         trophy_size = compute_trophy_size(trophy_row)
+        if exam_category == "National":
+            trophy_size = 1
+        else:
+            trophy_size = compute_trophy_size(trophy_row)
         ws.write(num_of_header_rows + i, trophy_column, trophy_size)
 
     ws.set_column(0, 1, 15)
@@ -339,4 +368,5 @@ if __name__ == "__main__":
     xls_wb = "test.xlsx"
     year = "2018"
     exam_category = ["State", "Final"]
+    exam_category = "National"
     export_to_excel(xls_wb, state, year, exam_category, username, password)

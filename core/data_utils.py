@@ -40,12 +40,13 @@ GRADE_WEIGHTS = {"First Prize": 2000,
 
 __group_comp__ = "குழுநிலைப் போட்டிகள்"
 __special_comp__ = "விசேட தமிழார்வ தேர்வு"
+__national_comp__ = "தேசிய நிலைப்  போட்டிகள்"
 DIVISION_ORDER = [("பாலர் பிரிவு", "P"),
                   ("ஆரம்பப் பிரிவு", "B"), ("கீழ்ப் பிரிவு", "L"),
                   ("மத்திய பிரிவு", "I"), ("மேற் பிரிவு", "S"),
                   ("அதிமேற் பிரிவு", "AS"), ("இளைஞர் பிரிவு", "Y"),
                   (__group_comp__,
-                   "G"), (__special_comp__, "SP"),
+                   "G"), (__special_comp__, "SP"), (__national_comp__, "N"),
                   ]
 GROUP_COMPS = ["வினாடி வினாப் போட்டி - அதிமேற் பிரிவு",
                "வினாடி வினாப் போட்டி - இளைஞர் பிரிவு", "விவாத போட்டி - இளைஞர் பிரிவு"
@@ -53,8 +54,41 @@ GROUP_COMPS = ["வினாடி வினாப் போட்டி - அ�
 SPECIAL_COMPS = ["விசேட அடிப்படை தமிழார்வ எழுத்தறிவுத் தேர்வு - இடைநிலை",
                  "விசேட அடிப்படை தமிழார்வ எழுத்தறிவுத் தேர்வு - மேல்நிலை"]
 
-GRADES = ["First Prize", "Second Prize",
-          "Third Prize", "Grade A", "Grade B", "Grade C", "Participated"]
+GRADES = ["First Prize", 
+          "Second Prize",
+          "Third Prize",
+          "Forth Prize",
+          "Fifth Prize",
+          "Sixth Prize",
+          "Seventh Prize",
+          "Eigth Prize",
+          "Ninth Prize",
+          "Tenth Prize",
+          "Grade A",
+          "Grade B",
+          "Grade C",
+          "Participated",
+          "Pending",
+          ]
+
+
+NATIONAL_GRADES = [
+    "First Prize (Gold Medal)",
+    "Second Prize (Silver Medal)",
+    "Third Prize (Bronze Medal)",
+    "Fourth Prize",
+    "Fifth Prize",
+    "Sixth Prize",
+    "Seventh Prize",
+    "Eighth Prize",
+    "Ninth Prize",
+    "Tenth Prize",
+    "Grade A",
+    "Grade B",
+    "Grade C",
+    "Participated",
+    "Pending",
+]
 
 
 class Result(object):
@@ -78,6 +112,7 @@ class Competition(object):
         self.exam_e = competition[1]
         self.name_e = competition[6].replace("<br>", " ")
         self.name_t = competition[7].replace("<br>", " ")
+        self.name_bamini = unicode2bamini(self.name_t)
         self.paid_status = competition[18]
 
 
@@ -372,7 +407,7 @@ class Student(object):
         self.name_bamini = unicode2bamini(name_t)
 
 
-def process_results_for_seating_number(results):
+def process_results_for_seating_number(results, exam_category=["State", "Final"]):
     ordered_results = {division: {} for division, _ in DIVISION_ORDER}
     division_comp_map = {division: {} for division, _ in DIVISION_ORDER}
     student_data_map = {}
@@ -408,6 +443,7 @@ def process_results_for_seating_number(results):
             print("division {} not found in ordered results".format(division))
             continue
         division_data = ordered_results[division]
+
         if division_prefix == "G":
             ordered_stds = sort_std_no_group(division_data)
         else:
@@ -421,6 +457,30 @@ def process_results_for_seating_number(results):
                 student_data_map[std_no].seat_pos = seat_pos
 
     return ordered_results, division_comp_map, student_data_map
+
+
+def sort_national_results(results):
+    division_weights = {division: weight for weight,
+                        (division, prefix) in enumerate(DIVISION_ORDER)}
+    national_grade_weights = {
+        grade: weight for weight, grade in enumerate(NATIONAL_GRADES)}
+
+    def grade_weight(result):
+        grade = result.grade if result.award == "" else result.award
+        return national_grade_weights[grade]
+
+    sorted_results = sorted(results, key=lambda x: (
+        division_weights[x.division_t], x.comp_t, grade_weight(x)))
+    student_data_map = {}
+    seat_count = 0
+    for result in sorted_results:
+        std_no = result.std_no
+        if std_no not in student_data_map:
+            seat_count += 1
+            seat_pos = "N{:03d}".format(seat_count)
+            student_data_map[std_no] = Student(
+                std_no, name_t=result.name_t, name_e=result.name_e, seat_pos=seat_pos)
+    return sorted_results, student_data_map
 
 
 def sort_std_no_group(division_data):

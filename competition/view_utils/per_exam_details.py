@@ -50,8 +50,9 @@ def export_to_excel(xls_wb, state, year, exam_category, username, password):
     comp_title2_format = wb.add_format({
         'font_name': "Bamini",
         # 'font_name': "Calibri (Body)",
+        # 'font_size': 16,
         'align': 'center',
-        'font_size': 16,
+        'font_size': 20,
         'valign': 'vcenter'})
     comp_title2_height = 30
 
@@ -116,7 +117,9 @@ def export_to_excel(xls_wb, state, year, exam_category, username, password):
 
     # common formats
     tamil_format = wb.add_format({
-        'font_name': "Calibri (Body)",
+        # 'font_name': "Calibri (Body)",
+        # 'font_size': 16,
+        'font_name': "Bamini",
         'font_size': 16,
         'border': 1,
         'align': 'left'})
@@ -222,7 +225,7 @@ def export_to_excel(xls_wb, state, year, exam_category, username, password):
             ws.write_row(
                 cur_row, 0, ["", comp_row.std_no, comp_row.name_e, comp_row.name_t, comp_row.paid_status, ""], 
                 comp_row_format)
-            ws.write("D{:0d}".format(cur_row+1), comp_row.name_t, tamil_format)
+            ws.write_string("D{:0d}".format(cur_row+1), comp_row.name_bamini, tamil_format)
             ws.set_row(cur_row, comp_row_height)
 
         ws.set_column('A:B', 11)
