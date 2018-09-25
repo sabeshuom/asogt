@@ -13,6 +13,9 @@ from asogt.settings import MEDIA_ROOT, MEDIA_URL
 # Create your views here.
 from django.http import HttpResponse
 
+ASOGT_USERNAME = "sabesan"
+ASOGT_PASSWORD = "Sabesan4NSW"
+
 
 def index(request):
     return render(request, 'asogt.html')
@@ -40,15 +43,15 @@ def get_student_details(request):
         year = json_data["year"]
         req_format = json_data["format"]
 
-        # if state == "QLD":
-        #     username = "yoges"
-        #     password = "Yoges"
-        # if state == "NSW":
-        username = "sabesan"
-        password = "Sabesan4NSW"
+        if state == "National":
+            exam_category = "National"
+            state = "All"
+        else:
+            exam_category = ["State", "Final"]
+
         output = BytesIO()
         per_exam_details.export_to_excel(
-            output, state, year, username, password)
+            output, state, year, exam_category, ASOGT_USERNAME, ASOGT_PASSWORD)
         output.seek(0)
         response = HttpResponse(output.read(
         ), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
@@ -56,6 +59,8 @@ def get_student_details(request):
 
 # Content types reference:
 # https://stackoverflow.com/questions/4212861/what-is-a-correct-mime-type-for-docx-pptx-etc
+
+
 @csrf_exempt
 def get_results(request):
     if not request.user.is_authenticated():
@@ -65,29 +70,29 @@ def get_results(request):
         state = json_data["state"]
         year = json_data["year"]
         req_format = json_data["format"]
-        result_type = ["State", "Final"]
+        if state == "National":
+            exam_category = "National"
+            state = "All"
+        else:
+            exam_category = ["State", "Final"]
 
-        # if state == "QLD":
-        #     username = "yoges"
-        #     password = "Yoges"
-        # if state == "NSW":
         username = "sabesan"
         password = "Sabesan4NSW"
         output = BytesIO()
         content_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         if req_format.lower() == "certificate":
             results_for_certificate.export_to_excel(
-                output, state, year, result_type,  username, password)
+                output, state, year, exam_category,  ASOGT_USERNAME, ASOGT_PASSWORD)
         if req_format.lower() == "trophy":
             results_for_trophy.export_to_excel(
-                output, state, year, result_type, username, password)
+                output, state, year, exam_category, ASOGT_USERNAME, ASOGT_PASSWORD)
         if req_format.lower() == "book excel":
             results_for_book.export_to_excel(
-                output, state, year, result_type, username, password)
+                output, state, year, exam_category, ASOGT_USERNAME, ASOGT_PASSWORD)
         if req_format.lower() == "book word":
             content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
             results_for_book.export_to_docx(
-                output, state, year, result_type, username, password)
+                output, state, year, exam_category, ASOGT_USERNAME, ASOGT_PASSWORD)
 
         output.seek(0)
         response = HttpResponse(output.read(), content_type=content_type)

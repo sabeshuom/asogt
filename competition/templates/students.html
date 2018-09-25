@@ -34,9 +34,12 @@
         }
     });
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         export_excel()
         check_authentication(true);
+        $('.dropdown-menu a').click(function(){
+            $(this).parent().parent().parent().find(".selected").text($(this).text());
+        });
     });
 
 </script> {% endblock %} {% block page_content %}
@@ -57,7 +60,7 @@
 
         <div class="row">
             <div class="col-40">
-                <div class="label"> State :</div>
+                <div class="label"> Competition Category :</div>
             </div>
             <div class="col-60">
                 <div class="dropdown">
@@ -66,6 +69,7 @@
                         <span class="caret"></span>
                     </button>
                     <ul id="drop-state" class="dropdown-menu">
+                        <li><a>National</a></li>
                         <li><a>QLD</a></li>
                         <li><a>NSW</a></li>
                         <li><a>VIC</a></li>

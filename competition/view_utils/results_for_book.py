@@ -13,6 +13,7 @@ import string
 import numpy as np
 from docx import Document
 from docx.shared import Inches
+import time
 
 sys.path.append("../../")
 from asogt.settings import MEDIA_ROOT, BASE_DIR
@@ -55,11 +56,11 @@ GRADE_INFO = {"First Prize": (" ", "Kjw; ghpR"),
               }
 
 
-def export_to_excel(xls_wb, state,  year, result_type, username, password):
+def export_to_excel(xls_wb, state,  year, exam_category, username, password):
 
     sess = init_sess(username, password)
     results = get_results(sess, state=state, year=year,
-                          competion="All", result_type=result_type)
+                          competition="All", exam_category=exam_category)
     ordered_results, division_comp_map, student_data_map = process_results_for_seating_number(
         results)
 
@@ -145,10 +146,20 @@ def export_to_excel(xls_wb, state,  year, result_type, username, password):
     wb.close()
 
 
-def export_to_docx(word_doc, state,  year,  result_type, username, password):
+# class Logger(object)
+
+#     def __init__(self, log_str=""):
+#         self.log_str = log_str
+
+#     def add(log_str):
+#         self.
+
+
+def export_to_docx(word_doc, state,  year,  exam_category, username, password):
     sess = init_sess(username, password)
     results = get_results(sess, state=state, year=year,
-                          competion="All", result_type=result_type)
+                          competition="All", exam_category=exam_category)
+
     ordered_results, division_comp_map, student_data_map = process_results_for_seating_number(
         results)
     template = os.path.join(MEDIA_ROOT, "book_template.docx")
@@ -229,8 +240,8 @@ if __name__ == "__main__":
     password = "Sabesan4NSW"
     state = "NSW"
     year = "2018"
-    result_type = ["State", "Final"]
+    exam_category = ["State", "Final"]
     xls_wb = "test.xlsx"
     word_doc = "test.docx"
-    #export_to_excel(xls_wb, state,  year, result_type, username, password)
-    export_to_docx(word_doc, state,  year, result_type,  username, password)
+    # export_to_excel(xls_wb, state,  year, exam_category, username, password)
+    export_to_docx(word_doc, state,  year, exam_category,  username, password)

@@ -199,10 +199,10 @@ def compute_trophy_size(result_row):
     return 4
 
 
-def export_to_excel(xls_wb, state,  year, result_type, username, password):
+def export_to_excel(xls_wb, state,  year, exam_category, username, password):
     sess = init_sess(username, password)
     results = get_results(sess, state=state, year=year,
-                          competion="All", result_type=result_type)
+                          competition="All", exam_category=exam_category)
     ordered_results, division_comp_map, student_data_map = process_results_for_seating_number(
         results)
     trophy_rows, num_of_lines = get_trophy_data_by_rows(
@@ -338,5 +338,5 @@ if __name__ == "__main__":
     state = "NSW"
     xls_wb = "test.xlsx"
     year = "2018"
-    result_type = ["State", "Final"]
-    export_to_excel(xls_wb, state, year, result_type, username, password)
+    exam_category = ["State", "Final"]
+    export_to_excel(xls_wb, state, year, exam_category, username, password)

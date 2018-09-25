@@ -84,10 +84,11 @@ def get_row_data(result, state, student_data_map):
     return row_data
 
 
-def export_to_excel(xls_wb, state,  year, result_type, username, password):
+def export_to_excel(xls_wb, state,  year, exam_category, username, password):
     sess = init_sess(username, password)
     results = get_results(sess, state=state, year=year,
-                          competion="All", result_type=result_type)
+                          competition="All", exam_category=exam_category)
+    
     ordered_results, division_comp_map, student_data_map = process_results_for_seating_number(
         results)
     wb = xlsxwriter.Workbook(xls_wb)
@@ -128,7 +129,7 @@ def export_to_excel(xls_wb, state,  year, result_type, username, password):
     data_row = 1
     col_max_widths = [8]*len(col_headers)
     for result in sorted(results, key=lambda x: int(student_data_map[x.std_no].seat_pos[-3:])):
-        if result.result_type not in result_type:
+        if result.exam_category not in exam_category:
             continue
 
         row_data = get_row_data(result, state, student_data_map)
@@ -161,5 +162,5 @@ if __name__ == "__main__":
     # password = "Yoges"
     state = "NSW"
     xls_wb = "test.xlsx"
-    result_type = ["State", "Final"]
-    export_to_excel(xls_wb, state, year, result_type, username, password)
+    exam_category = ["State", "Final"]
+    export_to_excel(xls_wb, state, year, exam_category, username, password)

@@ -24,7 +24,7 @@ COMPETITION_TYPE_IDS = {"P": "1", "S": "2", "V": "4", "SpP-A": "9", "SpP-T": "8"
                         "D": "6", "All": "Any"}
 COMPET_XLS = os.path.join(MEDIA_ROOT, "comp_data_2018.xlsx")
 STATE_DETAILS = {"NSW": 2, "VIC": 3, "SA": 5,
-                 "QLD": 6, "WA": 7, "ACT": 4, "NZW": 8, "NZH": 9}
+                 "QLD": 6, "WA": 7, "ACT": 4, "NZW": 8, "NZH": 9, "All": "Any"}
 # 7,8,9,
 COMPETITION_IDS = {"All": "Any"}
 
@@ -34,7 +34,9 @@ GRADE_WEIGHTS = {"First Prize": 2000,
                  "Grade A": 20,
                  "Grade B": 10,
                  "Grade C": 5,
-                 "Participated": 1}
+                 "Participated": 1,
+                 "Pending": 0,
+                 }
 
 __group_comp__ = "குழுநிலைப் போட்டிகள்"
 __special_comp__ = "விசேட தமிழார்வ தேர்வு"
@@ -67,7 +69,16 @@ class Result(object):
         self.grade = result[7]
         self.award = result[8]
         self.comp_t = result[12].strip()
-        self.result_type = result[5]
+        self.exam_category = result[5]
+
+
+class Competition(object):
+    def __init__(self, competition):
+        self.std_no = cleanhtml(competition[0])
+        self.exam_e = competition[1]
+        self.name_e = competition[6].replace("<br>", " ")
+        self.name_t = competition[7].replace("<br>", " ")
+        self.paid_status = competition[18]
 
 
 class Exam(object):
@@ -76,6 +87,7 @@ class Exam(object):
         self.exam_e = exam[1]
         self.exam_t = exam[2]
         self.comp_code = exam[3]
+        self.exam_bamini = unicode2bamini(self.exam_t)
 
 
 def get_student_weight(std_data):
@@ -155,7 +167,7 @@ def get_competition_info():
     return comp_details, comp_details_map
 
 
-def get_exam_info(sess, state, competion="All"):
+def get_exam_info(sess, state, exam_category=["State"], competition="All"):
     # get exam infor for each state
     # Returns:
     #   Exam objext for each exam
@@ -166,7 +178,7 @@ def get_exam_info(sess, state, competion="All"):
         "division_id": "Any",
         "exam_category_id": "Any",
         "location_id": "Any",
-        "competition_id": COMPETITION_IDS[competion],
+        "competition_id": COMPETITION_IDS[competition],
         "exam_id": "Any",
         "search_exam": "Search",
     }
@@ -177,8 +189,10 @@ def get_exam_info(sess, state, competion="All"):
     exams = get_data_table(sess, "exam")
     exam_details = {}
     for exam in exams:
-        exam_obj = Exam(exam)
-        exam_details[exam_obj.exam_e] = exam_obj
+        exam_cat = exam[4]
+        if exam_cat in exam_category:
+            exam_obj = Exam(exam)
+            exam_details[exam_obj.exam_e] = exam_obj
     return exam_details
 
 
@@ -271,10 +285,15 @@ def get_student_details(sess, state, division="All"):
     data = get_data_table("student_details")
 
 
-def get_competition_details(sess, state, year="2018", division="",  competition_type="", competion=""):
-    assert competion != "" or (division != "" and competition_type !=
-                               ""), "have to give either competion id or competiion type id with division id"
+def get_competition_details(sess, state, year="2018", division="",  exam_category=["State"],  competition_type="", competition=""):
+    assert competition != "" or (division != "" and competition_type !=
+                               ""), "have to give either competition id or competiion type id with division id"
     competitions_url = "https://www.tamilcompetition.org.au/admin/student_competitions/searchcomp/"
+    
+    # make sure we consider all the states if we doing this in national state
+    if exam_category == "National":
+        state = "All"
+    
     payload = {
         "state_id": STATE_DETAILS[state],
         "year": year,
@@ -288,8 +307,8 @@ def get_competition_details(sess, state, year="2018", division="",  competition_
         "end_dob": "",
         "add": "Search",
     }
-    if competion != "":
-        payload["competition_id"] = COMPETITION_IDS[competion]
+    if competition != "":
+        payload["competition_id"] = COMPETITION_IDS[competition]
     else:
         payload["competition_type_id"] = COMPETITION_TYPE_IDS[competition_type]
         payload["division_id"] = DIVISION_IDS[division]
@@ -298,11 +317,21 @@ def get_competition_details(sess, state, year="2018", division="",  competition_
         competitions_url,
         data=payload,
     )
-    data = get_data_table(sess, "student_competitions")
-    return data
+    comp_data = get_data_table(sess, "student_competitions")
+    comp_data_objs = []
+    for comp in comp_data:
+        if comp[3] is not None:
+            if comp[3] in exam_category:
+                comp_data_objs.append(Competition(comp))
+        else:
+            print(comp)
+    return comp_data_objs
 
 
-def get_results(sess, state="6", year="2018", competion="All", result_type=["State"]):
+def get_results(sess, state="All", year="2018", competition="All", exam_category=["State", "Final"]):
+    if exam_category == "National":
+        state = "All"
+
     competitions_url = "https://www.tamilcompetition.org.au/admin/results/searchcomp/"
     payload = {
         "state_id": STATE_DETAILS[state],
@@ -310,7 +339,7 @@ def get_results(sess, state="6", year="2018", competion="All", result_type=["Sta
         "division_id": "Any",
         "gender": "2",
         "student_no": "",
-        "competition_id": COMPETITION_IDS[competion],
+        "competition_id": COMPETITION_IDS[competition],
         "competition_type_id": "Any",
         "exam_id": "Any",
         "tamil_school_id": "Any",
@@ -321,7 +350,7 @@ def get_results(sess, state="6", year="2018", competion="All", result_type=["Sta
         data=payload,
     )
     results = get_data_table(sess, "results")
-    return [Result(result) for result in results if result[5] in result_type]
+    return [Result(result) for result in results if result[5] in exam_category]
 
 
 def sort_std_keys_for_division(division_data):
@@ -419,7 +448,7 @@ def sort_std_no_group(division_data):
 def split_data(comp_data):
     comp_sets = {}
     for comp in comp_data:
-        exam_e = comp[1]
+        exam_e = comp.exam_e
         comp_sets[exam_e] = comp_sets.get(exam_e, [])
         comp_sets[exam_e].append(comp)
     return comp_sets
@@ -431,7 +460,7 @@ if __name__ == "__main__":
     # state = "NSW"
     # sess = init_sess(username, password)
     # # get_student_details(sess, sate, division="All")
-    # # get_competition_details(sess, state, division="All", competion="All")
+    # # get_competition_details(sess, state, division="All", competition="All")
 
     # # cert_data = get_certificate_info()
 
