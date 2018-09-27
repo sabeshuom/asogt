@@ -75,8 +75,6 @@ def get_row_data(result, cert_state, student_data_map):
         print("STD: {:s} -- Not found comp: {:s}, stae: {:s}, gender: {:s} , grade : {:s}".format(std_no,
                                                                                                   comp_code, cert_state,
                                                                                                   gender, grade_award))
-        import pdb
-        pdb.set_trace()
         return None
 
     name_info["SEAT POS"] = student_data_map[std_no].seat_pos

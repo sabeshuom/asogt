@@ -35,7 +35,6 @@ GRADE_WEIGHTS = {"First Prize": 2000,
                  "Grade B": 10,
                  "Grade C": 5,
                  "Participated": 1,
-                 "Pending": 0,
                  }
 
 __group_comp__ = "குழுநிலைப் போட்டிகள்"
@@ -68,7 +67,6 @@ GRADES = ["First Prize",
           "Grade B",
           "Grade C",
           "Participated",
-          "Pending",
           ]
 
 
@@ -87,7 +85,6 @@ NATIONAL_GRADES = [
     "Grade B",
     "Grade C",
     "Participated",
-    "Pending",
 ]
 
 
