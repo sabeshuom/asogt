@@ -466,6 +466,8 @@ def sort_national_results(results):
         grade = result.grade if result.award == "" else result.award
         return national_grade_weights[grade]
 
+    # filter resutls:
+    results = [result for result in results if result.grade in national_grade_weights]
     sorted_results = sorted(results, key=lambda x: (
         division_weights[x.division_t], x.comp_t, grade_weight(x)))
     student_data_map = {}

@@ -22,6 +22,14 @@ from core import unicode_to_bamini
 from core.write_timetable import add_time_table
 
 
+national_formatted_grades = ["Fourth Prize",
+                                "Fifth Prize",
+                                "Sixth Prize",
+                                "Seventh Prize",
+                                "Eighth Prize",
+                                "Ninth Prize",
+                                "Tenth Prize"]
+
 # CERT_INFO = get_certificate_info()
 REF_DATA = get_ref_data_from_excel()
 
@@ -83,6 +91,11 @@ def get_row_data(result, cert_state, student_data_map):
     state_info = cert_states[cert_state]
     gender_info = cert_gender[gender]
     grade_info = cert_grades[grade_award]
+
+    if cert_state == "National":
+        if grade_award in national_formatted_grades:
+            grade_info["T9"] = grade.replace("Grade ", "")
+            grade_info["E5"] = grade_info["E5"] + " ({:s}) ".format(grade)
 
     row_data = merge_dicts([name_info, common_info, comp_info,
                             state_info, gender_info, grade_info])
