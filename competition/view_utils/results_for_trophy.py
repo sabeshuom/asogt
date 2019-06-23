@@ -44,7 +44,6 @@ def get_trophy_data_rows_national(results):
         comp_code = comp_details[comp_details["Comp Tamil"] == comp_t]["Comp Code"].item()
         comp_division = cert_comp_data[comp_code]["E7"]
         comp_type = cert_comp_data[comp_code]["E9"]
-
         comp_grade_info = "{:s} {:s} - {:s}".format(comp_division, comp_type, grade)
         trophy_rows.append([seat_pos, std_no, name_e, comp_grade_info])
     return trophy_rows, num_of_lines
@@ -367,6 +366,6 @@ if __name__ == "__main__":
     state = "NSW"
     xls_wb = "test.xlsx"
     year = "2018"
-    exam_category = ["State", "Final"]
+    #exam_category = ["State", "Final"]
     exam_category = "National"
     export_to_excel(xls_wb, state, year, exam_category, username, password)

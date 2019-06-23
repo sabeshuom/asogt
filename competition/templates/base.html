@@ -16,8 +16,11 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Dosis|Muli" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 
     <!-- static js -->
     <script src="{% static 'js/downloaded_scripts/jquery.dataTables.min.js' %}"></script>
@@ -66,6 +69,17 @@
     </div>
     <nav class="navbar topmenu navbar-light" role="navigation" data-spy="affix" data-offset-top="97">
         <div class="container-fluid nav-main">
+            <div class="collapse navbar-collapse navbar-left" id="bs-example-navbar-collapse-0">
+                <div id='app_drop-down' class="nav-dropdown">
+                    <a class="dropbtn">Apps
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="/asogt/competitions/" >Competitions</a>
+                        <a href="/asogt/results/">Results</a>
+                        <a href="/asogt/students/">Students</a>
+                    </div>
+                </div>
+            </div>
             <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li><a href="#">Info-pack</a></li>
@@ -133,7 +147,7 @@
     <footer class="footer">
         <div class="row">
             <div class="col-lg-12">
-                <p>Copyright &copy; ASOGT 2018 </p>
+                <p>Copyright &copy; ASOGT 2019 </p>
             </div>
         </div>
     </footer>

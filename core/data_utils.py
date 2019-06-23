@@ -111,6 +111,7 @@ class Competition(object):
         self.name_t = competition[7].replace("<br>", " ")
         self.name_bamini = unicode2bamini(self.name_t)
         self.paid_status = competition[18]
+        self.ind_no = competition[22]
 
 
 class Exam(object):
@@ -120,6 +121,20 @@ class Exam(object):
         self.exam_t = exam[2]
         self.comp_code = exam[3]
         self.exam_bamini = unicode2bamini(self.exam_t)
+
+
+class StudentDetail(object):
+    def __init__(self, student):
+        self.std_no = cleanhtml(student[0])
+        self.name_e = student[1].replace("<br>", " ")
+        self.name_t = student[2].replace("<br>", " ")
+        self.name_bamini = unicode2bamini(self.name_t)
+        self.dob = student[4]
+        self.division_t = student[5]
+        self.gender = student[8]
+        self.phone = student[9]
+        self.email = student[10]
+        self.ind_no = student[14]
 
 
 def get_student_weight(std_data):
@@ -199,14 +214,14 @@ def get_competition_info():
     return comp_details, comp_details_map
 
 
-def get_exam_info(sess, state, exam_category=["State"], competition="All"):
+def get_exam_info(sess, state, year, exam_category=["State"], competition="All"):
     # get exam infor for each state
     # Returns:
     #   Exam objext for each exam
     competitions_url = "https://www.tamilcompetition.org.au/admin/exam/searchcomp/"
     payload = {
         "state_id": STATE_DETAILS[state],
-        "year": "2018",
+        "year": year,
         "division_id": "Any",
         "exam_category_id": "Any",
         "location_id": "Any",
@@ -298,11 +313,11 @@ def get_data_table(sess, type_key="student_details"):
     return data
 
 
-def get_student_details(sess, state, division="All"):
+def get_student_details(sess, state, year, division="All"):
     students_url = "https://www.tamilcompetition.org.au/admin/student_details/searchcomp/"
     payload = {
         "state_id": STATE_DETAILS[state],
-        "year": 2018,
+        "year": year,
         "gender": 2,
         "student_no": "",
         "division_id": DIVISION_IDS[division],
@@ -314,7 +329,8 @@ def get_student_details(sess, state, division="All"):
         students_url,
         data=payload,
     )
-    data = get_data_table("student_details")
+    data = get_data_table(sess, "student_details")
+    return [StudentDetail(d) for d in data]
 
 
 def get_competition_details(sess, state, year="2018", division="",  exam_category=["State"],  competition_type="", competition=""):
@@ -356,7 +372,7 @@ def get_competition_details(sess, state, year="2018", division="",  exam_categor
             if comp[3] in exam_category:
                 comp_data_objs.append(Competition(comp))
         else:
-            print(comp)
+            comp_data_objs.append(Competition(comp))
     return comp_data_objs
 
 
@@ -410,6 +426,8 @@ def process_results_for_seating_number(results, exam_category=["State", "Final"]
     student_data_map = {}
     for result in results:
         try:
+            if result.grade in ["Pending", "Absent"]:
+                continue
             # get comp grade details
             std_no = result.std_no
             division = result.division_t

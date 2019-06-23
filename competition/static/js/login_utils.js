@@ -1,6 +1,6 @@
 function check_authentication(require_login){
     $("#a-login").html("login");
-    $.ajax({
+    return $.ajax({
         method: 'GET',
         url: '/asogt/is_authenticated/',
         success: function(d) {

@@ -14,13 +14,26 @@ from core.data_utils import init_sess,\
     get_ref_data_from_excel,\
     get_exam_info,\
     cleanhtml,\
-    split_data
+    split_data,\
+    STATE_DETAILS
 from core.write_timetable import add_time_table
 
 # COMP_DETAILS, COMP_DETAILS_DICT = get_competition_info()
 
 COMP_DATA = get_ref_data_from_excel(
 ).competition_details.set_index("Comp Code").transpose()
+
+
+def get_formatted_details(state, year, exam_category, username, password):
+    sess = init_sess(username, password)
+
+    comp_data_raw = get_competition_details(
+        sess, state=state, exam_category=exam_category, year=year, competition="All")
+    headers = ["Std No", "Index No", "Name(T)",  "Name(E)", "Exam",  "Payment"]
+    std_data = []
+    for d in comp_data_raw:
+        std_data.append([d.std_no, d.ind_no, d.name_t, d.name_e, d.exam_e, d.paid_status])
+    return std_data, headers
 
 
 def export_to_excel(xls_wb, state, year, exam_category, username, password):
@@ -32,7 +45,7 @@ def export_to_excel(xls_wb, state, year, exam_category, username, password):
     comp_data_sets = split_data(comp_data_raw)
 
     exam_details = get_exam_info(
-        sess, state=state, exam_category=exam_category)
+        sess,  year=year, state=state, exam_category=exam_category)
 
     wb = xlsxwriter.Workbook(xls_wb)
     left_image_path = os.path.join(MEDIA_ROOT, "left_src.jpg")
@@ -46,6 +59,12 @@ def export_to_excel(xls_wb, state, year, exam_category, username, password):
         'font_size': 26,
         'valign': 'vcenter'})
     comp_title1_height = 45
+    comp_title1_eng = wb.add_format({
+        'font_name': "Calibri (Body)",
+        'bold': 2,
+        'align': 'center',
+        'font_size': 20,
+        'valign': 'vcenter'})
 
     comp_title2_format = wb.add_format({
         'font_name': "Bamini",
@@ -135,10 +154,18 @@ def export_to_excel(xls_wb, state, year, exam_category, username, password):
         'right': 1,
         'bg_color': '#ebf0df',
         'align': 'left'})
+    center = wb.add_format({'align': 'center'})
+
+    state_info = ""
+    if state in STATE_DETAILS:
+        if state.lower() is not "all":
+            state_info = "({:s})".format(state)
+    
+    year_info = "-" + year
 
     # setting up stats
     ws_stats = wb.add_worksheet("stats")
-    ws_stats.merge_range('A1:J1', "Participants Count", stats_title_format)
+    ws_stats.merge_range('A1:J1', "Participants Count" + state_info + year_info, stats_title_format)
     ws_stats.write_row(1, 0, ["Comp-code", "Desc", "Count", "Time(S)", "Admin(S)", "Total Time (S)",
                               "Judge Buf(S)", "Total(S)", "Total(M)", "Comment"], stats_header_format)
     ws_stats.set_column('A:A', 20)
@@ -199,8 +226,10 @@ def export_to_excel(xls_wb, state, year, exam_category, username, password):
                         'x_offset': -20, 'y_offset': 10})
 
         #  titile 1 for comp sheet
-        title1 = "jkpo; Cf;Ftpg;Gg; Nghl;b - 2018"
+        title1 = "jkpo; Cf;Ftpg;Gg; Nghl;b"
         ws.merge_range('A1:F1', title1, comp_title1_format)
+        ws.write_rich_string('A1',  comp_title1_format, title1, comp_title1_eng, state_info + year_info, center)
+
         ws.set_row(0, comp_title1_height)
         #  titile 2 for comp sheet
         # title2 = unicode2bamini(exam_details[exam_e]["exam_t"])
@@ -213,7 +242,7 @@ def export_to_excel(xls_wb, state, year, exam_category, username, password):
         ws.set_row(2, comp_title3_height)
 
         # header for comp sheet
-        ws.write_row(3, 0, ["Number", "Student ID", "Student Name",
+        ws.write_row(3, 0, ["Student ID", "Index No", "Student Name",
                             "", "Payment", "Comments"], comp_header_format)
         ws.write("D4", "khzthpd; ngaH", tamil_header)
         ws.write("F4", "Comments", comp_header_right_border)
@@ -223,7 +252,7 @@ def export_to_excel(xls_wb, state, year, exam_category, username, password):
         for row, comp_row in enumerate(comp_data):
             cur_row = row + header_rows
             ws.write_row(
-                cur_row, 0, ["", comp_row.std_no, comp_row.name_e, comp_row.name_t, comp_row.paid_status, ""], 
+                cur_row, 0, [comp_row.std_no, comp_row.ind_no, comp_row.name_e, comp_row.name_t, comp_row.paid_status, ""], 
                 comp_row_format)
             ws.write_string("D{:0d}".format(cur_row+1), comp_row.name_bamini, tamil_format)
             ws.set_row(cur_row, comp_row_height)
@@ -250,8 +279,8 @@ if __name__ == "__main__":
     password = "Sabesan4NSW"
     # username = "yoges"
     # password = "Yoges"
-    state = "All"
-    exam_category = "National"
+    state = "VIC"
+    exam_category = "State"
     xls_wb = "test.xlsx"
-    year = "2018"
+    year = "2019"
     export_to_excel(xls_wb, state, year, exam_category, username, password)

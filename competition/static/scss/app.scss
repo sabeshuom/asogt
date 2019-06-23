@@ -31,6 +31,7 @@ a{
         float: right;
     }
     li a {
+        border-top: 2px solid #dae5e8;
          &:hover:not(.active)
         {
             border-top: 2px solid #ec971f;
@@ -103,201 +104,6 @@ a{
         }
     }
 }
-//side environment
-.sidenav {
-    height: auto;
-    width: 200px;
-    position: fixed;
-    z-index: 1;
-    top: 150px;
-    left: 0;
-    background-color: #f8f9f7;
-    overflow-x: hidden;
-    transition: 0.5s;
-    padding-top: 20px;
-    width: 0px;
-    text-align: right;
-    padding-right: 0px;
-    transition: .5s;
-}
-
-.sidenav.active{
-    // padding-right: 20px;
-    width: 200px;
-    transition: .5s;
-}
-.sidenav a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    // font-size: 25px;
-    color: #313030;
-    display: block;
-    border-bottom: 1px solid #dddedb;
-}
-
-.sidenav a:hover {
-    color: #0f618c;
-}
-
-.sidenav .closebtn {
-    position: absolute;
-    top: -25px;
-    right: 0px;
-    font-size: 36px;
-    margin-left: 50px;
-    border-bottom:0px;
-}
-
-@media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
-  .sidenav a {font-size: 18px;}
-}
-.dashboard-span{
-    font-size:20px;
-    cursor:pointer;
-    position: absolute;
-    top: 100px;
-    left:10px;
-    color: #0f618c;
-    span{
-        font-size:14px;
-    }
-}
-.footer{
-    padding-top: 50%;
-}
-
-.dropdown-menu>li>a{
-    width: 100% !important;
-}
-
-.export_form {
-    // background: #fff;
-    background-color: #f2f2f2;
-    width: 40%;
-    margin-top: 40px;
-    margin-left: 30%;
-    padding: 20px;
-    padding-top: 10px;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
-    display: inline-block;
-    .disabled{
-        a{
-            color: red;
-            pointer-events: none;
-        }
-    }
-    h4{
-        margin-bottom: 30px;
-    }
-    .label{
-        border-radius: 0px;
-        display: inline-block;
-        width: 100%;
-        margin: 0px;
-        margin-right: 5px;
-        text-align:right;
-        color: black;
-        font-size: 14px;
-        line-height: 18px;
-        height:25px;
-        // border: 1px solid rgba(11,89,156,.1);
-        // border-left: 2px solid #1587a9;
-    }
-    .col-40 {
-        float: left;
-        width: calc(40% - 10px);
-        margin-top: 6px;
-        margin-left: 10px;
-    }
-    
-    .col-60 {
-        float: left;
-        width: calc(60% - 10px);
-        margin-top: 6px;
-        margin-right: 10px;
-        button{
-            width: 100%;
-            span.selected{
-                width: 100%;
-                float: left;
-                text-align: left;
-            }
-        }
-    }
-    .download-btn{
-        text-align: right;
-        padding-right: 10px;
-    }
-    /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
-    @media screen and (max-width: 800px) {
-        width: 70%;
-        margin-top: 40px;
-        margin-left: 15%;
-        padding: 30px;
-        .col-40, .col-60 {
-            width: 100%;
-            margin-top: 0;
-            margin-left: 0px;
-            margin-right: 0px;
-            .label{
-                text-align: left
-            }
-        }
-        .download-btn{
-            width: 100%;
-            padding-right: 0px;
-            a{
-                width: 100%;
-            }
-        }
-    }
-    .row{
-        margin-bottom: 20px;
-        margin-top: 10px;
-    }
-    /* Clear floats after the columns */
-    .row:after {
-        content: "";
-        display: table;
-        clear: both;
-    }
-
-    a{
-        width: 120px;
-        text-align: centre;
-        &.loading{
-            text-align: left;
-            cursor: crosshair;
-            pointer-events: none;
-            color:black;
-            background-color:#68c0e2;
-            position: relative;
-            &::after{
-                display: block;
-                content: "";
-                width: 30px;
-                height: 30px;
-                background: transparent url(/static/assets/loading_bluedots.gif) no-repeat;
-                position: absolute;
-                right: -0px;
-                top: 0px;
-                background-size: contain;
-            } 
-            // &::before{
-            //     content: "Processing data ...";
-            //     position: absolute;
-            //     color: black;
-            //     left: 125px;
-            //     top: 0px;
-            //     height: 100%;
-            //     line-height: 200%;
-            // }
-        }
-    }
-
-  }
-
 
 
 .main-content{
@@ -332,22 +138,103 @@ a{
     text-transform: capitalize;
 }
 
-//login stuff
-//login stuff
-// input{
-//     background: white;
-//     border: none;
-//     outline: none;
-// }
-// input {
-//     -webkit-appearance: none;
-//     box-shadow: none !important;
-//      }
-// input:-webkit-autofill {
-//      color: #fff !important;
-//       }
+.app-header{
+    color: #2478ad;
+    font-weight: BOLDER;
+}
+.form-menu{
+    margin-bottom: 25px;
+    background: #efead9;
+    margin-left: 0px;
+    margin-right: 0px;
+    .disabled{
+        a{
+            color: red;
+            pointer-events: none;
+        }
+    }
+    h4{
+        margin-bottom: 30px;
+    }
+    .col{
+        margin-top: 7px;
+        &.left{
+            float: left;
+            margin-left: 10px;
+        }
+        &.right{
+            float: right;
+            margin-right: 10px;
+        }
+    }
+    .label{
+        border-radius: 0px;
+        display: inline-block;
+        width: 100%;
+        margin: 0px;
+        margin-right: 5px;
+        text-align:right;
+        color: black;
+        font-size: 16px;
+        line-height: 18px;
+        height:25px;
+    }
+    .dropdown{
+        button{
+            height: 25px;
+            line-height: 12px;
+            width: 100%;
+        }
+        span.selected{
+            width: 100%;
+            float: left;
+            text-align: left;
+        }
+    }
 
-input[type=text], input[type=password] {
+    .row{
+        margin-bottom: 20px;
+        margin-top: 10px;
+    }
+    /* Clear floats after the columns */
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    .submit-btn{
+        min-width: 30px;
+        height: 30px;
+        text-align: centre;
+        margin-left: 20px;
+        i{
+            font-size:20px;
+        }
+        &.loading{
+            text-align: left;
+            cursor: crosshair;
+            pointer-events: none;
+            color:black;
+            margin-right: 40px;
+            position: relative;
+            &::after{
+                display: block;
+                content: "";
+                width: 30px;
+                height: 30px;
+                background: transparent url(/static/assets/loading_bluedots.gif) no-repeat;
+                position: absolute;
+                right: -35px;
+                top: -4px;
+                background-size: contain;
+            } 
+        }
+    }
+
+  }
+
+  input[type=text], input[type=password] {
     width: 100%;
     padding: 5px;
     display: inline-block;
@@ -396,29 +283,159 @@ input[type=submit]{
 
 }
 
+  /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+  @media screen and (max-width: 800px) {
+    width: 70%;
+    margin-top: 40px;
+    margin-left: 15%;
+    padding: 30px;
+    .col-40, .col-60 .col-25{
+        width: 100%;
+        margin-top: 0;
+        margin-left: 0px;
+        margin-right: 0px;
+        .label{
+            text-align: left
+        }
+    }
+    .download-btn{
+        width: 100%;
+        padding-right: 0px;
+        a{
+            width: 100%;
+        }
+    }
+}
 
-// .button
-// {
-//     float: right;
-//     margin-right: 10px;
-//     padding: 8px 30px;
-//     background: #3d59fe;
-//     outline: none;
-//     border: none;
-//     border-radius: 5px;
-//     color: #fff;
-//     cursor: pointer;
-// }
-// .button:hover
-// {
-//     background: #2c49ee;
-// }
-// .link
-// {
-//     color: #ffffffb2;
-// }
-// .link:hover
-// {
-//     color: #fff;
-//     text-decoration: none;
-// }
+.hleft{
+    text-align: left;
+}
+.hcenter{
+    text-align: center;
+}
+.hright{
+    text-align: right;
+}
+// loading stuff
+.lds-ellipsis {
+    display: inline-block;
+    position: relative;
+    width: 64px;
+    height: 64px;
+  }
+  .lds-ellipsis div {
+    position: absolute;
+    top: 27px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #0d7cd2;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+  }
+  .lds-ellipsis div:nth-child(1) {
+    left: 6px;
+    animation: lds-ellipsis1 0.6s infinite;
+  }
+  .lds-ellipsis div:nth-child(2) {
+    left: 6px;
+    animation: lds-ellipsis2 0.6s infinite;
+  }
+  .lds-ellipsis div:nth-child(3) {
+    left: 26px;
+    animation: lds-ellipsis2 0.6s infinite;
+  }
+  .lds-ellipsis div:nth-child(4) {
+    left: 45px;
+    animation: lds-ellipsis3 0.6s infinite;
+  }
+  @keyframes lds-ellipsis1 {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  @keyframes lds-ellipsis3 {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(0);
+    }
+  }
+  @keyframes lds-ellipsis2 {
+    0% {
+      transform: translate(0, 0);
+    }
+    100% {
+      transform: translate(19px, 0);
+    }
+  }
+  
+
+
+
+.nav-dropdown {
+    float: left;
+    overflow: hidden;
+    .dropbtn {
+        padding: 5px 15px;
+        border-top: 2px solid #dae5e8;
+        // font-size: 16px;  
+        // border: none;
+        // outline: none;
+        // color: white;
+        // padding: 14px 16px;
+        // background-color: inherit;
+        // font-family: inherit;
+        // margin: 0;
+    }
+  
+    // &:hover .dropbtn {
+    //     background-color: red;
+    // }
+    // &:hover .dropbtn {
+    //     border-top: 2px solid #ec971f;
+    //     background: white;
+    // }
+
+    .dropbtn {
+        display: block;
+         &:hover:not(.active)
+        {
+            border-top: 2px solid #ec971f;
+            background: white;
+        }
+    }
+    .active
+    {
+        border-top: 5px solid #31b0d5  
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+  
+    .dropdown-content a {
+        float: none;
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        text-align: left;
+    }
+  
+    .dropdown-content a:hover {
+        background-color: #ddd;
+    }
+  
+    &:hover .dropdown-content{
+        display: block;
+    }
+}

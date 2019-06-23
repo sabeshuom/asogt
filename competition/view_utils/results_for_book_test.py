@@ -14,6 +14,7 @@ import numpy as np
 from docx import Document
 from docx.shared import Inches
 import time
+import pandas as pd
 
 sys.path.append("../../")
 from asogt.settings import MEDIA_ROOT, BASE_DIR
@@ -56,6 +57,19 @@ GRADE_INFO = {"First Prize": (" ", "Kjw; ghpR"),
               }
 
 
+def get_updated_student_data_map(student_data_map):
+    
+    df = pd.ExcelFile("map.xlsx")
+    new_map = df.parse(
+        "Student List").fillna('').set_index("Student Number").transpose()
+    
+    for std_no in student_data_map:
+        student_data_map[std_no].seat_pos = new_map[std_no]["Seating Number"]
+
+    return student_data_map
+
+
+
 def export_to_excel(xls_wb, state,  year, exam_category, username, password):
 
     sess = init_sess(username, password)
@@ -63,6 +77,7 @@ def export_to_excel(xls_wb, state,  year, exam_category, username, password):
                           competition="All", exam_category=exam_category)
     ordered_results, division_comp_map, student_data_map = process_results_for_seating_number(
         results)
+    student_data_map =  get_updated_student_data_map(student_data_map)
 
     wb = xlsxwriter.Workbook(xls_wb)
     row_height = 25
@@ -97,7 +112,7 @@ def export_to_excel(xls_wb, state,  year, exam_category, username, password):
         comps = [comp for comp in sorted(
             division_comp_map[division], key=lambda x: division_comp_map[division][x], reverse=True)]
         comps_bamini = [unicode2bamini(comp) for comp in comps]
-        div_header = ["SMrd ,y.", "khztu; ,y.",
+        div_header = ["Seat POS", "khztu; ,y.",
                       "KOg; ngau;", "KOg; ngau;"] + comps_bamini
         ws.write_row(0, 0, div_header, div_header_format)
         ws.set_row(0, row_title_height)
@@ -162,6 +177,7 @@ def export_to_docx(word_doc, state,  year,  exam_category, username, password):
 
     ordered_results, division_comp_map, student_data_map = process_results_for_seating_number(
         results)
+    student_data_map =  get_updated_student_data_map(student_data_map)
     template = os.path.join(MEDIA_ROOT, "book_template.docx")
     document = Document(template)
 
@@ -241,7 +257,7 @@ if __name__ == "__main__":
     state = "NSW"
     year = "2018"
     exam_category = ["State", "Final"]
-    xls_wb = "test.xlsx"
-    word_doc = "test.docx"
-    # export_to_excel(xls_wb, state,  year, exam_category, username, password)
+    xls_wb = "book.xlsx"
+    word_doc = "book.docx"
+    export_to_excel(xls_wb, state,  year, exam_category, username, password)
     export_to_docx(word_doc, state,  year, exam_category,  username, password)

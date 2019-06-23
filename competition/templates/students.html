@@ -1,157 +1,78 @@
 {% extends 'base.html' %} {% load staticfiles %} {% block head_content %}
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
+<script src="{% static 'js/students.js' %}?ver=1.2"></script>
 <script>
-    function openNav() {
-        $("#mySidenav").addClass('active');
-    }
-    function closeNav() {
-        $("#mySidenav").removeClass('active');
-    }
-    function export_excel() {
-        $(".students").hide();
-        $("#export_excel").show();
-        closeNav();
-        $("#dashboar_span").html(" Students > Export");
-    }
-    function studentlist2017() {
-        $(".students").hide();
-        $("#studentlist2017").show();
-        closeNav()
-        $("#dashboar_span").html(" Students > 2017");
-    }
-    function studentlist2018() {
-        $(".students").hide();
-        $("#studentlist2018").show();
-        closeNav()
-        $("#dashboar_span").html(" Students > 2018");
-    }
+</script> 
 
-    //hide it when clicking anywhere else except the popup and the trigger
-    $(document).on('click touch', function (event) {
-        if (!$(event.target).parents().addBack().is('#mySidenav') && !$(event.target).parents().addBack().is('#dash_board_icon')) {
-            $("#mySidenav").removeClass('active');
-        }
-    });
+{% endblock %} {% block page_content %}
 
-    $(document).ready(function() {
-        export_excel()
-        check_authentication(true);
-        $('.dropdown-menu a').click(function(){
-            $(this).parent().parent().parent().find(".selected").text($(this).text());
-        });
-    });
+<div class="form-menu row">
 
-</script> {% endblock %} {% block page_content %}
-<div id="dash_board_icon" class="dashboard-span" onclick="openNav()">&#9776;
-    <span id="dashboar_span"></span>
-</div>
-<div id="mySidenav" class="sidenav">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-    <a onClick='export_excel()'>Export to Excel</a>
-    <a onClick='studentlist2018()'>Student List 2018</a>
-    <a onclick='studentlist2017()'>Student List 2017</a>
-</div>
-
-<div>
-
-    <div id="export_excel" class="export_form students" style="display: none">
-        <h4>Export Student Details</h4>
-
-        <div class="row">
-            <div class="col-40">
-                <div class="label"> Competition Category :</div>
-            </div>
-            <div class="col-60">
-                <div class="dropdown">
-                    <button class="btn btn-default dropdown-toggle btn-download" type="button" data-toggle="dropdown">
-                        <span id="students_selected_state" class="selected">NSW</span>
-                        <span class="caret"></span>
-                    </button>
-                    <ul id="drop-state" class="dropdown-menu">
-                        <li><a>National</a></li>
-                        <li><a>QLD</a></li>
-                        <li><a>NSW</a></li>
-                        <li><a>VIC</a></li>
-                        <li><a>SA</a></li>
-                        <li><a>ACT</a></li>
-                        <li><a>WA</a></li>
-                        <li><a>NZW</a></li>
-                        <li><a>NZH</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-40">
-                <div class="label"> Year :</div>
-            </div>
-            <div class="col-60">
-                <div class="dropdown">
-                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-                        <span id="students_selected_year" class="selected">2018</span>
-                        <span class="caret"></span>
-                    </button>
-                    <ul id="drop-year" class="dropdown-menu">
-                        <li>
-                            <a>2018</a>
-                        </li>
-                        <li class="disabled">
-                            <a>2017</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-40">
-                <div class="label"> Format :</div>
-            </div>
-            <div class="col-60">
-                <div class="dropdown">
-                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-                        <span id="students_selected_format" class="selected">Per Exam</span>
-                        <span class="caret"></span>
-                    </button>
-                    <ul id="drop-format" class="dropdown-menu">
-                        <li>
-                            <a>Per Exam</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="download-btn">
-                <a class="btn btn-primary " onclick="get_student_details(this)">Download</a>
-            </div>
+     <!-- <a class='col right submit-btn' onclick="export_student_details(this)" disabled>
+        <i class="fa fa-file-export"></i>
+     </a> -->
+    <a class="col right submit-btn" onclick="get_student_details(this)">
+        <i class="fa fa-search"></i>
+    </a>
+    <div class="col right">
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle btn-download" type="button" data-toggle="dropdown">
+                <span id="students_selected_state" class="selected">VIC</span>
+                <span class="caret"></span>
+            </button>
+            <ul id="drop-state" class="dropdown-menu">
+                <li><a>National</a></li>
+                <li><a>QLD</a></li>
+                <li><a>NSW</a></li>
+                <li><a>VIC</a></li>
+                <li><a>SA</a></li>
+                <li><a>ACT</a></li>
+                <li><a>WA</a></li>
+                <li><a>NZW</a></li>
+                <li><a>NZH</a></li>
+            </ul>
         </div>
     </div>
-
-    <!-- <div id="export_excel" class ="students" style="display: none">
-        <h4>TC List Workbook 2018</h4>
-            <ul class="excel-ul">
+    <div class="col right">
+        <div class="label"> State :</div>
+    </div>
+    <div class="col right">
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                <span id="students_selected_year" class="selected">2019</span>
+                <span class="caret"></span>
+            </button>
+            <ul id="drop-year" class="dropdown-menu">
                 <li>
-                    <a data-state="NSW" class="btn btn-primary" onclick="get_per_exam_details(this)">Per-exam student details-NSW</a>
+                    <a>2019</a>
                 </li>
                 <li>
-                    <a data-state="QLD" class="btn btn-primary" onclick="get_per_exam_details(this)">Per-exam student details-QLD</a>
+                    <a>2018</a>
                 </li>
             </ul>
-    </div> -->
-
-    <div id="studentlist2018" class="students" style="display: none">
-        <h4>Student List 2018</h4>
+        </div>
     </div>
-
-    <div id="studentlist2017" class="students" style="display: none">
-        <h4>Student List 2017</h4>
+    <div class="col right">
+        <div class="label"> Year :</div>
+    </div>
+    <div class="col left">
+        <div class="app-header">Students</div>
+    </div>
+</div>
+<div id='student_main' style="text-align: center">
+    <div class="lds-ellipsis loading"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+    <div id="div_students">
+        <table id="table_students" class="display" style="width: 100%">
+            <thead>
+                <tr class='tr-header'>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
     </div>
 </div>
 
-
+</div>
 
 {% endblock %}
