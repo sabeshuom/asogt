@@ -1,41 +1,41 @@
-// function export_student_details(id) {
-//     $(id).html("Getting Data ");
-//     $(id).addClass("loading")
-//     var xhttp = new XMLHttpRequest();
-//     var state = $("#students_selected_state").text();
-//     var format = $("#students_selected_format").text();
-//     var year = $("#students_selected_year").text();
-//     var out_ext = ".xlsx";
-//     var out_fname = "TC_STUDENT_DETAILS_" + state + "_" + year + "_" + format
-//     xhttp.onreadystatechange = function () {
-//         var a, today;
-//         if (xhttp.readyState === 4) {
-//             if (xhttp.status === 200) {
-//                 $(id).html("<i class='fa fa-file-export'></i>");
-//                 $(id).removeClass("loading");
-//                 a = document.createElement('a');
-//                 a.href = window.URL.createObjectURL(xhttp.response);
-//                 today = new Date();
-//                 a.download = out_fname + "_" + today.toDateString().split(" ").join("_") + out_ext;
-//                 a.style.display = 'none';
-//                 document.body.appendChild(a);
-//                 return a.click();
-//             }
-//             else {
-//                 alert("Something went wrong.Please check with Admin.")
-//             }
-//         }
-//     };
-//     xhttp.open("POST", "/asogt/export_student_details/", true);
-//     xhttp.setRequestHeader("Content-Type", "application/json");
-//     xhttp.responseType = 'blob';
-//     xhttp.send(JSON.stringify({
-//         'state': state,
-//         'year': year,
-//         'format': format
-//         })
-//     );
-// }
+function export_student_details(id) {
+    $(id).html("Compiling xlx");
+    $(id).addClass("loading")
+    var xhttp = new XMLHttpRequest();
+    var state = $("#students_selected_state").text();
+    var format = $("#students_selected_format").text();
+    var year = $("#students_selected_year").text();
+    var out_ext = ".xlsx";
+    var out_fname = "TC_STUDENT_DETAILS_" + state + "_" + year + "_" + format
+    xhttp.onreadystatechange = function () {
+        var a, today;
+        if (xhttp.readyState === 4) {
+            if (xhttp.status === 200) {
+                $(id).html("<i class='fa fa-file-export'></i>");
+                $(id).removeClass("loading");
+                a = document.createElement('a');
+                a.href = window.URL.createObjectURL(xhttp.response);
+                today = new Date();
+                a.download = out_fname + "_" + today.toDateString().split(" ").join("_") + out_ext;
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                return a.click();
+            }
+            else {
+                alert("Something went wrong.Please check with Admin.")
+            }
+        }
+    };
+    xhttp.open("POST", "/asogt/export_student_details/", true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    xhttp.responseType = 'blob';
+    xhttp.send(JSON.stringify({
+        'state': state,
+        'year': year,
+        'format': format
+        })
+    );
+}
 
 function get_student_details(id) {
     $("#div_students").hide()

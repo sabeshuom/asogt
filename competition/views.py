@@ -105,6 +105,27 @@ def get_student_details(request):
 
 
 @csrf_exempt
+def export_student_details(request):
+    json_data = json.loads(request.body)
+    state = json_data["state"]
+    year = json_data["year"]
+    req_format = json_data["format"]
+
+    if state == "National":
+        exam_category = "National"
+        state = "All"
+    else:
+        exam_category = ["State", "Final"]
+
+    output = BytesIO()
+    student_details.export_to_excel(
+        output, state, year, exam_category, ASOGT_USERNAME, ASOGT_PASSWORD)
+    output.seek(0)
+    response = HttpResponse(output.read(
+    ), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    return response
+
+@csrf_exempt
 def export_results(request):
     if not request.user.is_authenticated():
         return HttpResponse(status=204)
@@ -126,3 +147,5 @@ def export_results(request):
         output.seek(0)
         response = HttpResponse(output.read(), content_type=content_type)
         return response
+
+    

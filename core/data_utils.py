@@ -112,6 +112,9 @@ class Competition(object):
         self.name_bamini = unicode2bamini(self.name_t)
         self.paid_status = competition[18]
         self.ind_no = competition[22]
+        self.email = ",".join(competition[11].split("<br>"))
+        self.fname_e, self.lname_e = competition[6].split("<br>")
+        self.fname_t, self.lname_t = competition[7].split("<br>")
 
 
 class Exam(object):
@@ -135,6 +138,8 @@ class StudentDetail(object):
         self.phone = student[9]
         self.email = student[10]
         self.ind_no = student[14]
+        self.fname_e, self.lname_e = student[1].split("<br>")
+        self.fname_t, self.lname_t = student[2].split("<br>")
 
 
 def get_student_weight(std_data):

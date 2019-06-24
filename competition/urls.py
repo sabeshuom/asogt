@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'^get_results/$', views.get_results, name='get_results'),
     url(r'^export_results/$', views.export_results, name='export_results'),
     url(r'^get_student_details/$', views.get_student_details, name='get_student_details'),
+    url(r'^export_student_details/$', views.export_student_details, name='export_student_details'),
 ]
