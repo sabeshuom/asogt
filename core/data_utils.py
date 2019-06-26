@@ -115,6 +115,11 @@ class Competition(object):
         self.email = ",".join(competition[11].split("<br>"))
         self.fname_e, self.lname_e = competition[6].split("<br>")
         self.fname_t, self.lname_t = competition[7].split("<br>")
+        data_time = competition[2]
+        if data_time:
+            self.date, self.time = data_time.split(" ")
+        else:
+            self.date, self.time = (None, None)
 
 
 class Exam(object):
