@@ -8,6 +8,8 @@ import re
 import xlrd
 import string
 import numpy as np
+from operator import itemgetter
+from itertools import groupby
 sys.path.append("../../")
 from core.data_utils import init_sess,\
     get_student_details,\
@@ -77,20 +79,24 @@ def export_to_excel(xls_wb, state, year, exam_category, username, password):
     # comps
     index_height = 170
     index_ind_format = wb.add_format({
-        'font_name': "Calibri (Body)",
-        'bold': 2,
+        'font_name': "Impact",
+        'bold': 3,
+        'border': 5,
         'align': 'center',
-        'font_size': 60,
+        'font_size': 80,
         'valign': 'vcenter'})
     index_name_format = wb.add_format({
-        'font_name': "Calibri (Body)",
+        'font_name': "Arial",
         'bold': 2,
+        'border': 5,
         'align': 'center',
         'font_size': 12,
         'valign': 'vcenter'})
 
     index_exam_format = wb.add_format({
-        'font_name': "Calibri (Body)",
+        'font_name': "Arial",
+        'text_wrap': True,
+        'border': 5,
         'align': 'center',
         'font_size': 10,
         'valign': 'vcenter'})
@@ -135,20 +141,24 @@ def export_to_excel(xls_wb, state, year, exam_category, username, password):
         comp_sets_by_family = date_comp_sets_by_family[date]
         ws_ids = wb.add_worksheet("ids-" + date)
         row = 0
-        ws_ids.set_column(0, 0, 42)
-        ws_ids.set_column(1, 1, 42)
-        for ind_no in sorted(comp_sets_by_id, key=lambda x: int(x.split('-')[1])):
-            exams = comp_sets_by_id[ind_no]['exams']
-            rows_per_id = len(exams) + 1
-            row_height = index_height / float(rows_per_id)
-            row += 1
-            ws_ids.merge_range('A{}:A{}'.format(row, row+len(exams)), ind_no, index_ind_format)
-            ws_ids.write("B{}".format(row), comp_sets_by_id[ind_no]['name'], index_name_format)
-            ws_ids.set_row(row-1, row_height)
-            for exam in exams:
+        ws_ids.set_column(0, 0, 41.75)
+        ws_ids.set_column(1, 1, 41.75)
+        aa = [{'div': a.split("-")[0], 'id': a.split("-")[1]} for a in comp_sets_by_id.keys()]
+        aa.sort(key=itemgetter('div'))
+        for div, items in groupby(aa, key=itemgetter('div')):
+            for item in sorted(items, key=lambda x: int(x['id'])):
+                ind_no = item["div"] + "-" + item['id'] 
+                exams = comp_sets_by_id[ind_no]['exams']
+                rows_per_id = len(exams) + 1
+                row_height = index_height / float(rows_per_id)
                 row += 1
-                ws_ids.write("B{}".format(row), exam, index_exam_format)
+                ws_ids.merge_range('A{}:A{}'.format(row, row+len(exams)), ind_no, index_ind_format)
+                ws_ids.write("B{}".format(row), comp_sets_by_id[ind_no]['name'], index_name_format)
                 ws_ids.set_row(row-1, row_height)
+                for exam in exams:
+                    row += 1
+                    ws_ids.write("B{}".format(row), exam, index_exam_format)
+                    ws_ids.set_row(row-1, row_height)
 
         # family lists
         ws_family = wb.add_worksheet("familyList -" + date)
