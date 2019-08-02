@@ -11,6 +11,7 @@ sys.path.append("../../")
 from asogt.settings import MEDIA_ROOT, BASE_DIR
 from core.data_utils import init_sess,\
     get_competition_details,\
+    get_student_details,\
     get_ref_data_from_excel,\
     get_exam_info,\
     cleanhtml,\
@@ -41,7 +42,9 @@ def export_to_excel(xls_wb, state, year, exam_category, username, password):
 
     comp_data_raw = get_competition_details(
         sess, state=state, exam_category=exam_category, year=year, competition="All")
-
+    
+    students = get_student_details(sess, state=state, year=year)
+    student_due = {student.std_no : student.amount_due for student in students}
     comp_data_sets = split_data(comp_data_raw)
 
     exam_details = get_exam_info(
@@ -243,16 +246,17 @@ def export_to_excel(xls_wb, state, year, exam_category, username, password):
 
         # header for comp sheet
         ws.write_row(3, 0, ["Student ID", "Index No", "Student Name",
-                            "", "Payment", "Comments"], comp_header_format)
+                            "", "Amount Due", "Comments"], comp_header_format)
         ws.write("D4", "khzthpd; ngaH", tamil_header)
         ws.write("F4", "Comments", comp_header_right_border)
         ws.set_row(3, comp_header_height)
         header_rows = 4
         comp_data = sorted(comp_data, key=lambda x: x.name_e)
         for row, comp_row in enumerate(comp_data):
+            amount_due = student_due[comp_row.std_no]
             cur_row = row + header_rows
             ws.write_row(
-                cur_row, 0, [comp_row.std_no, comp_row.ind_no, comp_row.name_e, comp_row.name_t, comp_row.paid_status, ""], 
+                cur_row, 0, [comp_row.std_no, comp_row.ind_no, comp_row.name_e, comp_row.name_t, amount_due, ""], 
                 comp_row_format)
             ws.write_string("D{:0d}".format(cur_row+1), comp_row.name_bamini, tamil_format)
             ws.set_row(cur_row, comp_row_height)
@@ -279,8 +283,8 @@ if __name__ == "__main__":
     password = "Sabesan4NSW"
     # username = "yoges"
     # password = "Yoges"
-    state = "VIC"
+    state = "NSW"
     exam_category = "State"
-    xls_wb = "test.xlsx"
+    xls_wb = "nsw.xlsx"
     year = "2019"
     export_to_excel(xls_wb, state, year, exam_category, username, password)

@@ -143,6 +143,7 @@ class StudentDetail(object):
         self.phone = student[9]
         self.email = student[10]
         self.ind_no = student[14]
+        self.amount_due = student[17]
         self.fname_e, self.lname_e = student[1].split("<br>")
         self.fname_t, self.lname_t = student[2].split("<br>")
 
