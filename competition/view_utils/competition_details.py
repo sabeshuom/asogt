@@ -44,7 +44,7 @@ def export_to_excel(xls_wb, state, year, exam_category, username, password):
         sess, state=state, exam_category=exam_category, year=year, competition="All")
     
     students = get_student_details(sess, state=state, year=year)
-    student_due = {student.std_no : student.amount_due for student in students}
+    student_due = {student.std_no : student.amount_due for student in students }
     comp_data_sets = split_data(comp_data_raw)
 
     exam_details = get_exam_info(
@@ -254,6 +254,7 @@ def export_to_excel(xls_wb, state, year, exam_category, username, password):
         comp_data = sorted(comp_data, key=lambda x: x.name_e)
         for row, comp_row in enumerate(comp_data):
             amount_due = student_due[comp_row.std_no]
+            amount_due = "Paid" if int(float(amount_due)) ==0 else str(amount_due)
             cur_row = row + header_rows
             ws.write_row(
                 cur_row, 0, [comp_row.std_no, comp_row.ind_no, comp_row.name_e, comp_row.name_t, amount_due, ""], 
