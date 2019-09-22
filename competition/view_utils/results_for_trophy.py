@@ -228,7 +228,7 @@ def export_to_excel(xls_wb, state,  year, exam_category, username, password):
     if exam_category == "National":
         trophy_rows, num_of_lines = get_trophy_data_rows_national(results)
     else:
-        ordered_results, division_comp_map, student_data_map = process_results_for_seating_number(results)
+        ordered_results, division_comp_map, student_data_map = process_results_for_seating_number(results, seperate_group_comps=False)
         trophy_rows, num_of_lines = get_trophy_data_by_rows(ordered_results, student_data_map)
 
     wb = xlsxwriter.Workbook(xls_wb)
@@ -366,6 +366,6 @@ if __name__ == "__main__":
     state = "NSW"
     xls_wb = "test.xlsx"
     year = "2018"
-    #exam_category = ["State", "Final"]
-    exam_category = "National"
+    exam_category = ["State", "Final"]
+    #exam_category = "National"
     export_to_excel(xls_wb, state, year, exam_category, username, password)
