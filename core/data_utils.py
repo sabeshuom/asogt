@@ -431,7 +431,7 @@ class Student(object):
         self.name_bamini = unicode2bamini(name_t)
 
 
-def process_results_for_seating_number(results, exam_category=["State", "Final"]):
+def process_results_for_seating_number(results, exam_category=["State", "Final"], seperate_group_comps=True):
     ordered_results = {division: {} for division, _ in DIVISION_ORDER}
     division_comp_map = {division: {} for division, _ in DIVISION_ORDER}
     student_data_map = {}
@@ -448,7 +448,7 @@ def process_results_for_seating_number(results, exam_category=["State", "Final"]
                 student_data_map[std_no] = Student(
                     std_no, name_t=result.name_t, name_e=result.name_e)
 
-            if comp in GROUP_COMPS:
+            if (comp in GROUP_COMPS) and seperate_group_comps:
                 division = __group_comp__
             if comp in SPECIAL_COMPS:
                 division = __special_comp__
