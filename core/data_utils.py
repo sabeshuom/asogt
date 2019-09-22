@@ -431,7 +431,7 @@ class Student(object):
         self.name_bamini = unicode2bamini(name_t)
 
 
-def process_results_for_seating_number(results, exam_category=["State", "Final"], seperate_group_comps=True):
+def process_results_for_seating_number(results, exam_category=["State", "Final"], seperate_group_comps=False):
     ordered_results = {division: {} for division, _ in DIVISION_ORDER}
     division_comp_map = {division: {} for division, _ in DIVISION_ORDER}
     student_data_map = {}
