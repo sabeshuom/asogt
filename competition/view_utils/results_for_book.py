@@ -56,13 +56,13 @@ GRADE_INFO = {"First Prize": (" ", "Kjw; ghpR"),
               }
 
 
-def export_to_excel(xls_wb, state,  year, exam_category, username, password):
+def export_to_excel(xls_wb, state,  year, exam_category, username, password, seat_no_map=None):
 
     sess = init_sess(username, password)
     results = get_results(sess, state=state, year=year,
                           competition="All", exam_category=exam_category)
-    ordered_results, division_comp_map, student_data_map = process_results_for_seating_number(
-        results)
+    _, _, student_data_map = process_results_for_seating_number(results, exam_category=exam_category, seperate_group_comps=False, seat_no_map=seat_no_map)
+    ordered_results, division_comp_map = process_results_without_seat_no(results, exam_category=exam_category, seperate_group_comps=True)
 
     wb = xlsxwriter.Workbook(xls_wb)
     row_height = 25
@@ -155,13 +155,12 @@ def export_to_excel(xls_wb, state,  year, exam_category, username, password):
 #         self.
 
 
-def export_to_docx(word_doc, state,  year,  exam_category, username, password):
+def export_to_docx(word_doc, state,  year,  exam_category, username, password, seat_no_map=None):
     sess = init_sess(username, password)
     results = get_results(sess, state=state, year=year,
                           competition="All", exam_category=exam_category)
 
-    ordered_results, division_comp_map, student_data_map = process_results_for_seating_number(
-        results)
+    ordered_results, division_comp_map, student_data_map = process_results_for_seating_number(results, exam_category=exam_category, seperate_group_comps=True, seat_no_map=seat_no_map)
     template = os.path.join(MEDIA_ROOT, "book_template.docx")
     document = Document(template)
 
@@ -239,7 +238,7 @@ if __name__ == "__main__":
     username = "sabesan"
     password = "Sabesan4NSW"
     state = "NSW"
-    year = "2018"
+    year = "2019"
     exam_category = ["State", "Final"]
     xls_wb = "test.xlsx"
     word_doc = "test.docx"

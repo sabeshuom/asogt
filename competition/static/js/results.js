@@ -1,3 +1,54 @@
+var SEAT_NO_MAP = {};
+$(document).ready(function() {
+    document.querySelector("html").classList.add('js');
+
+    var fileInput  = document.querySelector(".input-file");
+    var the_return = document.querySelector(".file-return");
+        
+    // button.addEventListener( "keydown", function( event ) {  
+    //     if ( event.keyCode == 13 || event.keyCode == 32 ) {  
+    //         fileInput.focus();  
+    //     }  
+    // });
+    // button.addEventListener( "click", function( event ) {
+    // fileInput.focus();
+    // return false;
+    // });  
+    fileInput.addEventListener( "change", function( event ) {  
+        the_return.innerHTML = this.value;  
+        handleFileSelect(event);
+    }); 
+});
+
+function excelToJSON(file) {
+    var reader = new FileReader();
+ 
+    reader.onload = function (e) {
+        var data = e.target.result;
+        var workbook = XLSX.read(data, {
+            type: 'binary'
+        });
+        var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets["Trophy_template"], { range: 5 });
+        for (row in XL_row_object) {
+            var std_no = XL_row_object[row]['Std No'];
+            var seat_no = XL_row_object[row]['Seat No'];
+            SEAT_NO_MAP[std_no] = seat_no;
+        }
+    };
+
+    reader.onerror = function (ex) {
+        console.log(ex);
+    };
+
+    reader.readAsBinaryString(file);
+
+};
+
+function handleFileSelect(evt) {
+    var files = evt.target.files; // FileList object
+    excelToJSON(files[0]);
+}
+
 function export_results(id) {
     $(id).find("p").show()
     $(id + " i").hide()
@@ -7,6 +58,7 @@ function export_results(id) {
     var format = $(id).data().type;
     var year = $("#results_selected_year").text();
     var out_ext = ".xlsx";
+    var gen_seat_no =  $("#gen-seatno").is(':checked');
     if(format=="book word"){
         out_ext = ".docx"
     }
@@ -38,7 +90,9 @@ function export_results(id) {
     xhttp.send(JSON.stringify({
         'state': state,
         'year': year,
-        'format': format
+        'format': format,
+        'gen_seat_no': gen_seat_no,
+        'seat_no_map': SEAT_NO_MAP,
         })
     );
 }
@@ -96,5 +150,15 @@ $(document).ready(function()
 {
     $('#app_drop-down').show();
     check_authentication(true)
-    get_results();
+    $("#result_main .loading").hide();
+    // get_results();
+    $("#gen-seatno").change(function(){
+        if($(this).is(':checked')) {
+            $("#div-input").hide()
+            // Checkbox is checked..
+        } else {
+            $("#div-input").show()
+            // Checkbox is not checked..
+        }
+    });
 });

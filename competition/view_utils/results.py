@@ -14,19 +14,19 @@ def get_formatted_results(state, year, exam_category, username, password):
     return data, headers
 
 
-def export_results(req_format, output, state, year, exam_category,  ASOGT_USERNAME, ASOGT_PASSWORD):
+def export_results(req_format, output, state, year, exam_category,  ASOGT_USERNAME, ASOGT_PASSWORD, seat_no_map):
     content_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     if req_format.lower() == "certificate":
         results_for_certificate.export_to_excel(
-            output, state, year, exam_category,  ASOGT_USERNAME, ASOGT_PASSWORD)
+            output, state, year, exam_category,  ASOGT_USERNAME, ASOGT_PASSWORD, seat_no_map)
     if req_format.lower() == "trophy":
         results_for_trophy.export_to_excel(
-            output, state, year, exam_category, ASOGT_USERNAME, ASOGT_PASSWORD)
+            output, state, year, exam_category, ASOGT_USERNAME, ASOGT_PASSWORD, seat_no_map)
     if req_format.lower() == "book excel":
         results_for_book.export_to_excel(
-            output, state, year, exam_category, ASOGT_USERNAME, ASOGT_PASSWORD)
+            output, state, year, exam_category, ASOGT_USERNAME, ASOGT_PASSWORD, seat_no_map)
     if req_format.lower() == "book word":
         content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         results_for_book.export_to_docx(
-            output, state, year, exam_category, ASOGT_USERNAME, ASOGT_PASSWORD)
+            output, state, year, exam_category, ASOGT_USERNAME, ASOGT_PASSWORD, seat_no_map)
     return content_type, output

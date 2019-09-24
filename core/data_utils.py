@@ -419,7 +419,7 @@ def sort_std_keys_for_division(division_data):
         for comp in division_data[student]:
             weight = GRADE_WEIGHTS[division_data[student][comp]]
             std_weights[student] += weight
-    return sorted(std_weights, key=lambda x: std_weights[x], reverse=True)
+    return sorted(std_weights, key=lambda x: (std_weights[x],x), reverse=True)
 
 
 class Student(object):
@@ -431,7 +431,7 @@ class Student(object):
         self.name_bamini = unicode2bamini(name_t)
 
 
-def process_results_for_seating_number(results, exam_category=["State", "Final"], seperate_group_comps=False):
+def process_results_for_seating_number(results, exam_category=["State", "Final"], seperate_group_comps=False, seat_no_map=None):
     ordered_results = {division: {} for division, _ in DIVISION_ORDER}
     division_comp_map = {division: {} for division, _ in DIVISION_ORDER}
     student_data_map = {}
@@ -447,7 +447,8 @@ def process_results_for_seating_number(results, exam_category=["State", "Final"]
             if std_no not in student_data_map:
                 student_data_map[std_no] = Student(
                     std_no, name_t=result.name_t, name_e=result.name_e)
-
+                if seat_no_map is not None:
+                    student_data_map[std_no].seat_pos = seat_no_map.get(std_no, '000')
             if (comp in GROUP_COMPS) and seperate_group_comps:
                 division = __group_comp__
             if comp in SPECIAL_COMPS:

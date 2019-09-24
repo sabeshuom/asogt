@@ -3,76 +3,109 @@
 <script src="{% static 'js/results.js' %}?ver=1.2"></script>
 <script>
 </script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+<style>
+label{
+    min-width:100 
+}
+</style>
 
 {% endblock %} {% block page_content %}
 
-<div class="form-menu row">
-    <a class='col right submit-btn' title="export for book docx" data-type='book word' onclick="export_results(this)">
-        <p style="display:none"> Exporintg for Book Word</p>
-        <i class="fa fa-file-word"></i>
-    </a>
-    <a class='col right submit-btn' title="export for book excel" data-type='book excel' onclick="export_results(this)">
-        <p style="display:none"> Exporintg for Book Excel</p>
-        <i class="fa fa-file-excel"></i>
-    </a>
-
-    <a class='col right submit-btn' title="export for trophy" data-type='trophy' onclick="export_results(this)">
-        <p style="display:none"> Exporintg for Trophy Excel</p>
-        <i class="fa fa-trophy"></i>
-    </a>
-
-    <a class='col right submit-btn' title="export for certificate" data-type='certificate' onclick="export_results(this)">
-        <p style="display:none"> Exporintg for Certificate Excel</p>
-        <i class="fa fa-certificate"></i>
-    </a>
-    <a class="col right submit-btn" onclick="get_results(this)">
-        <i class="fa fa-search"></i>
-    </a>
-    <div class="col right">
-        <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle btn-download" type="button" data-toggle="dropdown">
-                <span id="results_selected_state" class="selected">VIC</span>
-                <span class="caret"></span>
-            </button>
-            <ul id="drop-state" class="dropdown-menu">
-                <li><a>National</a></li>
-                <li><a>QLD</a></li>
-                <li><a>NSW</a></li>
-                <li><a>VIC</a></li>
-                <li><a>SA</a></li>
-                <li><a>ACT</a></li>
-                <li><a>WA</a></li>
-                <li><a>NZW</a></li>
-                <li><a>NZH</a></li>
-            </ul>
+<div class="form-menu" style="text-align: center">
+    <div class="form-menu row">
+        <div class="col left">
+            <div class="app-header"> Results</div>
         </div>
     </div>
-    <div class="col right">
-        <div class="label"> State :</div>
-    </div>
-    <div class="col right">
-        <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-                <span id="results_selected_year" class="selected">2019</span>
-                <span class="caret"></span>
-            </button>
-            <ul id="drop-year" class="dropdown-menu">
-                <li>
-                    <a>2019</a>
-                </li>
-                <li>
-                    <a>2018</a>
-                </li>
-            </ul>
+    <div class="input-data" style="display: inline-block">
+        <div class="form-menu row">
+            <div class="col right">
+                <div class="dropdown" style="min-width: 150px">
+                    <button class="btn btn-default dropdown-toggle btn-download" type="button" data-toggle="dropdown">
+                        <span id="results_selected_state" class="selected">VIC</span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul id="drop-state" class="dropdown-menu">
+                        <li><a>National</a></li>
+                        <li><a>QLD</a></li>
+                        <li><a>NSW</a></li>
+                        <li><a>VIC</a></li>
+                        <li><a>SA</a></li>
+                        <li><a>ACT</a></li>
+                        <li><a>WA</a></li>
+                        <li><a>NZW</a></li>
+                        <li><a>NZH</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col right">
+                    <div class="label"> State :</div>
+            </div>
         </div>
-    </div>
-    <div class="col right">
-        <div class="label"> Year :</div>
-    </div>
-    <div class="col left">
-        <div class="app-header"> Results</div>
+        <div class="form-menu row">
+
+            <div class="col right">
+                <div class="dropdown" style="min-width: 150px">
+                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                        <span id="results_selected_year" class="selected">2019</span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul id="drop-year" class="dropdown-menu">
+                        <li>
+                            <a>2019</a>
+                        </li>
+                        <li>
+                            <a>2018</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col right">
+                    <div class="label"> Year :</div>
+            </div>
+        </div>
+        <div class="form-menu row">
+            <div class="col right">
+                <label for="gen-seatno">Generate Seat No</label>
+                <input type="checkbox" id="gen-seatno" name="scales">
+            </div>
+        </div>
+        <div id='div-input' class="form-menu row">
+            <div class="input-file-container">
+                <input class="input-file" id="my-file" type="file" accept=".xlsx">
+                <label tabindex="0" for="my-file" class="input-file-trigger">Select a generated trophy xlsx ...</label>
+            </div>
+            <div class="file-return"></div>
+        </div>
+
+        <div class="form-menu row">
+                <a class='col right submit-btn' title="export for book docx" data-type='book word' onclick="export_results(this)">
+                    <p style="display:none"> Exporintg for Book Word</p>
+                    <i class="fa fa-file-word"></i>
+                </a>
+                <a class='col right submit-btn' title="export for book excel" data-type='book excel' onclick="export_results(this)">
+                    <p style="display:none"> Exporintg for Book Excel</p>
+                    <i class="fa fa-file-excel"></i>
+                </a>
+        
+                <a class='col right submit-btn' title="export for trophy" data-type='trophy' onclick="export_results(this)">
+                    <p style="display:none"> Exporintg for Trophy Excel</p>
+                    <i class="fa fa-trophy"></i>
+                </a>
+        
+                <a class='col right submit-btn' title="export for certificate" data-type='certificate' onclick="export_results(this)">
+                    <p style="display:none"> Exporintg for Certificate Excel</p>
+                    <i class="fa fa-certificate"></i>
+                </a>
+                <a class="col right submit-btn" onclick="get_results(this)">
+                    <i class="fa fa-search"></i>
+                </a>
+            </div>
     </div>
 </div>
+
 <div id='result_main' style="text-align: center">
     <div class="lds-ellipsis loading"><div></div><div></div><div></div><div></div><div></div><div></div></div>
     <div id="div_results">

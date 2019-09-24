@@ -26,49 +26,12 @@ def get_formatted_student_details(state, year, username, password):
     return data, headers
 
 
-def split__data(comp_data):
-    date_comp_sets_by_id = {}
-    date_comp_sets_by_family = {}
-
-    for comp in comp_data:
-        exam_e = comp.exam_e
-        date = comp.date
-        if exam_e is None or date is None:
-            continue
-
-        if date not in date_comp_sets_by_family:
-            date_comp_sets_by_id[date] = {}
-            date_comp_sets_by_family[date] = {}
-
-        comp_sets_by_id = date_comp_sets_by_id[date]
-        comp_sets_by_family = date_comp_sets_by_family[date]
-
-        ind = comp.ind_no if comp.ind_no else comp.std_no
-        if ind in comp_sets_by_id:
-            comp_sets_by_id[ind]['exams'].append(exam_e)
-        else:
-            comp_sets_by_id[ind] = {'exams': [exam_e], 'name': comp.name_e}
-        
-        if comp.email in comp_sets_by_family:
-            if ind in comp_sets_by_family[comp.email]:
-                comp_sets_by_family[comp.email][ind]['exams'].append(
-                    exam_e)
-            else:
-                comp_sets_by_family[comp.email][ind] = {
-                    'exams': [comp.exam_e], 'fname': comp.fname_e, 'lname': comp.lname_e}
-
-        else:
-            comp_sets_by_family[comp.email] = {ind: {'exams': [comp.exam_e], 'fname': comp.fname_e, 'lname': comp.lname_e}
-                                                   }
-        
-    return date_comp_sets_by_id, date_comp_sets_by_family
-
-
 def export_payment_summary(xls_wb, state, year, exam_category, username, password):
     sess = init_sess(username, password)
 
     comp_data_raw = get_competition_details(
         sess, state=state, exam_category=exam_category, year=year, competition="All")
+    get_comp_info(comp_data_raw)
 
     date_comp_sets_by_id, date_comp_sets_by_family = split__data(comp_data_raw)
 
@@ -199,6 +162,44 @@ def export_payment_summary(xls_wb, state, year, exam_category, username, passwor
             else:
                 ws_family.write('A{}'.format(row_family), count, family_count_format)
     wb.close()
+
+def split__data(comp_data):
+    date_comp_sets_by_id = {}
+    date_comp_sets_by_family = {}
+
+    for comp in comp_data:
+        exam_e = comp.exam_e
+        date = comp.date
+        if exam_e is None or date is None:
+            continue
+
+        if date not in date_comp_sets_by_family:
+            date_comp_sets_by_id[date] = {}
+            date_comp_sets_by_family[date] = {}
+
+        comp_sets_by_id = date_comp_sets_by_id[date]
+        comp_sets_by_family = date_comp_sets_by_family[date]
+
+        ind = comp.ind_no if comp.ind_no else comp.std_no
+        if ind in comp_sets_by_id:
+            comp_sets_by_id[ind]['exams'].append(exam_e)
+        else:
+            comp_sets_by_id[ind] = {'exams': [exam_e], 'name': comp.name_e}
+        
+        if comp.email in comp_sets_by_family:
+            if ind in comp_sets_by_family[comp.email]:
+                comp_sets_by_family[comp.email][ind]['exams'].append(
+                    exam_e)
+            else:
+                comp_sets_by_family[comp.email][ind] = {
+                    'exams': [comp.exam_e], 'fname': comp.fname_e, 'lname': comp.lname_e}
+
+        else:
+            comp_sets_by_family[comp.email] = {ind: {'exams': [comp.exam_e], 'fname': comp.fname_e, 'lname': comp.lname_e}
+                                                   }
+        
+    return date_comp_sets_by_id, date_comp_sets_by_family
+
 
 def export_to_excel(xls_wb, state, year, exam_category, username, password):
     sess = init_sess(username, password)

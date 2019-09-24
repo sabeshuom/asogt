@@ -221,14 +221,14 @@ def compute_trophy_size(result_row):
     return 4
 
 
-def export_to_excel(xls_wb, state,  year, exam_category, username, password):
+def export_to_excel(xls_wb, state,  year, exam_category, username, password, seat_no_map=None):
     sess = init_sess(username, password)
     results = get_results(sess, state=state, year=year,
                           competition="All", exam_category=exam_category)
     if exam_category == "National":
         trophy_rows, num_of_lines = get_trophy_data_rows_national(results)
     else:
-        ordered_results, division_comp_map, student_data_map = process_results_for_seating_number(results, seperate_group_comps=False)
+        ordered_results, division_comp_map, student_data_map = process_results_for_seating_number(results,exam_category, seperate_group_comps=False, seat_no_map=seat_no_map)
         trophy_rows, num_of_lines = get_trophy_data_by_rows(ordered_results, student_data_map)
 
     wb = xlsxwriter.Workbook(xls_wb)
@@ -309,7 +309,7 @@ def export_to_excel(xls_wb, state,  year, exam_category, username, password):
     # trophy headers
     trophy1 = "Australian Society of Graduate Tamils (ASoGT)"
     ws.merge_range('A1:D1', trophy1, trophy1_format)
-    trophy2 = "Tamil Competitions 2018 - QLD"
+    trophy2 = "Tamil Competitions {} - {}".format(year, state)
     ws.merge_range('A2:D2', trophy2, trophy2_format)
     trophy3 = "Full Name (Eg: Asvetha Senthilkumaran) - Number (Eg: P001)"
     ws.merge_range('A3:D3', trophy3, trophy3_format)
@@ -365,7 +365,7 @@ if __name__ == "__main__":
     # password = "Yoges"
     state = "NSW"
     xls_wb = "test.xlsx"
-    year = "2018"
+    year = "2019"
     exam_category = ["State", "Final"]
     #exam_category = "National"
     export_to_excel(xls_wb, state, year, exam_category, username, password)

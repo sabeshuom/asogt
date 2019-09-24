@@ -110,7 +110,6 @@ def export_student_details(request):
     state = json_data["state"]
     year = json_data["year"]
     req_format = json_data["format"]
-
     if state == "National":
         exam_category = "National"
         state = "All"
@@ -118,8 +117,7 @@ def export_student_details(request):
         exam_category = ["State", "Final"]
 
     output = BytesIO()
-    student_details.export_to_excel(
-        output, state, year, exam_category, ASOGT_USERNAME, ASOGT_PASSWORD)
+    student_details.export_to_excel(output, state, year, exam_category, ASOGT_USERNAME, ASOGT_PASSWORD)
     output.seek(0)
     response = HttpResponse(output.read(
     ), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
@@ -139,10 +137,13 @@ def export_results(request):
             state = "All"
         else:
             exam_category = ["State", "Final"]
+        seat_no_map = json_data["seat_no_map"]
+        gen_seat_no= json_data["gen_seat_no"]
+        if gen_seat_no:
+            seat_no_map = None
 
         output = BytesIO()
-        content_type, output = results.export_results(req_format, output, state, year,
-                               exam_category,  ASOGT_USERNAME, ASOGT_PASSWORD)
+        content_type, output = results.export_results(req_format, output, state, year, exam_category,  ASOGT_USERNAME, ASOGT_PASSWORD, seat_no_map=seat_no_map)
 
         output.seek(0)
         response = HttpResponse(output.read(), content_type=content_type)
