@@ -62,9 +62,12 @@ def export_to_excel(xls_wb, state,  year, exam_category, username, password, sea
     sess = init_sess(username, password)
     results = get_results(sess, state=state, year=year,
                           competition="All", exam_category=exam_category)
-    _, _, student_data_map = process_results_for_seating_number(results, exam_category=exam_category, seperate_group_comps=False, seat_no_map=seat_no_map)
-    ordered_results, division_comp_map = process_results_without_seat_no(results, exam_category=exam_category, seperate_group_comps=True)
-
+    if seat_no_map is None:
+        _, _, student_data_map = process_results_for_seating_number(results, exam_category=["State", "Final"], seperate_group_comps=False, seat_no_map=None)
+        seat_no_map = {std_no: student_data_map[std_no].seat_pos for std_no in student_data_map}
+    
+    ordered_results, division_comp_map, student_data_map = process_results_for_seating_number(results, exam_category=exam_category, seperate_group_comps=True, seat_no_map=seat_no_map)
+ 
     wb = xlsxwriter.Workbook(xls_wb)
     row_height = 25
     row_title_height = 35
@@ -146,16 +149,6 @@ def export_to_excel(xls_wb, state,  year, exam_category, username, password, sea
 
     wb.close()
 
-
-# class Logger(object)
-
-#     def __init__(self, log_str=""):
-#         self.log_str = log_str
-
-#     def add(log_str):
-#         self.
-
-
 def export_to_docx(word_doc, state,  year,  exam_category, username, password, seat_no_map=None):
     sess = init_sess(username, password)
     results = get_results(sess, state=state, year=year,
@@ -164,9 +157,9 @@ def export_to_docx(word_doc, state,  year,  exam_category, username, password, s
     if seat_no_map is None:
         _, _, student_data_map = process_results_for_seating_number(results, exam_category=["State", "Final"], seperate_group_comps=False, seat_no_map=None)
         seat_no_map = {std_no: student_data_map[std_no].seat_pos for std_no in student_data_map}
-    
     ordered_results, division_comp_map, student_data_map = process_results_for_seating_number(results, exam_category=exam_category, seperate_group_comps=True, seat_no_map=seat_no_map)
-    template = os.path.join(MEDIA_ROOT, "book_template.docx")
+   
+    template = os.path.join(MEDIA_ROOT, "book_template_{}.docx".format(year))
     document = Document(template)
 
     for division, division_prefix in DIVISION_ORDER:

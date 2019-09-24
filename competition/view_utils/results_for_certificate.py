@@ -109,8 +109,7 @@ def export_to_excel(xls_wb, state,  year, exam_category, username, password, sea
     if exam_category == "National":
         sorted_results, student_data_map = sort_national_results(results)
     else:
-        ordered_results, division_comp_map, student_data_map = process_results_for_seating_number(
-            results, exam_category=exam_category, seat_no_map=seat_no_map)
+        ordered_results, division_comp_map, student_data_map = process_results_for_seating_number(results,exam_category, seperate_group_comps=False, seat_no_map=seat_no_map)
         filtered_results = [r for r in results if r.std_no in student_data_map]
         sorted_results = sorted(filtered_results, key=lambda x: int(
             student_data_map[x.std_no].seat_pos[-3:]))
