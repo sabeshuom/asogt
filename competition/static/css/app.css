@@ -126,13 +126,15 @@ a {
       float: right;
       margin-right: 10px; }
   .form-menu .label {
-    border-radius: 0px;
+    width: 150px;
+    border-radius: 3px;
     display: inline-block;
-    width: 100%;
+    /* width: 100%; */
     margin: 0px;
     margin-right: 5px;
     text-align: right;
     color: black;
+    background: #decfbd;
     font-size: 16px;
     line-height: 18px;
     height: 25px; }
@@ -326,11 +328,12 @@ input[type=submit] {
  
   .input-file-container {
     position: relative;
-    /* width: 225px; */
+    width: 100%;
+    overflow: hidden;
   } 
   .js .input-file-trigger {
     display: block;
-    padding: 14px 45px;
+    padding: 8px 5px;
     background: #39D2B4;
     color: #fff;
     font-size: 1em;

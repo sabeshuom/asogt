@@ -139,7 +139,7 @@ def export_results(request):
             exam_category = ["State", "Final"]
         seat_no_map = json_data["seat_no_map"]
         gen_seat_no= json_data["gen_seat_no"]
-        if gen_seat_no:
+        if gen_seat_no or len(seat_no_map) ==0:
             seat_no_map = None
 
         output = BytesIO()

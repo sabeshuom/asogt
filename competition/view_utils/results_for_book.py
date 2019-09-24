@@ -22,7 +22,8 @@ from core.data_utils import init_sess,\
     get_results,\
     get_ref_data_from_excel,\
     DIVISION_ORDER,\
-    sort_std_keys_for_division
+    sort_std_keys_for_division,\
+    sort_std_no_group
 
 from core.unicode_to_bamini import unicode2bamini
 
@@ -160,6 +161,10 @@ def export_to_docx(word_doc, state,  year,  exam_category, username, password, s
     results = get_results(sess, state=state, year=year,
                           competition="All", exam_category=exam_category)
 
+    if seat_no_map is None:
+        _, _, student_data_map = process_results_for_seating_number(results, exam_category=["State", "Final"], seperate_group_comps=False, seat_no_map=None)
+        seat_no_map = {std_no: student_data_map[std_no].seat_pos for std_no in student_data_map}
+    
     ordered_results, division_comp_map, student_data_map = process_results_for_seating_number(results, exam_category=exam_category, seperate_group_comps=True, seat_no_map=seat_no_map)
     template = os.path.join(MEDIA_ROOT, "book_template.docx")
     document = Document(template)
@@ -199,7 +204,8 @@ def export_to_docx(word_doc, state,  year,  exam_category, username, password, s
         division_data = ordered_results[division]
 
         if division_prefix == "G":
-            sorted_stds = sort_std_keys_for_division(division_data)
+            # sorted_stds = sort_std_keys_for_division(division_data)
+            sorted_stds = sort_std_no_group(division_data)
         else:
             sorted_stds = sorted(division_data, key=lambda x: int(
                 student_data_map[x].seat_pos[-3:]))

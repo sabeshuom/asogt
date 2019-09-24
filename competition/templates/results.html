@@ -1,6 +1,6 @@
 {% extends 'base.html' %} {% load staticfiles %} {% block head_content %}
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="{% static 'js/results.js' %}?ver=1.3"></script>
+<script src="{% static 'js/results.js' %}?ver=1.4"></script>
 <script>
 </script> 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
@@ -24,7 +24,7 @@ label{
             <div class="col right">
                 <div class="dropdown" style="min-width: 150px">
                     <button class="btn btn-default dropdown-toggle btn-download" type="button" data-toggle="dropdown">
-                        <span id="results_selected_state" class="selected">VIC</span>
+                        <span id="results_selected_state" class="selected">NSW</span>
                         <span class="caret"></span>
                     </button>
                     <ul id="drop-state" class="dropdown-menu">
@@ -69,10 +69,10 @@ label{
         <div class="form-menu row">
             <div class="col right">
                 <label for="gen-seatno">Generate Seat No</label>
-                <input type="checkbox" id="gen-seatno" name="scales">
+                <input type="checkbox" id="gen-seatno" name="scales" checked>
             </div>
         </div>
-        <div id='div-input' class="form-menu row">
+        <div id='div-input' class="form-menu row" style="display: none">
             <div class="input-file-container">
                 <input class="input-file" id="my-file" type="file" accept=".xlsx">
                 <label tabindex="0" for="my-file" class="input-file-trigger">Select a generated trophy xlsx ...</label>
@@ -80,7 +80,7 @@ label{
             <div class="file-return"></div>
         </div>
 
-        <div class="form-menu row">
+        <div class="form-menu row" style="max-width: 500px">
                 <a class='col right submit-btn' title="export for book docx" data-type='book word' onclick="export_results(this)">
                     <p style="display:none"> Exporintg for Book Word</p>
                     <i class="fa fa-file-word"></i>

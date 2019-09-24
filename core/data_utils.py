@@ -69,6 +69,10 @@ GRADES = ["First Prize",
           "Participated",
           ]
 
+RANK_GRADES = ["First Prize", 
+          "Second Prize",
+          "Third Prize",
+          ]
 
 NATIONAL_GRADES = [
     "First Prize (Gold Medal)",
@@ -512,9 +516,32 @@ def sort_national_results(results):
     return sorted_results, student_data_map
 
 
+# def sort_std_no_group(division_data):
+#     comps = {}
+#     ordered_stds = []
+#     for std_no in division_data:
+#         std_comps = division_data[std_no]
+#         for comp_t in std_comps:
+#             if comp_t not in comps:
+#                 comps[comp_t] = {grade: [] for grade in GRADES}
+#             grade = std_comps[comp_t]
+#             comps[comp_t][grade].append(std_no)
+
+#     for grade in GRADES:
+#         for comp_t in comps:
+#             if grade not in comps[comp_t]:
+#                 continue
+#             else:
+#                 for std_no in comps[comp_t][grade]:
+#                     if std_no not in ordered_stds:
+#                         ordered_stds.append(std_no)
+#     return ordered_stds
+
+
 def sort_std_no_group(division_data):
     comps = {}
     ordered_stds = []
+    other_grades = list(set(GRADES) - set(RANK_GRADES))
     for std_no in division_data:
         std_comps = division_data[std_no]
         for comp_t in std_comps:
@@ -523,16 +550,24 @@ def sort_std_no_group(division_data):
             grade = std_comps[comp_t]
             comps[comp_t][grade].append(std_no)
 
-    for grade in GRADES:
-        for comp_t in comps:
+    for comp_t in comps:
+        for grade in RANK_GRADES:
             if grade not in comps[comp_t]:
                 continue
             else:
                 for std_no in comps[comp_t][grade]:
                     if std_no not in ordered_stds:
                         ordered_stds.append(std_no)
-    return ordered_stds
+    for comp_t in comps:
+        for grade in other_grades:
+            if grade not in comps[comp_t]:
+                continue
+            else:
+                for std_no in comps[comp_t][grade]:
+                    if std_no not in ordered_stds:
+                        ordered_stds.append(std_no)
 
+    return ordered_stds
 
 def split_data(comp_data):
     comp_sets = {}
