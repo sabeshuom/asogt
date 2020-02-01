@@ -22,6 +22,7 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^competition/', include('competition.urls')),
+    url(r'^bts/', include('bts.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^asogt/', include('competition.urls')), #default set to competition
 ]

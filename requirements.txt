@@ -52,3 +52,4 @@ XlsxWriter==1.0.5
 ndg-httpsclient
 pandas
 python-docx
+docxtpl==0.6.3

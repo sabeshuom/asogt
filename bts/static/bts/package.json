@@ -1,0 +1,27 @@
+{
+  "name": "Asogt",
+  "version": "0.0.1",
+  "description": "ASOGT",
+  "repository": "",
+  "homepage": "https://asogt.au/",
+  "license": "ASoGT 2018.",
+  "dependencies": {
+    "angular": "1.6.9",
+    "concat": "0.0.1-security",
+    "concat-map": "0.0.1",
+    "concurrently": "^2.1.0",
+    "node-sass": "^3.8.0",
+    "nodemon": "^1.9.2",
+    "orb": "^1.0.9",
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0",
+    "superagent": "^2.0.0",
+    "watchify": "^3.0"
+  },
+  "scripts": {
+    "build-css": "node-sass scss/ -o css/",
+    "watch-css": "nodemon --watch scss/*.scss -x \"npm run build-css\"",
+    "watch": "concurrently \"npm run watch-css\"",
+    "build": "npm run build-css"
+  }
+}

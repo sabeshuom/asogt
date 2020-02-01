@@ -1,0 +1,150 @@
+{% extends 'bts/base.html' %}
+{% load staticfiles %}
+{% block head_content %}
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7; IE=EmulateIE9">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+<!-- <link rel="stylesheet" type="text/css" href="style.css" media="all" />
+<link rel="stylesheet" type="text/css" href="demo.css" media="all" /> -->
+
+<link href="{% static 'bts/css/registration.css' %}" rel="stylesheet">
+<!-- <link href="{% static 'bts/css/demo.css' %}" rel="stylesheet"> -->
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+        $('#app_drop-down').hide()
+    });
+
+</script>
+
+{% endblock %}
+
+{% block page_content %}
+<div class="container">
+    <header>
+        <h1>Student Enrollement Form</h1>
+    </header>
+    <!-- multistep form -->
+    <form id="msform" name='registration' action="">
+        <!-- progressbar -->
+        <ul id="progressbar">
+        <li class="active">PARENTS’ / GURDIANS’ DETAILS</li>
+        <li>STUDENT DETAILS</li>
+        <li>DECLARATION</li>
+        </ul>
+        <!-- fieldsets -->
+        <fieldset id="parents">
+        <h2 class="fs-title">PARENTS’ / GURDIANS’ DETAILS</h2>
+        <div class="container">
+            <div  class="row">
+                <div id="parent1" class="col-md-6">
+                </div>
+                <div id="parent2" class="col-md-6">
+                </div> 
+            </div>
+            <p class="form-label"><label for="res_address">Residential Address </label></p>
+            <div class="row" style="margin-top: 10px">
+                <div class="col-md-6">
+                    <input id="res_address_suburb" class="parents" name="res_address_street" placeholder="No, Street" tabindex="1" type="text">
+                </div>
+                <div class="col-md-3">
+                    <input id="res_address_suburb" class="parents" name="res_address_suburb" placeholder="Suburb" tabindex="1" type="text">
+                </div>
+                <div class="col-md-3">
+                    <input id="res_address_postcode" class="parents" name="res_address_postcode" placeholder="Postcode" tabindex="1" type="text">
+                </div>
+            </div>
+            <p class="form-label"><label for="postal_address">Postal Address </label></p>
+            <div class="row" style="margin-top: 10px">
+                <div class="col-md-6">
+                    <input id="postal_address_suburb" class="parents" name="postal_address_street" placeholder="No, Street" tabindex="1" type="text">
+                </div>
+                <div class="col-md-3">
+                    <input id="postal_address_suburb" class="parents" name="postal_address_suburb" placeholder="Suburb" tabindex="1" type="text">
+                </div>
+                <div class="col-md-3">
+                    <input id="postal_address_postcode" class="parents" name="postal_address_postcode" placeholder="Postcode" tabindex="1" type="text">
+                </div>
+            </div>
+        </div>
+        <!-- <h3 class="fs-subtitle">This is step 1</h3> -->
+        <!-- <input type="text" name="email" placeholder="Email" />
+        <input type="password" name="pass" placeholder="Password" />
+        <input type="password" name="cpass" placeholder="Confirm Password" /> -->
+        <input type="button" name="next" class="next action-button" value="Next" />
+        </fieldset>
+        <fieldset id="students">
+        </fieldset>
+        <fieldset id="conditions">
+        <h2 class="fs-title">CONDITIONS OF ENROLMENT</h2>
+        <div class="container">
+            <div class="row">
+                <ul class="ul-declaration">
+                    <li><p><b>General</b></p>
+                        The completion and signing of this Application for Enrolment signifies your acceptance and agreement with the
+                        conditions relating to the payment of fees and charges and to any other condition or rule which may be implemented by the executive committee or its representatives to ensure the orderly conduct of the School.
+                    </li>
+                    <li><p><b>Class Room Allocation</b></p>
+                        During the enrolment, student’s fluency in Tamil language will be assessed by one of our teacher and depending on the fluency; she / he will be allocated in appropriate class division.
+                    </li>
+                    <li><p><b>Attendance and Absence</b></p>
+                        A student is expected to attend throughout the school year, which is divided into four terms. 
+                    </li>
+                    <li><p><b>Discipline</b></p>
+                        Enrolment signifies agreement with the rules and regulations of the School and intention to abide thereby.
+                    </li>
+                    <li><p><b>Enrolment Fees</b></p>
+                        The annual enrolment fee is $120 (or if paying by term $35 /term). 
+                        <p>Account Name : Brisbane Tamil School Inc</p>
+                        <p>BSB Number : 064 186</p>
+                        <p>Account Number: 1054 0491</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <h3 class="fs-subtitle">DECLARATION</h3>
+        <div class="container">
+            <div class="row">
+                <ul class="ul-declaration">
+                    <li>I/We apply to have my/our child admitted to the Tamil School as stated in the personal details.</li>
+                    <li>I/We certify that all personal details supplied with this application are true and correct.</li>
+                    <li>I/We acknowledge and accept the rules and regulations of the School </li>
+                    <li>I/We have read and understood Tamil School’s Management Strategy and Child Protection Policy.
+                    <li>I/We give permission to use my child’s details for the purpose of applying for and monitoring funding under the After Hours Ethnic Schooling (AHES) program. It will be used by the Department of Education and Training (DET) for assessment of eligibility and monitoring of program implementation.
+                    <li>I/We give permission to use my child’s photo/work in Tamil School’s publication, including internet publication as many times as it requires.
+                    <li>I/we agree to be responsible for payment of all fees and charges and to be bound by the School regulations.
+                    <li><p><b>Medical Declaration - General</b></p>
+                        In the event of illness or injury to my child while at school or at any school event venue, I authorise the principal or a senior staff member, if/where it is impossible to contact me, to consent to emergency medical treatment as is necessary by a qualified medical practitioner.
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <p class="form-label"><label for="signature">Signature
+                    </label></p> 
+                    <input id="signature" name="parent_signature" placeholder="Signature" required="" tabindex="1" type="text"> 
+                </div>
+            </div>
+        </div>
+        <input type="button" name="previous" class="previous action-button" value="Previous" />
+        <input type="submit" name="submit" class="action-button" value="Submit" />
+        </fieldset>
+    </form>
+ </div>
+ <!-- alert popup -->
+<div id='SB_popup_alert' class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <H2 id='SB_alert_title'>Battery Low!</H2>
+                <h4 id='SB_alert_disc'></h4>
+            </div>
+            <div id="SB_poup_confirm" style="text-align:right; padding:15px;">
+                <button type="but_poup_cancel" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="SB_but_popup_confirm" type="button" class="btn btn-info btn-ok" onclick="update_probe_on_server()">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+ <script src="{% static 'bts/js/registration.js' %}?ver=1.2"></script>  
+{% endblock %}

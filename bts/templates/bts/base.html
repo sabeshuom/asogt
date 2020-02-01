@@ -1,0 +1,95 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <META HTTP-EQUIV="EXPIRES" CONTENT="Tue, 13 Jun 2017 02:20:00 GMT">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Australian Tamil Competition</title>
+    
+    <!-- cdns -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/react/16.8.6/umd/react.production.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.8.6/umd/react-dom.production.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.validation/1.15.1/jquery.validate.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Dosis|Muli" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+
+    <!-- static js -->
+    <script src="{% static 'js/downloaded_scripts/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'js/downloaded_scripts/jquery.floatingscroll.min.js' %}"></script>
+    <script src="{% static 'js/downloaded_scripts/dropzone.js' %}"></script>
+    <script src="{% static 'js/downloaded_scripts/jquery.popupoverlay.js' %}"></script>
+
+    <link href="{% static 'css/downloaded_scripts/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/downloaded_scripts/awesome-bootstrap-checkbox.css' %}" rel="stylesheet">
+    <link href="{% static 'css/downloaded_scripts/heroic-features.css' %}" rel="stylesheet">
+    <link href="{% static 'css/downloaded_scripts/jquery.dataTables.min.css' %}" rel="stylesheet"> 
+    <link href="{% static 'css/downloaded_scripts/dropzone.css' %}" rel="stylesheet">
+    <link href="{% static 'css/downloaded_scripts/jquery.floatingscroll.css' %}" rel="stylesheet">
+
+    <link href="{% static 'css/app.css' %}?ver=1.7" rel="stylesheet">
+    <script src="{% static 'js/app.js' %}?ver=1.2"></script>
+    <script src="{% static 'js/login_utils.js' %}?ver=1.0"></script>
+    <!-- <script src="{% static 'js/unicode_to_bamini.js' %}"></script> -->
+
+    <script>
+        var STATIC_URL = "{% static '' %}"
+    </script>
+    {% block head_content %}
+    {% endblock %}
+
+</head>
+
+<body id="body" data-spy="scroll" data-target=".navbar" data-offset="0">
+    <div class="container-fluid top-header" style="padding: 0px">
+        <a href="/bts"><img class='left-logo' src="{%static 'bts/assets/logo_left.png'%}"></a>
+        <div class="landing-image">
+            <img src="{%static 'bts/assets/landing_top_crop.png'%}"></a>
+        </div>
+    </div>
+    <nav class="navbar topmenu navbar-light" role="navigation"><!-- data-spy="affix" data-offset-top="0">-->
+        <div class="container-fluid nav-main">
+            <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                      <li><a href="http://brisbanetamilschool.org/news/" target="_blank">News</a></li>
+                    <li><a href="http://brisbanetamilschool.org/about/school-management-committee/" target="_blank">Contact</a></li>
+                    <li><a href="http://brisbanetamilschool.org/school-calendar/" target="_blank">Calender</a></li>
+                    <!-- <li>
+                            <a id="a-login" onclick="alternate_login()">Login</a>
+                    </li> -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+        {% block page_content %}
+        {% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="row">
+            <div class="col-lg-12">
+                <p>Copyright &copy; BTS 2020 </p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

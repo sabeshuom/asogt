@@ -44,6 +44,7 @@ ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     'competition.apps.CompetitionConfig',
+    'bts.apps.BtsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -141,6 +142,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+# EMAIL:
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'sabeshuom@gmail.com'
+EMAIL_HOST_PASSWORD = 'Sabesh83Priya'
+EMAIL_PORT = 587
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
