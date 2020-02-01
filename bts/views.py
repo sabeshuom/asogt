@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader, Template, Context
@@ -31,10 +33,11 @@ class EmailThread(threading.Thread):
         threading.Thread.__init__(self)
 
     def run (self):
-        msg = EmailMessage(self.subject, self.html_content, "BTS Enrolment", self.recipient_list)
+        msg = EmailMessage(self.subject, self.html_content, "BTS Enrolment", self.recipient_list, attachments=self.attachments)
         msg.content_subtype = "html"
-        for attachemnt in self.attachments:
-            msg.attach_file(attachemnt)
+        # for attachemnt in self.attachments:
+        #     import pdb; pdb.set_trace()
+        #     msg.attach_file(attachemnt[0], attachemnt[1], "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
         msg.send()
 
 @csrf_exempt
@@ -44,7 +47,7 @@ def submit_registration(request):
     attachments = generate_docs(doc_data)
     subject = "BTS Enroment - " + str(request_data["year"])
     html_content = 'PLease find the attached enrolment form.'
-    recipient_list = ["sabeshuom@gmail.com"]
+    recipient_list = ["sabeshuom@gmail.com", "iya.satha@gmail.com"]
     EmailThread(subject, html_content, recipient_list, attachments).start()
     return HttpResponse(json.dumps({'Sucess': True}))
 
@@ -57,9 +60,11 @@ def generate_docs(doc_data):
         context = student_doc_data
         fname = "BTS_enrolment_form_2020_" + context["student_surname_eng"] + "_" + context["student_givenname_eng"] + ".docx"
         fpath = os.path.join(MEDIA_ROOT, "bts_uploaded_forms", fname)
+        out = BytesIO()
         doc.render(context)
-        doc.save(fpath)
-        attachments.append(fpath)
+        doc.save(out)
+        # out.seek(0)
+        attachments.append([fname, out.getvalue(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document"])
     return attachments
 
 def generate_doc_data(data):
@@ -74,7 +79,7 @@ def generate_doc_data(data):
             student_split = key.split("_")
             student_ind  = int(student_split[1])-1
             student_key = "student_" + str("_".join(student_split[2:]))
-            student_data[student_ind][student_key] = str(form_data[key])
+            student_data[student_ind][student_key] = form_data[key]
     
     for ind in range(data['no_of_students']):
         student_data[ind].update(common_data)
