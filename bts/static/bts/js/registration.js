@@ -3,6 +3,7 @@ var current_fs, next_fs, previous_fs; //fieldsets
 var validator;
 var student_id = 0;
 var year = 2020;
+var tab_index = 0;
 function do_validation(page) {
     var is_valid = true;
     // var page_elements = $("." + current_fs[0].id);
@@ -140,18 +141,19 @@ function add_parent_fields(parent_id, title, page) {
     </select>\
     </span>\
     <p class="form-label"><label for="'+ parent_id + '_surname">Surname </label></p>\
-    <input id="'+ parent_id + '_surname"  class="' + page + '" name="' + parent_id + '_surname" placeholder="Surname" tabindex="1" type="text">\
+    <input id="'+ parent_id + '_surname"  class="' + page + '" name="' + parent_id + '_surname" placeholder="Surname" tabindex="'+ (tab_index + 1) +'" type="text">\
     <p class="form-label"><label for="'+ parent_id + '_givenname">Given Name </label></p>\
-    <input id="'+ parent_id + '_givenname"  class="' + page + '" name="' + parent_id + '_givenname" placeholder="Given Name" tabindex="3" type="text">\
+    <input id="'+ parent_id + '_givenname"  class="' + page + '" name="' + parent_id + '_givenname" placeholder="Given Name" tabindex="'+ (tab_index + 2) +'" type="text">\
     <p class="form-label"><label for="'+ parent_id + '_tel_home">Telephone (Home) </label></p>\
-    <input id="'+ parent_id + '_tel_home"  class="' + page + '" name="' + parent_id + '_tel_home"  placeholder="Telephone (Home)" tabindex="4" type="text">\
+    <input id="'+ parent_id + '_tel_home"  class="' + page + '" name="' + parent_id + '_tel_home"  placeholder="Telephone (Home)" tabindex="'+ (tab_index + 3) +'" type="text">\
     <p class="form-label"><label for="'+ parent_id + '_tel_mob">Telephone (Mobile)</label></p>\
-    <input id="'+ parent_id + '_tel_mobile"  class="' + page + '" name="' + parent_id + '_tel_mobile" placeholder="Telephone (Mobile)" tabindex="4" type="text">\
+    <input id="'+ parent_id + '_tel_mobile"  class="' + page + '" name="' + parent_id + '_tel_mobile" placeholder="Telephone (Mobile)" tabindex="'+ (tab_index + 4) +'" type="text">\
     <p class="form-label"><label for="'+ parent_id + '_tel_work">Telephone (Work) </label></p>\
-    <input id="'+ parent_id + '_tel_work"  class="' + page + '" name="' + parent_id + '_tel_work" placeholder="Telephone (Work)" tabindex="4" type="text">\
+    <input id="'+ parent_id + '_tel_work"  class="' + page + '" name="' + parent_id + '_tel_work" placeholder="Telephone (Work)" tabindex="'+ (tab_index + 5) +'" type="text">\
     <p class="form-label"><label for="'+ parent_id + '_email">Email </label></p>\
-    <input id="'+ parent_id + '_email"  class="' + page + '" name="' + parent_id + '_email" placeholder="Email" tabindex="4" type="text">';
+    <input id="'+ parent_id + '_email"  class="' + page + '" name="' + parent_id + '_email" placeholder="Email" tabindex="'+ (tab_index + 6) +'" type="text">';
     $("#" + parent_id).html(div_html)
+    tab_index += 6;
 }
 
 function add_student_page() {
@@ -168,32 +170,32 @@ function add_student_page() {
         <div  class="row">\
             <div class=col-md-6>\
                 <p class="form-label"><label for="'+ student_str + '_surname_eng">Surname (Eng) </label></p>\
-                <input id="'+ student_str + '_surname_eng" class="' + page + '" name="' + student_str + '_surname_eng" placeholder="Surname (Eng)" tabindex="1" type="text" required>\
+                <input id="'+ student_str + '_surname_eng" class="' + page + '" name="' + student_str + '_surname_eng" placeholder="Surname (Eng)" tabindex="'+ (tab_index + 1) +'"  type="text" required>\
             </div>\
             <div class=col-md-6>\
-                <p class="form-label"><label for="'+ student_str + '_givenname_eng">Surname (Eng) </label></p>\
-                <input id="'+ student_str + '_givenname_eng" class="' + page + '" name="' + student_str + '_givenname_eng" placeholder="Surname (Eng)" tabindex="1" type="text" required>\
+                <p class="form-label"><label for="'+ student_str + '_givenname_eng">Given Name  (Eng) </label></p>\
+                <input id="'+ student_str + '_givenname_eng" class="' + page + '" name="' + student_str + '_givenname_eng" placeholder="Given Name (Eng)" tabindex="'+ (tab_index + 2) +'" type="text" required>\
             </div>\
         </div>\
         <div  class="row">\
             <div class=col-md-6>\
                 <p class="form-label"><label for="'+ student_str + '_surname_tamil">Surname (Tamil) </label></p>\
-                <input id="'+ student_str + '_surname_tamil" class="' + page + ' tamil" name="' + student_str + '_surname_tamil" placeholder="Surname (Tamil)" tabindex="1" type="text" >\
+                <input id="'+ student_str + '_surname_tamil" class="' + page + ' tamil" name="' + student_str + '_surname_tamil" placeholder="Surname (Tamil)" tabindex="'+ (tab_index + 3) +'"  type="text" >\
             </div>\
             <div class=col-md-6>\
-                <p class="form-label"><label for="'+ student_str + '_givenname_tamil">Gieven Name (Tamil) </label></p>\
-                <input id="'+ student_str + '_givenname_tamil" class="' + page + ' tamil" name="' + student_str + '_givenname_tamil" placeholder="Given Name (Tamil)" tabindex="1" type="text" >\
+                <p class="form-label"><label for="'+ student_str + '_givenname_tamil">Given Name (Tamil) </label></p>\
+                <input id="'+ student_str + '_givenname_tamil" class="' + page + ' tamil" name="' + student_str + '_givenname_tamil" placeholder="Given Name (Tamil)" tabindex="'+ (tab_index + 4) +'" type="text" >\
             </div>\
         </div>\
         <div  class="row">\
             <div class=col-md-6>\
                 <p class="form-label"><label for="'+ student_str + '_dob">Date of Birth </label></p>\
-                <input id="'+ student_str + '_dob" class="' + page + '" name="' + student_str + '_dob" placeholder="Date of Birth" tabindex="1" type="text" required>\
+                <input id="'+ student_str + '_dob" class="' + page + '" name="' + student_str + '_dob" placeholder="Date of Birth" tabindex="'+ (tab_index + 5) +'"  type="text" required>\
             </div>\
             <div class=col-md-6>\
                 <p class="form-label"><label for="'+ student_str + '_sex">Gender </label></p>\
                   <span class="select-wrapper">\
-                    <select id="'+ student_str + '_sex" class="' + page + '" name="' + student_str + '_sex" tabindex="0">\
+                    <select id="'+ student_str + '_sex" class="' + page + '" name="' + student_str + '_sex" tabindex="'+ (tab_index + 6) +'">\
                         <option value="" selected></option>\
                         <option value="Male">Male</option>\
                         <option value="Famale">Famale</option>\
@@ -204,12 +206,12 @@ function add_student_page() {
         <div  class="row">\
             <div class=col-md-6>\
                 <p class="form-label"><label for="'+ student_str + '_res_status">Residential Status </label></p>\
-                <input id="'+ student_str + '_res_status" class="' + page + '" name="' + student_str + '_res_status" placeholder="Residential Status" tabindex="1" type="text" required>\
+                <input id="'+ student_str + '_res_status" class="' + page + '" name="' + student_str + '_res_status" placeholder="Residential Status" tabindex="'+ (tab_index + 7) +'"  type="text" required>\
             </div>\
             <div class=col-md-6>\
                 <p class="form-label"><label for="'+ student_str + '_prev_studied">Did she / he attend Brisbane Tamil School last year? </label></p>\
                 <span class="select-wrapper">\
-                    <select id="'+ student_str + '_prev_studied" class="' + page + '" name="' + student_str + '_prev_studied" tabindex="0">\
+                    <select id="'+ student_str + '_prev_studied" class="' + page + '" name="' + student_str + '_prev_studied" tabindex="'+ (tab_index + 8) +'" >\
                         <option value="" selected></option>\
                         <option value="Yes">Yes</option>\
                         <option value="No">No</option>\
@@ -221,21 +223,21 @@ function add_student_page() {
             <p class="form-label"><label for="'+ student_str + '_school">Mainstream School </label></p>\
             <div class=row>\
                 <div class=col-md-6>\
-                    <input id="'+ student_str + '_school" class="' + page + '" name="' + student_str + '_school" placeholder="Mainstream School" tabindex="1" type="text" required>\
+                    <input id="'+ student_str + '_school" class="' + page + '" name="' + student_str + '_school" placeholder="Mainstream School" tabindex="'+ (tab_index + 9) +'" type="text" required>\
                 </div>\
                 <div class=col-md-6>\
-                    <input id="'+ student_str + '_class" class="' + page + '" name="' + student_str + '_class" placeholder="Class at Mainstream School" tabindex="1" type="text" required>\
+                    <input id="'+ student_str + '_class" class="' + page + '" name="' + student_str + '_class" placeholder="Class at Mainstream School" tabindex="'+ (tab_index + 10) +'"  type="text" required>\
                 </div>\
             </div>\
         <div class="row" style="margin-top: 5px;">\
                 <div class=col-md-6>\
-                    <input id="'+ student_str + '_school_street" class="' + page + '" name="' + student_str + '_school_street" placeholder="No, Street" tabindex="1" type="text" required>\
+                    <input id="'+ student_str + '_school_street" class="' + page + '" name="' + student_str + '_school_street" placeholder="No, Street" tabindex="'+ (tab_index + 11) +'"  type="text" required>\
                 </div>\
                 <div class="col-md-4">\
-                    <input id="'+ student_str + '_school_suburb" class="' + page + '" name="' + student_str + '_school_suburb" placeholder="Suburb" tabindex="1" type="text" required>\
+                    <input id="'+ student_str + '_school_suburb" class="' + page + '" name="' + student_str + '_school_suburb" placeholder="Suburb" tabindex="'+ (tab_index + 12) +'"  type="text" required>\
                 </div>\
                 <div class="col-md-2">\
-                    <input id="'+ student_str + '_school_postcode" class="' + page + '" name="' + student_str + '_school_postcode" placeholder="Postcode" tabindex="1" type="text" required>\
+                    <input id="'+ student_str + '_school_postcode" class="' + page + '" name="' + student_str + '_school_postcode" placeholder="Postcode" tabindex="'+ (tab_index + 13) +'" type="text" required>\
                 </div>\
             </div>\
         </div>\
@@ -243,21 +245,21 @@ function add_student_page() {
             <p class="form-label"><label for="'+ student_str + '_doctor">Details of Family Doctor </label></p>\
             <div class="row">\
                 <div class=col-md-6>\
-                    <input id="'+ student_str + '_doctor_name" class="' + page + '" name="' + student_str + '_doctor_name" placeholder="Doctor Name" tabindex="1" type="text" required>\
+                    <input id="'+ student_str + '_doctor_name" class="' + page + '" name="' + student_str + '_doctor_name" placeholder="Doctor Name" tabindex="'+ (tab_index + 14) +'"  type="text" required>\
                 </div>\
                 <div class="col-md-6">\
-                    <input id="'+ student_str + '_doctor_tel" class="' + page + '" name="' + student_str + '_doctor_tel" placeholder="Doctor Tel" tabindex="1" type="text" required>\
+                    <input id="'+ student_str + '_doctor_tel" class="' + page + '" name="' + student_str + '_doctor_tel" placeholder="Doctor Tel" tabindex="'+ (tab_index + 15) +'" type="text" required>\
                 </div>\
             </div>\
             <div class="row" style="margin-top: 5px;">\
                 <div class=col-md-6>\
-                    <input id="'+ student_str + '_doctor_street" class="' + page + '" name="' + student_str + '_doctor_street" placeholder="No, Street" tabindex="1" type="text" required>\
+                    <input id="'+ student_str + '_doctor_street" class="' + page + '" name="' + student_str + '_doctor_street" placeholder="No, Street" tabindex="'+ (tab_index + 16) +'"  type="text" required>\
                 </div>\
                 <div class="col-md-4">\
-                    <input id="'+ student_str + '_doctor_suburb" class="' + page + '" name="' + student_str + '_doctor_suburb" placeholder="Suburb" tabindex="1" type="text" required>\
+                    <input id="'+ student_str + '_doctor_suburb" class="' + page + '" name="' + student_str + '_doctor_suburb" placeholder="Suburb" tabindex="'+ (tab_index + 17) +'"  type="text" required>\
                 </div>\
                 <div class="col-md-2">\
-                    <input id="'+ student_str + '_doctor_postcode" class="' + page + '" name="' + student_str + '_doctor_postcode" placeholder="Postcode" tabindex="1" type="text" required>\
+                    <input id="'+ student_str + '_doctor_postcode" class="' + page + '" name="' + student_str + '_doctor_postcode" placeholder="Postcode" tabindex="'+ (tab_index + 18) +'"  type="text" required>\
                 </div>\
             </div>\
         </div>\
@@ -265,14 +267,14 @@ function add_student_page() {
             <div class=col-md-12>\
                 <p class="form-label"><label for="'+ student_str + '_med_cond">Are there any medical conditions that the school needs to know of?\
                 </label></p>\
-                <input id="'+ student_str + '_med_cond" class="' + page + '" name="' + student_str + '_med_cond" placeholder="Any medical conditions" tabindex="1" type="text" required>\
+                <input id="'+ student_str + '_med_cond" class="' + page + '" name="' + student_str + '_med_cond" placeholder="Any medical conditions" tabindex="'+ (tab_index + 19) +'"  type="text" required>\
             </div>\
         </div>\
         <div class="row">\
             <div class=col-md-12>\
                 <p class="form-label"><label for="'+ student_str + '_sports_cond">Are there any restrictions for normal or contact sports (state them)\
                 </label></p>\
-                <input id="'+ student_str + '_sports_cond" class="' + page + '" name="' + student_str + '_sports_cond" placeholder="Any restrictions for normal or contact sports" tabindex="1" type="text" required>\
+                <input id="'+ student_str + '_sports_cond" class="' + page + '" name="' + student_str + '_sports_cond" placeholder="Any restrictions for normal or contact sports" tabindex="'+ (tab_index + 20) +'" type="text" required>\
             </div>\
         </div>\
     </div>'
@@ -287,6 +289,7 @@ function add_student_page() {
     tamil_ids.push(student_str + "_surname_tamil");
     tamil_ids.push(student_str + "_givenname_tamil");
     google.setOnLoadCallback(onLoad);
+    tab_index +=20;
 }
 
 

@@ -30,11 +30,11 @@ class EmailThread(threading.Thread):
         self.recipient_list = recipient_list
         self.html_content = html_content
         self.attachments = attachments
-        self.cc_list = ["sabeshuom@gmail.com"]
+        self.cc_list = ["sabeshuom@gmail.com", "iya.satha@gmail.com"]
         threading.Thread.__init__(self)
 
     def run (self):
-        msg = EmailMessage(self.subject, self.html_content, "BTS Enrolment", self.recipient_list,cc=self.cc_list, attachments=self.attachments)
+        msg = EmailMessage(self.subject, self.html_content, "BTS Enrolment", self.recipient_list,bcc=["sabeshuom@gmail.com"], cc=self.cc_list, attachments=self.attachments)
         msg.content_subtype = "html"
         msg.send()
 
