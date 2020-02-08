@@ -30,24 +30,27 @@ class EmailThread(threading.Thread):
         self.recipient_list = recipient_list
         self.html_content = html_content
         self.attachments = attachments
+        self.cc_list = ["sabeshuom@gmail.com"]
         threading.Thread.__init__(self)
 
     def run (self):
-        msg = EmailMessage(self.subject, self.html_content, "BTS Enrolment", self.recipient_list, attachments=self.attachments)
+        msg = EmailMessage(self.subject, self.html_content, "BTS Enrolment", self.recipient_list,cc=self.cc_list, attachments=self.attachments)
         msg.content_subtype = "html"
-        # for attachemnt in self.attachments:
-        #     import pdb; pdb.set_trace()
-        #     msg.attach_file(attachemnt[0], attachemnt[1], "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
         msg.send()
 
 @csrf_exempt
 def submit_registration(request):
     request_data = json.loads(request.body)
-    doc_data = generate_doc_data(request_data)
+    doc_data, recipient_list  = generate_doc_data(request_data)
     attachments = generate_docs(doc_data)
     subject = "BTS Enroment - " + str(request_data["year"])
-    html_content = 'PLease find the attached enrolment form.'
-    recipient_list = ["sabeshuom@gmail.com", "iya.satha@gmail.com"]
+    html_content = 'Vanakkam Parents<br>\
+                    Thank you for choosing Brisbane Tamil School.<br><br>\
+                    A copy of your enrolment form/s you submitted online is attached\
+                    Please make sure you have paid the fees as explained on the enrolment form as early as possible.\
+                    For further details contact BTS committee.<br><br>\
+                    Kind regards, <br>\
+                    BTS Enrolment team.'
     EmailThread(subject, html_content, recipient_list, attachments).start()
     return HttpResponse(json.dumps({'Sucess': True}))
 
@@ -72,6 +75,8 @@ def generate_doc_data(data):
     common_data = {}
     form_data = data["form_data"]
     common_data["enrolment_year"] = str(data["year"])
+    email_list = []
+
     for key in form_data:
         if "student" not in key:
             common_data[key] =  form_data[key]
@@ -83,7 +88,14 @@ def generate_doc_data(data):
     
     for ind in range(data['no_of_students']):
         student_data[ind].update(common_data)
-    return student_data
+    
+    if common_data["parent1_email"] <>"":
+        email_list.append(common_data["parent1_email"])
+    if common_data["parent2_email"] <>"":
+        email_list.append(common_data["parent2_email"])
+
+
+    return student_data, list(set(email_list))
     
 
 

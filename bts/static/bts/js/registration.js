@@ -82,7 +82,7 @@ function add_click_events() {
         current_fs = $(this).parent();
         next_fs = $(this).parent().next();
         var page = current_fs[0].id;
-        is_valid = true; //do_validation(page);
+        is_valid = do_validation(page);
         if (is_valid) {
             //activate next step on progressbar using the index of next_fs
             $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
@@ -172,7 +172,7 @@ function add_student_page() {
             </div>\
             <div class=col-md-6>\
                 <p class="form-label"><label for="'+ student_str + '_givenname_eng">Surname (Eng) </label></p>\
-                <input id="'+ student_str + '_givenname_eng" class="' + page + '" name="' + student_str + '_givenname_eng" placeholder="Givenname (Eng)" tabindex="1" type="text" required>\
+                <input id="'+ student_str + '_givenname_eng" class="' + page + '" name="' + student_str + '_givenname_eng" placeholder="Surname (Eng)" tabindex="1" type="text" required>\
             </div>\
         </div>\
         <div  class="row">\

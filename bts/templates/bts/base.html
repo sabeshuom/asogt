@@ -56,9 +56,13 @@
 
 <body id="body" data-spy="scroll" data-target=".navbar" data-offset="0">
     <div class="container-fluid top-header" style="padding: 0px">
-        <a href="/bts"><img class='left-logo' src="{%static 'bts/assets/logo_left.png'%}"></a>
-        <div class="landing-image">
-            <img src="{%static 'bts/assets/landing_top_crop.png'%}"></a>
+        <div class='row'>
+            <div class='col-md-3 left-logo-div'>
+                <a href="/bts"><img class='left-logo' src="{%static 'bts/assets/logo_left.png'%}"></a>
+            </div>
+            <div class="landing-image col-md-9">
+                <img src="{%static 'bts/assets/landing_top_crop.png'%}"></a>
+            </div>
         </div>
     </div>
     <nav class="navbar topmenu navbar-light" role="navigation"><!-- data-spy="affix" data-offset-top="0">-->
