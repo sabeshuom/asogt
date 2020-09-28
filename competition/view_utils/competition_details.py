@@ -188,7 +188,6 @@ def export_to_excel(xls_wb, state, year, exam_category, username, password):
     # comp_data_raw = get_competition_details(sess, competion_id= comp["Comp Id"])
 
     for exam_e in sorted(comp_data_sets):
-        import pdb; pdb.set_trace()
         if exam_e not in exam_details:
             print("Exam not found")
             print exam_e
