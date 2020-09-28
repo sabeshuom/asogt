@@ -280,7 +280,7 @@ def export_to_excel(xls_wb, state, year, exam_category, username, password):
         row = 0
         ws_ids.set_column(0, 0, 41.75)
         ws_ids.set_column(1, 1, 41.75)
-        aa = [{'div': a.split("-")[0], 'id': a.split("-")[1]} for a in comp_sets_by_id.keys()]
+        aa = [{'div': a.split("-")[0], 'id': a.split("-")[1]} for a in comp_sets_by_id.keys() if len(a.split("-")) == 2 ]
         aa.sort(key=itemgetter('div'))
         for div, items in groupby(aa, key=itemgetter('div')):
             for item in sorted(items, key=lambda x: int(x['id'])):
