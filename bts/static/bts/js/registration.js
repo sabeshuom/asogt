@@ -15,27 +15,8 @@ function do_validation(page) {
     return is_valid
 }
 
-// function onLoad() {
-//     var options = {
-//       sourceLanguage: 'en', 
-//       destinationLanguage:  ['gu', 'ml', 'hi', 'kn', 'ta', 'te'],
-//       shortcutKey: 'ctrl+m',
-//       transliterationEnabled: true
-//     }
-//     // Create an instance on TransliterationControl with the required options.
-//     var control = new google.elements.transliteration.TransliterationControl(options);
 
-//     // Enable transliteration in the textfields with the given ids.
-//     var ids = [];
-//     $("." + tamil).each(function() {
-//             ids.push(this.id)
-//       });
-//     control.makeTransliteratable(ids);
-//     // Show the transliteration control which can be used to toggle between English and Hindi and also choose other destination language.
-//     // control.showControl('translControl');
-//   }
-
-
+var control;
 google.load("elements", "1", {
     packages: "transliteration"
 });
@@ -50,11 +31,13 @@ function onLoad() {
         shortcutKey: 'ctrl+g',
         transliterationEnabled: true
     };
-    var control =
+    control =
         new google.elements.transliteration.TransliterationControl(options);
 
     control.makeTransliteratable(tamil_ids);
 }
+
+google.setOnLoadCallback(onLoad);
 
 function show_popup_alert(alert_title, alert_disc, confirm_but_data) {
     if (confirm_but_data == '')
@@ -78,7 +61,6 @@ $('#SB_popup_alert').on('hidden.bs.modal', function () {
 })
 
 function add_click_events() {
-
     $(".next").click(function () {
         current_fs = $(this).parent();
         next_fs = $(this).parent().next();
@@ -111,11 +93,12 @@ function add_click_events() {
         current_fs = $(this).parent();
         var page = current_fs[0].id;
         if (do_validation(page)) {
-            $(".addstudent").remove();
-            $(".delstudent").remove();
-            $(".previous").remove();
-            $(".next").remove();
+            $("#students .addstudent").remove();
+            $("#students .delstudent").remove();
+            $("#students  .previous").remove();
+            $("#students  .next").remove();
             add_student_page();
+            control.makeTransliteratable(tamil_ids);
         }
     });
     $(".delstudent").click(function () {
@@ -165,7 +148,7 @@ function add_student_page() {
     if (student_id > 1)
         delete_btn_html = '<input type="button" name="delete" class="delstudent action-button" value="Delete Student"/>'
     var div_html = '\
-    <div id='+ student_str + '">\
+    <div id="'+ student_str + '">\
         <h3 class="fs-title">'+ title + '</h3>\
         <div  class="row">\
             <div class=col-md-6>\
@@ -288,7 +271,6 @@ function add_student_page() {
     add_click_events();
     tamil_ids.push(student_str + "_surname_tamil");
     tamil_ids.push(student_str + "_givenname_tamil");
-    google.setOnLoadCallback(onLoad);
     tab_index +=20;
 }
 

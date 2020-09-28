@@ -30,7 +30,8 @@ class EmailThread(threading.Thread):
         self.recipient_list = recipient_list
         self.html_content = html_content
         self.attachments = attachments
-        self.cc_list = ["sabeshuom@gmail.com", "iya.satha@gmail.com"]
+        # self.cc_list = ["sabeshuom@gmail.com", "iya.satha@gmail.com"]
+        self.cc_list = ["sabeshuom@gmail.com"]
         threading.Thread.__init__(self)
 
     def run (self):
@@ -42,8 +43,9 @@ class EmailThread(threading.Thread):
 def submit_registration(request):
     request_data = json.loads(request.body)
     doc_data, recipient_list  = generate_doc_data(request_data)
+    import pdb; pdb.set_trace()
     attachments = generate_docs(doc_data)
-    subject = "BTS Enroment - " + str(request_data["year"])
+    subject = "BTS Enrolment - " + str(request_data["year"])
     html_content = 'Vanakkam Parents<br>\
                     Thank you for choosing Brisbane Tamil School.<br><br>\
                     A copy of your enrolment form/s you submitted online is attached\
@@ -94,7 +96,7 @@ def generate_doc_data(data):
     if common_data["parent2_email"] <>"":
         email_list.append(common_data["parent2_email"])
 
-
+    import pdb; pdb.set_trace()
     return student_data, list(set(email_list))
     
 
