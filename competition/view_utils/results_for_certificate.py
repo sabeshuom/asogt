@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import os
 import sys
 import requests
@@ -7,6 +9,8 @@ import re
 import xlrd
 import string
 import numpy as np
+reload(sys)  
+sys.setdefaultencoding('utf-8')
 
 sys.path.append("../../")
 from asogt.settings import MEDIA_ROOT, BASE_DIR
@@ -62,8 +66,7 @@ def get_row_data(result, cert_state, student_data_map):
             grade_award = award if award != "" else grade
         else:
             grade_award = grade if award == "" else award + "-" + grade
-        comp_code = comp_details[comp_details["Comp Tamil"]
-                                 == comp_t]["Comp Code"].item()
+        comp_code = comp_details[comp_details["Comp Tamil"] == comp_t]["Comp Code"].item()
 
     except Exception, e:
         print("Getting Exception when getting row data {:s}".format(str(e)))

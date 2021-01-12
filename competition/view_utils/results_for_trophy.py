@@ -20,6 +20,9 @@ from core.data_utils import init_sess,\
     sort_national_results,\
     GRADES
 
+reload(sys)  
+sys.setdefaultencoding('utf-8')
+
 from core import unicode_to_bamini
 
 from core.write_timetable import add_time_table

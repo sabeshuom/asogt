@@ -22,7 +22,7 @@ DIVISION_IDS = {"P": "15", "B": "14", "L": "12", "I": "10",
                 "S": "7", "AdS": "4", "Y": "3", "AY": "18", "All": "Any"}
 COMPETITION_TYPE_IDS = {"P": "1", "S": "2", "V": "4", "SpP-A": "9", "SpP-T": "8", "W": "3", "A": "5", "Q": "7",
                         "D": "6", "All": "Any"}
-COMPET_XLS = os.path.join(MEDIA_ROOT, "comp_data_2018.xlsx")
+COMPET_XLS = os.path.join(MEDIA_ROOT, "comp_data_2020.xlsx")
 STATE_DETAILS = {"NSW": 2, "VIC": 3, "SA": 5,
                  "QLD": 6, "WA": 7, "ACT": 4, "NZW": 8, "NZH": 9, "All": "Any"}
 # 7,8,9,
