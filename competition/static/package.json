@@ -10,7 +10,7 @@
     "concat": "0.0.1-security",
     "concat-map": "0.0.1",
     "concurrently": "^2.1.0",
-    "node-sass": "^3.8.0",
+    "node-sass": "^4.13.1",
     "nodemon": "^1.9.2",
     "orb": "^1.0.9",
     "react": "^15.1.0",
