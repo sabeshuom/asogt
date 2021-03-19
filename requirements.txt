@@ -22,7 +22,7 @@ dask==0.9.0
 decorator==4.3.0
 Django==1.10a1
 django-tokenapi==1.0
-djangorestframework==3.8.2
+djangorestframework==3.11.2
 djangorestframework-jwt==1.11.0
 docutils==0.12
 easydict==1.7
