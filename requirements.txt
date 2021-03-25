@@ -41,7 +41,7 @@ numpy==1.14.2
 opencv-contrib-python==3.4.0.12
 opencv-python==3.4.0.12
 Pillow>=3.3.2
-PyYAML==3.11
+PyYAML==5.4
 requests==2.10.0
 scikit-image==0.12.3
 scipy
