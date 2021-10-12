@@ -39,7 +39,7 @@ magickwand==0.2
 Markdown==2.6.11
 numpy==1.14.2
 opencv-contrib-python==3.4.0.12
-opencv-python==3.4.0.12
+opencv-python==3.4.7.28
 Pillow>=3.3.2
 PyYAML==3.11
 requests==2.10.0
