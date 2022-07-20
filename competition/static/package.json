@@ -6,7 +6,7 @@
   "homepage": "https://asogt.au/",
   "license": "ASoGT 2018.",
   "dependencies": {
-    "angular": "1.6.9",
+    "angular": "1.8.3",
     "concat": "0.0.1-security",
     "concat-map": "0.0.1",
     "concurrently": "^2.1.0",
